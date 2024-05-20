@@ -1,4 +1,3 @@
-import { readFileSync, writeFileSync } from "fs";
 import Decimal from "decimal.js";
 import { getServerSideConfig } from "@/app/config/server";
 import { NextRequest } from "next/server";
@@ -46,7 +45,8 @@ export function pay(
   decreaseUserQuota(username, thisBilling, true);
 }
 
-export function readUserQuota(username: string): Decimal {
+export async function readUserQuota(username: string): Promise<Decimal> {
+  const { readFileSync } = await import("fs");
   let fileContent = readFileSync(
     serverConfig.shansingQuotaPath + "/" + username,
     "utf8",
@@ -68,12 +68,13 @@ export function getUsernameFromHttpBasicAuth(req: Request) {
   return auth.split(":")[0];
 }
 
-function increaseUserQuota(
+async function increaseUserQuota(
   username: string,
   delta: Decimal,
   allowToNegative: boolean,
 ) {
-  let quota = readUserQuota(username);
+  const { writeFileSync } = await import("fs");
+  let quota = await readUserQuota(username);
   // console.log(username + '\'s old quota: ' + quota.toFixed())
   let newQuota = quota.plus(delta);
   // console.log(username + '\'s new quota: ' + newQuota.toFixed())
