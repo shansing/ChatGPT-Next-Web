@@ -480,6 +480,10 @@ const tw = {
     Topic: "主題",
     Time: "時間",
   },
+  Shansing: {
+    userQuota: "用戶配額",
+    userName: "登入用户",
+  },
 };
 
 type DeepPartial<T> = T extends object

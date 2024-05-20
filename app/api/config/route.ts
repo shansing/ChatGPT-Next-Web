@@ -1,6 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getServerSideConfig } from "../../config/server";
+import {
+  getUsernameFromHttpBasicAuth,
+  readUserQuota,
+} from "@/app/api/shansing";
 
 const serverConfig = getServerSideConfig();
 
@@ -14,14 +18,23 @@ const DANGER_CONFIG = {
   disableFastLink: serverConfig.disableFastLink,
   customModels: serverConfig.customModels,
   defaultModel: serverConfig.defaultModel,
+
+  aboutHtml: serverConfig.shansingAboutHtml,
+  userName: "",
+  userQuota: "",
 };
 
 declare global {
   type DangerConfig = typeof DANGER_CONFIG;
 }
 
-async function handle() {
-  return NextResponse.json(DANGER_CONFIG);
+async function handle(req: NextRequest) {
+  const username = getUsernameFromHttpBasicAuth(req);
+  return NextResponse.json({
+    ...DANGER_CONFIG,
+    userName: username,
+    userQuota: username ? readUserQuota(username) : null,
+  });
 }
 
 export const GET = handle;

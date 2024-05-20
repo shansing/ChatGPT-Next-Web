@@ -5,7 +5,7 @@ import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
 import { requestOpenai } from "../../common";
-import { pay } from "@/app/shansing";
+import { pay } from "@/app/api/shansing";
 
 const ALLOWD_PATH = new Set(Object.values(OpenaiPath));
 const config = getServerSideConfig();

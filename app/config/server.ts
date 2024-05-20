@@ -1,6 +1,6 @@
 import md5 from "spark-md5";
 import { DEFAULT_MODELS } from "../constant";
-import { ShansingModelChoice } from "../shansing";
+import { ShansingModelChoice } from "../api/shansing";
 
 declare global {
   namespace NodeJS {

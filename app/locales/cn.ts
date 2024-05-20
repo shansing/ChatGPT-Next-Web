@@ -484,6 +484,10 @@ const cn = {
     Topic: "主题",
     Time: "时间",
   },
+  Shansing: {
+    userQuota: "用户余额",
+    userName: "当前用户",
+  },
 };
 
 type DeepPartial<T> = T extends object

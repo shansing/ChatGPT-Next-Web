@@ -43,15 +43,23 @@ export function pay(
         .mul(completionTokenNumber),
     );
   console.log("pay:", "username", username, "thisBilling", thisBilling);
-  decreaseUserQuota(
-    serverConfig.shansingQuotaPath,
-    username,
-    thisBilling,
-    true,
-  );
+  decreaseUserQuota(username, thisBilling, true);
 }
 
-function getUsernameFromHttpBasicAuth(req: Request) {
+export function readUserQuota(username: string): Decimal {
+  let fileContent = readFileSync(
+    serverConfig.shansingQuotaPath + "/" + username,
+    "utf8",
+  );
+  try {
+    return new Decimal(fileContent.trim());
+  } catch (error) {
+    globalThis.console.error(username + "'s quota is not number", error);
+    throw error;
+  }
+}
+
+export function getUsernameFromHttpBasicAuth(req: Request) {
   const authHeader = req.headers.get("authorization");
   if (!authHeader) {
     return null;
@@ -60,41 +68,29 @@ function getUsernameFromHttpBasicAuth(req: Request) {
   return auth.split(":")[0];
 }
 
-function readUserQuota(quotaPath: string, username: string): Decimal {
-  let fileContent = readFileSync(quotaPath + "/" + username, "utf8");
-  try {
-    return new Decimal(fileContent.trim());
-  } catch (error) {
-    globalThis.console.error(username + "'s quota is not number", error);
-    throw error;
-  }
-}
 function increaseUserQuota(
-  quotaPath: string,
   username: string,
   delta: Decimal,
   allowToNegative: boolean,
 ) {
-  let quota = readUserQuota(quotaPath, username);
+  let quota = readUserQuota(username);
   // console.log(username + '\'s old quota: ' + quota.toFixed())
   let newQuota = quota.plus(delta);
   // console.log(username + '\'s new quota: ' + newQuota.toFixed())
   if (!allowToNegative && newQuota.lt(0)) {
     return false;
   }
-  writeFileSync(quotaPath + "/" + username, newQuota.toFixed(), "utf8");
+  writeFileSync(
+    serverConfig.shansingQuotaPath + "/" + username,
+    newQuota.toFixed(),
+    "utf8",
+  );
   return true;
 }
 function decreaseUserQuota(
-  quotaPath: string,
   username: string,
   delta: Decimal,
   allowToNonPositive: boolean,
 ) {
-  return increaseUserQuota(
-    quotaPath,
-    username,
-    new Decimal(-1).mul(delta),
-    true,
-  );
+  return increaseUserQuota(username, new Decimal(-1).mul(delta), true);
 }
