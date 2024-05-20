@@ -140,9 +140,9 @@ function Screen() {
     <div
       className={
         styles.container +
-        ` ${shouldTightBorder ? styles["tight-container"] : styles.container} ${
-          getLang() === "ar" ? styles["rtl-screen"] : ""
-        }`
+        ` ${
+          shouldTightBorder ? styles["tight-container"] : styles.container
+        } ${""}`
       }
     >
       {isAuth ? (
