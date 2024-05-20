@@ -7,7 +7,7 @@ const kilo = new Decimal("1000");
 const serverConfig = getServerSideConfig();
 
 export interface ShansingModelChoice {
-  // name: string
+  name: string;
   model: string;
   // contextToken1k: number
   // completionToken1k: number

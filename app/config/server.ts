@@ -78,8 +78,18 @@ export const getServerSideConfig = () => {
     );
   }
 
+  const shansingModelChoice: ShansingModelChoice[] = process.env
+    .SHANSING_MODEL_CHOICES
+    ? JSON.parse(process.env.SHANSING_MODEL_CHOICES)
+    : [];
+
   const disableGPT4 = !!process.env.DISABLE_GPT4;
-  let customModels = process.env.CUSTOM_MODELS ?? "";
+  // let customModels = process.env.CUSTOM_MODELS ?? "";
+  let customModels =
+    "-all," +
+    shansingModelChoice
+      .map((modelChoice) => "+" + modelChoice.model + "=" + modelChoice.name)
+      .join(",");
   let defaultModel = process.env.DEFAULT_MODEL ?? "";
 
   if (disableGPT4) {
@@ -105,11 +115,6 @@ export const getServerSideConfig = () => {
   const allowedWebDevEndpoints = (
     process.env.WHITE_WEBDEV_ENDPOINTS ?? ""
   ).split(",");
-
-  const shansingModelChoice: ShansingModelChoice[] = process.env
-    .SHANSING_MODEL_CHOICES
-    ? JSON.parse(process.env.SHANSING_MODEL_CHOICES)
-    : [];
 
   return {
     baseUrl: process.env.BASE_URL,
