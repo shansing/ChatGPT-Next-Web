@@ -17,7 +17,7 @@ export interface ShansingModelChoice {
   // maxPrice: string
 }
 
-export async function pay(
+export function pay(
   req: NextRequest,
   modelChoice: ShansingModelChoice,
   promptTokenNumber: number,
@@ -42,7 +42,7 @@ export async function pay(
         .mul(completionTokenNumber),
     );
   console.log("pay:", "username", username, "thisBilling", thisBilling);
-  await decreaseUserQuota(username, thisBilling, true);
+  decreaseUserQuota(username, thisBilling, true);
 }
 
 export async function readUserQuota(username: string): Promise<Decimal> {
@@ -88,7 +88,7 @@ async function increaseUserQuota(
   );
   return true;
 }
-async function decreaseUserQuota(
+function decreaseUserQuota(
   username: string,
   delta: Decimal,
   allowToNonPositive: boolean,
