@@ -96,7 +96,7 @@ async function handle(
           responseJson.usage &&
           responseJson.usage.total_tokens
         ) {
-          pay(
+          await pay(
             req,
             modelChoice,
             responseJson.usage.prompt_tokens,
