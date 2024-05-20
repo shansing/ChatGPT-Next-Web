@@ -45,6 +45,9 @@ interface RequestPayload {
     role: "system" | "user" | "assistant";
     content: string | MultimodalContent[];
   }[];
+  stream_options: {
+    include_usage?: boolean;
+  };
   stream?: boolean;
   model: string;
   temperature: number;
@@ -119,6 +122,9 @@ export class ChatGPTApi implements LLMApi {
     const requestPayload: RequestPayload = {
       messages,
       stream: options.config.stream,
+      stream_options: {
+        include_usage: true,
+      },
       model: modelConfig.model,
       temperature: modelConfig.temperature,
       presence_penalty: modelConfig.presence_penalty,

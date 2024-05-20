@@ -25,26 +25,27 @@ function parseApiKey(bearToken: string) {
 }
 
 export function auth(req: NextRequest, modelProvider: ModelProvider) {
-  const authToken = req.headers.get("Authorization") ?? "";
-
-  // check if it is openai api key or user token
-  const { accessCode, apiKey } = parseApiKey(authToken);
-
-  const hashedCode = md5.hash(accessCode ?? "").trim();
-
+  // const authToken = req.headers.get("Authorization") ?? "";
+  //
+  // // check if it is openai api key or user token
+  // const { accessCode, apiKey } = parseApiKey(authToken);
+  //
+  // const hashedCode = md5.hash(accessCode ?? "").trim();
+  //
   const serverConfig = getServerSideConfig();
   console.log("[Auth] allowed hashed codes: ", [...serverConfig.codes]);
-  console.log("[Auth] got access code:", accessCode);
-  console.log("[Auth] hashed access code:", hashedCode);
+  // console.log("[Auth] got access code:", accessCode);
+  // console.log("[Auth] hashed access code:", hashedCode);
   console.log("[User IP] ", getIP(req));
   console.log("[Time] ", new Date().toLocaleString());
-
-  if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !apiKey) {
-    return {
-      error: true,
-      msg: !accessCode ? "empty access code" : "wrong access code",
-    };
-  }
+  //
+  // if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !apiKey) {
+  //   return {
+  //     error: true,
+  //     msg: !accessCode ? "empty access code" : "wrong access code",
+  //   };
+  // }
+  const apiKey = false;
 
   if (serverConfig.hideUserApiKey && !!apiKey) {
     return {

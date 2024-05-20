@@ -5,12 +5,12 @@ import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
 import { requestOpenai } from "../../common";
+import { pay } from "@/app/shansing";
 
 const ALLOWD_PATH = new Set(Object.values(OpenaiPath));
+const config = getServerSideConfig();
 
 function getModels(remoteModelRes: OpenAIListModelResponse) {
-  const config = getServerSideConfig();
-
   if (config.disableGPT4) {
     remoteModelRes.data = remoteModelRes.data.filter(
       (m) => !m.id.startsWith("gpt-4"),
@@ -53,6 +53,29 @@ async function handle(
   }
 
   try {
+    const requestBody = await req.text();
+    const requestJson = JSON.parse(requestBody);
+    const modelChoice = config.shansingModelChoice.find(
+      (choice) => choice.model === requestJson.model,
+    );
+    if (!modelChoice) {
+      return NextResponse.json("Unsupported model", {
+        status: 401,
+      });
+    }
+    if (
+      requestJson.stream &&
+      (!requestJson.stream_options ||
+        requestJson.stream_options.include_usage !== true)
+    ) {
+      return NextResponse.json(
+        "Invalid param (stream_options.include_usage should be true)",
+        {
+          status: 401,
+        },
+      );
+    }
+
     const response = await requestOpenai(req);
 
     // list models
@@ -62,6 +85,29 @@ async function handle(
       return NextResponse.json(availableModels, {
         status: response.status,
       });
+    }
+
+    const responseBody = await response.clone().text();
+    if (responseBody.includes('"usage"')) {
+      try {
+        const responseJson = JSON.parse(responseBody);
+        if (
+          responseJson &&
+          responseJson.usage &&
+          responseJson.usage.total_tokens
+        ) {
+          pay(
+            req,
+            modelChoice,
+            responseJson.usage.prompt_tokens,
+            responseJson.usage.completion_tokens,
+          );
+        }
+      } catch (e) {
+        if (!(e instanceof SyntaxError)) {
+          throw e;
+        }
+      }
     }
 
     return response;

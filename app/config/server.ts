@@ -1,5 +1,6 @@
 import md5 from "spark-md5";
 import { DEFAULT_MODELS } from "../constant";
+import { ShansingModelChoice } from "../shansing";
 
 declare global {
   namespace NodeJS {
@@ -105,6 +106,11 @@ export const getServerSideConfig = () => {
     process.env.WHITE_WEBDEV_ENDPOINTS ?? ""
   ).split(",");
 
+  const shansingModelChoice: ShansingModelChoice[] = process.env
+    .SHANSING_MODEL_CHOICES
+    ? JSON.parse(process.env.SHANSING_MODEL_CHOICES)
+    : [];
+
   return {
     baseUrl: process.env.BASE_URL,
     apiKey: getApiKey(process.env.OPENAI_API_KEY),
@@ -140,5 +146,13 @@ export const getServerSideConfig = () => {
     customModels,
     defaultModel,
     allowedWebDevEndpoints,
+
+    shansingAboutHtml: process.env.SHANSING_ABOUT_HTML
+      ? process.env.SHANSING_ABOUT_HTML
+      : "",
+    shansingQuotaPath: process.env.SHANSING_QUOTA_PATH
+      ? process.env.SHANSING_QUOTA_PATH
+      : "",
+    shansingModelChoice: shansingModelChoice,
   };
 };

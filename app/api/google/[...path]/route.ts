@@ -78,6 +78,11 @@ async function handle(
     signal: controller.signal,
   };
 
+  //待添加计费
+  return NextResponse.json("not supported yet", {
+    status: 401,
+  });
+
   try {
     const res = await fetch(fetchUrl, fetchOptions);
     // to prevent browser prompt for credentials
