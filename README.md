@@ -1,3 +1,6 @@
+
+> 此项目为定制版本。
+
 <div align="center">
 <img src="./docs/images/head-cover.png" alt="icon"/>
 

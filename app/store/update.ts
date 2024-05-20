@@ -85,6 +85,8 @@ export const useUpdateStore = createPersistStore(
         lastUpdate: Date.now(),
       }));
 
+      //TODO 屏蔽更新
+
       try {
         const remoteId = await getVersion(versionType);
         set(() => ({
@@ -106,7 +108,7 @@ export const useUpdateStore = createPersistStore(
                       if (version === remoteId) {
                         // Show a notification using Tauri
                         window.__TAURI__?.notification.sendNotification({
-                          title: "NextChat",
+                          title: "Shansing He2lper",
                           body: `${Locale.Settings.Update.IsLatest}`,
                           icon: `${ChatGptIcon.src}`,
                           sound: "Default",
@@ -116,7 +118,7 @@ export const useUpdateStore = createPersistStore(
                           Locale.Settings.Update.FoundUpdate(`${remoteId}`);
                         // Show a notification for the new version using Tauri
                         window.__TAURI__?.notification.sendNotification({
-                          title: "NextChat",
+                          title: "Shansing He2lper",
                           body: updateMessage,
                           icon: `${ChatGptIcon.src}`,
                           sound: "Default",
