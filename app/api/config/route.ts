@@ -33,7 +33,7 @@ async function handle(req: NextRequest) {
   return NextResponse.json({
     ...DANGER_CONFIG,
     userName: username,
-    userQuota: username ? readUserQuota(username) : null,
+    userQuota: username ? await readUserQuota(username) : null,
   });
 }
 

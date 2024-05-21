@@ -90,7 +90,8 @@ export const getServerSideConfig = () => {
     shansingModelChoice
       .map((modelChoice) => "+" + modelChoice.model + "=" + modelChoice.name)
       .join(",");
-  let defaultModel = process.env.DEFAULT_MODEL ?? "";
+  //let defaultModel = process.env.DEFAULT_MODEL ?? "";
+  let defaultModel = shansingModelChoice[0].model;
 
   if (disableGPT4) {
     if (customModels) customModels += ",";

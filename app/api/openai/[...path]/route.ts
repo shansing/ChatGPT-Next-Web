@@ -5,7 +5,11 @@ import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
 import { requestOpenai } from "../../common";
-import { pay } from "@/app/api/shansing";
+import {
+  getUsernameFromHttpBasicAuth,
+  pay,
+  readUserQuota,
+} from "@/app/api/shansing";
 
 const ALLOWD_PATH = new Set(Object.values(OpenaiPath));
 const config = getServerSideConfig();
@@ -45,6 +49,60 @@ async function handle(
     );
   }
 
+  const username = getUsernameFromHttpBasicAuth(req);
+  if (!username) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "need http basic auth",
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+  if ((await readUserQuota(username)).lessThanOrEqualTo(0)) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "Insufficient quota | 余额不足",
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+  const requestJson = await req.clone().json();
+  const modelChoice = config.shansingModelChoice.find(
+    (choice) => choice.model === requestJson.model,
+  );
+  if (!modelChoice) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "Unsupported model",
+      },
+      {
+        status: 401,
+      },
+    );
+  }
+  if (
+    requestJson.stream &&
+    (!requestJson.stream_options ||
+      requestJson.stream_options.include_usage !== true)
+  ) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "Invalid param (stream_options.include_usage should be true)",
+      },
+      {
+        status: 401,
+      },
+    );
+  }
+
   const authResult = auth(req, ModelProvider.GPT);
   if (authResult.error) {
     return NextResponse.json(authResult, {
@@ -53,29 +111,6 @@ async function handle(
   }
 
   try {
-    const requestBody = await req.text();
-    const requestJson = JSON.parse(requestBody);
-    const modelChoice = config.shansingModelChoice.find(
-      (choice) => choice.model === requestJson.model,
-    );
-    if (!modelChoice) {
-      return NextResponse.json("Unsupported model", {
-        status: 401,
-      });
-    }
-    if (
-      requestJson.stream &&
-      (!requestJson.stream_options ||
-        requestJson.stream_options.include_usage !== true)
-    ) {
-      return NextResponse.json(
-        "Invalid param (stream_options.include_usage should be true)",
-        {
-          status: 401,
-        },
-      );
-    }
-
     const response = await requestOpenai(req);
 
     // list models
@@ -87,28 +122,44 @@ async function handle(
       });
     }
 
-    const responseBody = await response.clone().text();
-    if (responseBody.includes('"usage"')) {
-      try {
-        const responseJson = JSON.parse(responseBody);
-        if (
-          responseJson &&
-          responseJson.usage &&
-          responseJson.usage.total_tokens
-        ) {
+    response
+      .clone()
+      .text()
+      .then((responseBody) => {
+        //console.log("[responseBody]" + responseBody)
+        const usageIndex = responseBody.indexOf('"usage":{');
+        if (usageIndex !== -1) {
+          const openBracket = responseBody.indexOf("{", usageIndex);
+          const closeBracket = responseBody.indexOf("}", openBracket);
+          if (openBracket !== -1 && closeBracket !== -1) {
+            const jsonString = responseBody.substring(
+              openBracket,
+              closeBracket + 1,
+            );
+            console.log("jsonString", jsonString);
+            const jsonData = JSON.parse(jsonString);
+            if (
+              jsonData.prompt_tokens !== undefined &&
+              jsonData.completion_tokens !== undefined
+            ) {
+              return {
+                promptTokenNumber: jsonData.prompt_tokens as number,
+                completionTokenNumber: jsonData.completion_tokens as number,
+              };
+            }
+          }
+        }
+      })
+      .then((obj) => {
+        if (obj) {
           pay(
-            req,
+            username,
             modelChoice,
-            responseJson.usage.prompt_tokens,
-            responseJson.usage.completion_tokens,
+            obj.promptTokenNumber,
+            obj.completionTokenNumber,
           );
         }
-      } catch (e) {
-        if (!(e instanceof SyntaxError)) {
-          throw e;
-        }
-      }
-    }
+      });
 
     return response;
   } catch (e) {

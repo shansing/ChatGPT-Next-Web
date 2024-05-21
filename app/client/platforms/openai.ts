@@ -45,7 +45,7 @@ interface RequestPayload {
     role: "system" | "user" | "assistant";
     content: string | MultimodalContent[];
   }[];
-  stream_options: {
+  stream_options?: {
     include_usage?: boolean;
   };
   stream?: boolean;
@@ -122,9 +122,6 @@ export class ChatGPTApi implements LLMApi {
     const requestPayload: RequestPayload = {
       messages,
       stream: options.config.stream,
-      stream_options: {
-        include_usage: true,
-      },
       model: modelConfig.model,
       temperature: modelConfig.temperature,
       presence_penalty: modelConfig.presence_penalty,
@@ -133,6 +130,11 @@ export class ChatGPTApi implements LLMApi {
       // max_tokens: Math.max(modelConfig.max_tokens, 1024),
       // Please do not ask me why not send max_tokens, no reason, this param is just shit, I dont want to explain anymore.
     };
+    requestPayload["stream_options"] = options.config.stream
+      ? {
+          include_usage: true,
+        }
+      : undefined;
 
     // add max_tokens to vision model
     if (visionModel && modelConfig.model.includes("preview")) {

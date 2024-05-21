@@ -366,3 +366,10 @@ pre {
 .copyable {
   user-select: text;
 }
+
+a {
+  background-color: transparent;
+  color: var(--color-accent-fg);
+  text-decoration: none;
+}
+

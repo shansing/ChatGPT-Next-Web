@@ -1,4 +1,3 @@
-import { readFileSync, writeFileSync } from "fs";
 import Decimal from "decimal.js";
 import { getServerSideConfig } from "@/app/config/server";
 import { NextRequest } from "next/server";
@@ -18,13 +17,12 @@ export interface ShansingModelChoice {
   // maxPrice: string
 }
 
-export function pay(
-  req: NextRequest,
+export async function pay(
+  username: string,
   modelChoice: ShansingModelChoice,
   promptTokenNumber: number,
   completionTokenNumber: number,
 ) {
-  const username = getUsernameFromHttpBasicAuth(req);
   if (!username) {
     throw Error("Username not found");
   }
@@ -42,21 +40,40 @@ export function pay(
         .div(kilo)
         .mul(completionTokenNumber),
     );
-  console.log("pay:", "username", username, "thisBilling", thisBilling);
-  decreaseUserQuota(username, thisBilling, true);
+  console.log(
+    "pay:",
+    "username",
+    username,
+    "thisBilling",
+    thisBilling.toFixed(),
+  );
+  await decreaseUserQuota(username, thisBilling, true);
 }
 
-export function readUserQuota(username: string): Decimal {
-  let fileContent = readFileSync(
-    serverConfig.shansingQuotaPath + "/" + username,
-    "utf8",
-  );
-  try {
-    return new Decimal(fileContent.trim());
-  } catch (error) {
-    globalThis.console.error(username + "'s quota is not number", error);
-    throw error;
-  }
+export async function readUserQuota(username: string): Promise<Decimal> {
+  return fetch(
+    "http://localhost:1202/balance" +
+      "?userName=" +
+      encodeURIComponent(username),
+    { method: "get" },
+  )
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.error) {
+        throw Error(
+          "failed to read quota, username=" + username + ", error=" + res.error,
+        );
+      }
+      return res.balance;
+    })
+    .then((text) => {
+      try {
+        return new Decimal(text.trim());
+      } catch (error) {
+        console.error(username + "'s quota is not number", error);
+        throw error;
+      }
+    });
 }
 
 export function getUsernameFromHttpBasicAuth(req: Request) {
@@ -68,26 +85,41 @@ export function getUsernameFromHttpBasicAuth(req: Request) {
   return auth.split(":")[0];
 }
 
-function increaseUserQuota(
+async function increaseUserQuota(
   username: string,
   delta: Decimal,
   allowToNegative: boolean,
 ) {
-  let quota = readUserQuota(username);
+  let quota = await readUserQuota(username);
   // console.log(username + '\'s old quota: ' + quota.toFixed())
   let newQuota = quota.plus(delta);
   // console.log(username + '\'s new quota: ' + newQuota.toFixed())
   if (!allowToNegative && newQuota.lt(0)) {
     return false;
   }
-  writeFileSync(
-    serverConfig.shansingQuotaPath + "/" + username,
-    newQuota.toFixed(),
-    "utf8",
-  );
+  await fetch("http://localhost:1202/balance", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body:
+      "userName=" +
+      encodeURIComponent(username) +
+      "&newQuota=" +
+      encodeURIComponent(newQuota.toFixed()),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.error) {
+        throw Error(
+          "failed to write quota, username=" + ", error=" + res.error,
+        );
+      }
+      return res.balance;
+    });
   return true;
 }
-function decreaseUserQuota(
+async function decreaseUserQuota(
   username: string,
   delta: Decimal,
   allowToNonPositive: boolean,

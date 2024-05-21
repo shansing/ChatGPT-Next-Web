@@ -549,7 +549,7 @@ export function ImagePreviewer(props: {
           <div>
             <div className={styles["main-title"]}>Shansing He2lper</div>
             <div className={styles["sub-title"]}>
-              https://He2lper.shansing.net
+              https://he2lper.shansing.net
             </div>
             <div className={styles["icons"]}>
               <ExportAvatar avatar={config.avatar} />

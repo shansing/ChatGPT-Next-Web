@@ -628,11 +628,11 @@ export function Settings() {
 
   const showUsage = accessStore.isAuthorized();
 
-  const userAndQuota = {
+  const [userAndQuota, setUserAndQuota] = useState({
     userName: "",
     userQuota: "",
     aboutHtml: "",
-  };
+  });
   const [loadingQuota, setLoadingQuota] = useState(false);
   function getUserAndQuota() {
     setLoadingQuota(true);
@@ -646,9 +646,11 @@ export function Settings() {
       .then((res) => res.json())
       .then((res: DangerConfig) => {
         console.log("[Config] got config from server", res);
-        userAndQuota.userName = res?.userName;
-        userAndQuota.userQuota = res?.userQuota;
-        userAndQuota.aboutHtml = res?.aboutHtml;
+        setUserAndQuota({
+          userName: res.userName,
+          userQuota: res.userQuota,
+          aboutHtml: res.aboutHtml,
+        });
       })
       .catch(() => {
         console.error("[Config] failed to fetch config");
@@ -712,19 +714,22 @@ export function Settings() {
         </div>
       </div>
       <div className={styles["settings"]}>
-        <div className="about-html">{userAndQuota?.aboutHtml}</div>
+        <div
+          className="about-html"
+          dangerouslySetInnerHTML={{ __html: `${userAndQuota.aboutHtml}` }}
+        ></div>
         <List>
           <ListItem
             title={Locale.Shansing.userName}
             subTitle={loadingQuota ? Locale.Settings.Usage.IsChecking : ""}
           >
-            {loadingQuota ? <div /> : <div>{userAndQuota?.userName}</div>}
+            {loadingQuota ? <div /> : <div>{userAndQuota.userName}</div>}
           </ListItem>
           <ListItem
             title={Locale.Shansing.userQuota}
             subTitle={loadingQuota ? Locale.Settings.Usage.IsChecking : ""}
           >
-            {loadingQuota ? <div /> : <div>{userAndQuota?.userQuota}</div>}
+            {loadingQuota ? <div /> : <div>{userAndQuota.userQuota}</div>}
           </ListItem>
         </List>
         <List>
