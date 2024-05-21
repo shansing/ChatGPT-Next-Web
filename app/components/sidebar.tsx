@@ -159,13 +159,14 @@ export function SideBar(props: { className?: string }) {
         </div>
         <div className={styles["sidebar-sub-title"]}>
           s/o to{" "}
-          <a href="https://openai.com" target="_blank">
+          <a href="https://openai.com" target="_blank" className="link">
             OpenAI
           </a>{" "}
           &{" "}
           <a
             href="https://github.com/shansing/ChatGPT-Next-Web"
             target="_blank"
+            className="link"
           >
             GitHub
           </a>

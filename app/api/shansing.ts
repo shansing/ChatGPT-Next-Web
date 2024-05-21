@@ -47,12 +47,12 @@ export async function pay(
     "thisBilling",
     thisBilling.toFixed(),
   );
-  await decreaseUserQuota(username, thisBilling, true);
+  return decreaseUserQuota(username, thisBilling, true);
 }
 
 export async function readUserQuota(username: string): Promise<Decimal> {
   return fetch(
-    "http://localhost:1202/balance" +
+    serverConfig.shansingQuotaAgentUrl +
       "?userName=" +
       encodeURIComponent(username),
     { method: "get" },
@@ -97,7 +97,7 @@ async function increaseUserQuota(
   if (!allowToNegative && newQuota.lt(0)) {
     return false;
   }
-  await fetch("http://localhost:1202/balance", {
+  return fetch(serverConfig.shansingQuotaAgentUrl, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -116,8 +116,8 @@ async function increaseUserQuota(
         );
       }
       return res.balance;
-    });
-  return true;
+    })
+    .then((i) => true);
 }
 async function decreaseUserQuota(
   username: string,

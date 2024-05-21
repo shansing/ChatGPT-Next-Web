@@ -367,9 +367,23 @@ pre {
   user-select: text;
 }
 
-a {
-  background-color: transparent;
-  color: var(--color-accent-fg);
-  text-decoration: none;
+.about-html {
+  font-size: 14px;
+  color: var(--black);
+}
+
+.about-html table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  display: block;
+  //width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  margin: 0;
+}
+
+.about-html td,
+.about-html th {
+  padding: 5px;
 }
 

@@ -110,14 +110,11 @@ export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lan
 // Latex inline: $x^2$
 // Latex block: $$e=mc^2$$
 // `;
-export const DEFAULT_SYSTEM_TEMPLATE = `
-You are ChatGPT, a large language model trained by {{ServiceProvider}}.
+export const DEFAULT_SYSTEM_TEMPLATE = `You are ChatGPT, a large language model trained by {{ServiceProvider}}, based on the {{model}} architecture.
 Knowledge cutoff: {{cutoff}}
-Current model: {{model}}
-Current time: {{time}}
+Current date: {{ShansingHelperUserDate}}
 Latex inline: \\(x^2\\) 
-Latex block: $$e=mc^2$$
-`;
+Latex block: $$e=mc^2$$`;
 
 export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
 export const GEMINI_SUMMARIZE_MODEL = "gemini-pro";
@@ -149,7 +146,7 @@ const openaiModels = [
   "gpt-4o",
   "gpt-4o-2024-05-13",
   "gpt-4-vision-preview",
-  "gpt-4-turbo-2024-04-09"
+  "gpt-4-turbo-2024-04-09",
 ];
 
 const googleModels = [

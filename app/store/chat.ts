@@ -135,6 +135,15 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     time: new Date().toString(),
     lang: getLang(),
     input: input,
+    ShansingHelperUserDate: new Date()
+      .toLocaleDateString("ISO", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replace(/\//g, "-"),
+    ShansingHelperUserTime: new Date().toLocaleTimeString("UTC"),
+    ShansingHelperUserLanguage: navigator.language,
   };
 
   let output = modelConfig.template ?? DEFAULT_INPUT_TEMPLATE;

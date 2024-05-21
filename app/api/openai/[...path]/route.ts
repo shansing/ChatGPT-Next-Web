@@ -73,7 +73,7 @@ async function handle(
     );
   }
   const requestJson = await req.clone().json();
-  const modelChoice = config.shansingModelChoice.find(
+  const modelChoice = config.shansingModelChoices.find(
     (choice) => choice.model === requestJson.model,
   );
   if (!modelChoice) {
@@ -127,7 +127,7 @@ async function handle(
       .text()
       .then((responseBody) => {
         //console.log("[responseBody]" + responseBody)
-        const usageIndex = responseBody.indexOf('"usage":{');
+        const usageIndex = responseBody.lastIndexOf('"usage":{');
         if (usageIndex !== -1) {
           const openBracket = responseBody.indexOf("{", usageIndex);
           const closeBracket = responseBody.indexOf("}", openBracket);
@@ -152,7 +152,7 @@ async function handle(
       })
       .then((obj) => {
         if (obj) {
-          pay(
+          return pay(
             username,
             modelChoice,
             obj.promptTokenNumber,

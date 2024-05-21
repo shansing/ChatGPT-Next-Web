@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+// npm install express parser
+
 // 从环境变量中获取目录和端口
 const QUOTA_PATH = process.env.QUOTA_PATH;
 const PORT = process.env.PORT || 3000;
@@ -46,7 +48,7 @@ app.post('/balance', (req, res) => {
     }
 
     const filePath = path.join(QUOTA_PATH, userName);
-    
+
     // 写入新余额
     fs.writeFile(filePath, newQuota, (err) => {
         if (err) {

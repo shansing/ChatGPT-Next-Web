@@ -4,6 +4,7 @@ import { getServerSideConfig } from "../../config/server";
 import {
   getUsernameFromHttpBasicAuth,
   readUserQuota,
+  ShansingModelChoice,
 } from "@/app/api/shansing";
 
 const serverConfig = getServerSideConfig();
@@ -20,6 +21,7 @@ const DANGER_CONFIG = {
   defaultModel: serverConfig.defaultModel,
 
   aboutHtml: serverConfig.shansingAboutHtml,
+  modelChoices: serverConfig.shansingModelChoices,
   userName: "",
   userQuota: "",
 };

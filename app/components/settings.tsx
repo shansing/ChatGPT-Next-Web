@@ -74,6 +74,7 @@ import { nanoid } from "nanoid";
 import { useMaskStore } from "../store/mask";
 import { ProviderType } from "../utils/cloud";
 import { getHeaders } from "@/app/client/api";
+import { ShansingModelChoice } from "@/app/api/shansing";
 
 function EditPromptModal(props: { id: string; onClose: () => void }) {
   const promptStore = usePromptStore();
@@ -494,65 +495,65 @@ function SyncItems() {
 
   return (
     <>
-      <List>
-        <ListItem
-          title={Locale.Settings.Sync.CloudState}
-          subTitle={
-            syncStore.lastProvider
-              ? `${new Date(syncStore.lastSyncTime).toLocaleString()} [${
-                  syncStore.lastProvider
-                }]`
-              : Locale.Settings.Sync.NotSyncYet
-          }
-        >
-          <div style={{ display: "flex" }}>
-            <IconButton
-              icon={<ConfigIcon />}
-              text={Locale.UI.Config}
-              onClick={() => {
-                setShowSyncConfigModal(true);
-              }}
-            />
-            {couldSync && (
-              <IconButton
-                icon={<ResetIcon />}
-                text={Locale.UI.Sync}
-                onClick={async () => {
-                  try {
-                    await syncStore.sync();
-                    showToast(Locale.Settings.Sync.Success);
-                  } catch (e) {
-                    showToast(Locale.Settings.Sync.Fail);
-                    console.error("[Sync]", e);
-                  }
-                }}
-              />
-            )}
-          </div>
-        </ListItem>
+      {/*<List>*/}
+      {/*  <ListItem*/}
+      {/*    title={Locale.Settings.Sync.CloudState}*/}
+      {/*    subTitle={*/}
+      {/*      syncStore.lastProvider*/}
+      {/*        ? `${new Date(syncStore.lastSyncTime).toLocaleString()} [${*/}
+      {/*            syncStore.lastProvider*/}
+      {/*          }]`*/}
+      {/*        : Locale.Settings.Sync.NotSyncYet*/}
+      {/*    }*/}
+      {/*  >*/}
+      {/*    <div style={{ display: "flex" }}>*/}
+      {/*      <IconButton*/}
+      {/*        icon={<ConfigIcon />}*/}
+      {/*        text={Locale.UI.Config}*/}
+      {/*        onClick={() => {*/}
+      {/*          setShowSyncConfigModal(true);*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*      {couldSync && (*/}
+      {/*        <IconButton*/}
+      {/*          icon={<ResetIcon />}*/}
+      {/*          text={Locale.UI.Sync}*/}
+      {/*          onClick={async () => {*/}
+      {/*            try {*/}
+      {/*              await syncStore.sync();*/}
+      {/*              showToast(Locale.Settings.Sync.Success);*/}
+      {/*            } catch (e) {*/}
+      {/*              showToast(Locale.Settings.Sync.Fail);*/}
+      {/*              console.error("[Sync]", e);*/}
+      {/*            }*/}
+      {/*          }}*/}
+      {/*        />*/}
+      {/*      )}*/}
+      {/*    </div>*/}
+      {/*  </ListItem>*/}
 
-        <ListItem
-          title={Locale.Settings.Sync.LocalState}
-          subTitle={Locale.Settings.Sync.Overview(stateOverview)}
-        >
-          <div style={{ display: "flex" }}>
-            <IconButton
-              icon={<UploadIcon />}
-              text={Locale.UI.Export}
-              onClick={() => {
-                syncStore.export();
-              }}
-            />
-            <IconButton
-              icon={<DownloadIcon />}
-              text={Locale.UI.Import}
-              onClick={() => {
-                syncStore.import();
-              }}
-            />
-          </div>
-        </ListItem>
-      </List>
+      {/*  <ListItem*/}
+      {/*    title={Locale.Settings.Sync.LocalState}*/}
+      {/*    subTitle={Locale.Settings.Sync.Overview(stateOverview)}*/}
+      {/*  >*/}
+      {/*    <div style={{ display: "flex" }}>*/}
+      {/*      <IconButton*/}
+      {/*        icon={<UploadIcon />}*/}
+      {/*        text={Locale.UI.Export}*/}
+      {/*        onClick={() => {*/}
+      {/*          syncStore.export();*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*      <IconButton*/}
+      {/*        icon={<DownloadIcon />}*/}
+      {/*        text={Locale.UI.Import}*/}
+      {/*        onClick={() => {*/}
+      {/*          syncStore.import();*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*  </ListItem>*/}
+      {/*</List>*/}
 
       {showSyncConfigModal && (
         <SyncConfigModal onClose={() => setShowSyncConfigModal(false)} />
@@ -632,6 +633,7 @@ export function Settings() {
     userName: "",
     userQuota: "",
     aboutHtml: "",
+    modelChoices: [] as ShansingModelChoice[],
   });
   const [loadingQuota, setLoadingQuota] = useState(false);
   function getUserAndQuota() {
@@ -650,6 +652,7 @@ export function Settings() {
           userName: res.userName,
           userQuota: res.userQuota,
           aboutHtml: res.aboutHtml,
+          modelChoices: res.modelChoices,
         });
       })
       .catch(() => {
@@ -714,22 +717,46 @@ export function Settings() {
         </div>
       </div>
       <div className={styles["settings"]}>
-        <div
-          className="about-html"
-          dangerouslySetInnerHTML={{ __html: `${userAndQuota.aboutHtml}` }}
-        ></div>
         <List>
           <ListItem
-            title={Locale.Shansing.userName}
-            subTitle={loadingQuota ? Locale.Settings.Usage.IsChecking : ""}
-          >
-            {loadingQuota ? <div /> : <div>{userAndQuota.userName}</div>}
-          </ListItem>
-          <ListItem
             title={Locale.Shansing.userQuota}
-            subTitle={loadingQuota ? Locale.Settings.Usage.IsChecking : ""}
+            subTitle={
+              loadingQuota
+                ? Locale.Settings.Usage.IsChecking
+                : userAndQuota.userName
+            }
           >
-            {loadingQuota ? <div /> : <div>{userAndQuota.userQuota}</div>}
+            {loadingQuota ? <div /> : <div>🪙{userAndQuota.userQuota}</div>}
+          </ListItem>
+          <ListItem title="模型价格">
+            <div className="about-html">
+              <table>
+                <thead>
+                  <tr>
+                    <th>别名</th>
+                    <th>模型名</th>
+                    <th>输入单价</th>
+                    <th>输出单价</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userAndQuota.modelChoices.map((choice, index) => (
+                    <tr key={index}>
+                      <td>{choice.name}</td>
+                      <td>{choice.model}</td>
+                      <td>🪙{choice.promptTokenPrice1k}</td>
+                      <td>🪙{choice.completionTokenPrice1k}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </ListItem>
+          <ListItem title="">
+            <div
+              className="about-html"
+              dangerouslySetInnerHTML={{ __html: `${userAndQuota.aboutHtml}` }}
+            ></div>
           </ListItem>
         </List>
         <List>

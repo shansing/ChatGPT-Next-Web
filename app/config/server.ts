@@ -78,7 +78,7 @@ export const getServerSideConfig = () => {
     );
   }
 
-  const shansingModelChoice: ShansingModelChoice[] = process.env
+  const shansingModelChoices: ShansingModelChoice[] = process.env
     .SHANSING_MODEL_CHOICES
     ? JSON.parse(process.env.SHANSING_MODEL_CHOICES)
     : [];
@@ -87,11 +87,11 @@ export const getServerSideConfig = () => {
   // let customModels = process.env.CUSTOM_MODELS ?? "";
   let customModels =
     "-all," +
-    shansingModelChoice
+    shansingModelChoices
       .map((modelChoice) => "+" + modelChoice.model + "=" + modelChoice.name)
       .join(",");
   //let defaultModel = process.env.DEFAULT_MODEL ?? "";
-  let defaultModel = shansingModelChoice[0].model;
+  let defaultModel = shansingModelChoices[0].model;
 
   if (disableGPT4) {
     if (customModels) customModels += ",";
@@ -156,9 +156,9 @@ export const getServerSideConfig = () => {
     shansingAboutHtml: process.env.SHANSING_ABOUT_HTML
       ? process.env.SHANSING_ABOUT_HTML
       : "",
-    shansingQuotaPath: process.env.SHANSING_QUOTA_PATH
-      ? process.env.SHANSING_QUOTA_PATH
+    shansingQuotaAgentUrl: process.env.SHANSING_QUOTA_AGENT_URL
+      ? process.env.SHANSING_QUOTA_AGENT_URL
       : "",
-    shansingModelChoice: shansingModelChoice,
+    shansingModelChoices: shansingModelChoices,
   };
 };

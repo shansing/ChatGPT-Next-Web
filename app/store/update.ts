@@ -85,8 +85,6 @@ export const useUpdateStore = createPersistStore(
         lastUpdate: Date.now(),
       }));
 
-      //TODO 屏蔽更新
-
       try {
         const remoteId = await getVersion(versionType);
         set(() => ({
