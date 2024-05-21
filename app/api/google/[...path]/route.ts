@@ -180,10 +180,10 @@ async function handle(
             modelChoice,
             obj.promptTokenNumber <= 128_000
               ? obj.promptTokenNumber
-              : 128_000 + (obj.promptTokenNumber - 128_000) * 2,
+              : obj.promptTokenNumber * 2,
             obj.completionTokenNumber <= 128_000
               ? obj.completionTokenNumber
-              : 128_000 + (obj.completionTokenNumber - 128_000) * 2,
+              : obj.completionTokenNumber * 2,
           );
         }
       });
