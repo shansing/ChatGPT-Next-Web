@@ -41,7 +41,7 @@ export async function pay(
         .mul(completionTokenNumber),
     );
   console.log(
-    "pay:",
+    "[pay]",
     "username",
     username,
     "thisBilling",

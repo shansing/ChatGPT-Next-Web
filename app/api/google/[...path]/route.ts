@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
 import { getServerSideConfig } from "@/app/config/server";
 import { GEMINI_BASE_URL, Google, ModelProvider } from "@/app/constant";
+import {
+  getUsernameFromHttpBasicAuth,
+  pay,
+  readUserQuota,
+} from "@/app/api/shansing";
 
 async function handle(
   req: NextRequest,
@@ -16,6 +21,7 @@ async function handle(
   const controller = new AbortController();
 
   const serverConfig = getServerSideConfig();
+  const config = serverConfig;
 
   let baseUrl = serverConfig.googleUrl || GEMINI_BASE_URL;
 
@@ -38,6 +44,56 @@ async function handle(
     },
     10 * 60 * 1000,
   );
+
+  const username = getUsernameFromHttpBasicAuth(req);
+  if (!username) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "need http basic auth",
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+  if ((await readUserQuota(username)).lessThanOrEqualTo(0)) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "Insufficient quota | 余额不足",
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+  const modelGuess = path.split("/")?.slice(2).join("/");
+  if (modelGuess == null || modelGuess.includes("/")) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "Unable to match model",
+      },
+      {
+        status: 401,
+      },
+    );
+  }
+  const modelChoice = config.shansingModelChoices.find((choice) =>
+    modelGuess.includes(choice.model),
+  );
+  if (!modelChoice) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "Unsupported model",
+      },
+      {
+        status: 401,
+      },
+    );
+  }
 
   const authResult = auth(req, ModelProvider.GeminiPro);
   if (authResult.error) {
@@ -80,6 +136,54 @@ async function handle(
 
   try {
     const res = await fetch(fetchUrl, fetchOptions);
+
+    res
+      .clone()
+      .text()
+      .then((responseBody) => {
+        //console.log("[responseBody]" + responseBody)
+        const usageIndex = responseBody.lastIndexOf('"usageMetadata"');
+        if (usageIndex !== -1) {
+          const openBracket = responseBody.indexOf("{", usageIndex);
+          const closeBracket = responseBody.indexOf("}", openBracket);
+          if (openBracket !== -1 && closeBracket !== -1) {
+            const jsonString = responseBody.substring(
+              openBracket,
+              closeBracket + 1,
+            );
+            console.log("[usage][google]", jsonString);
+            const jsonData = JSON.parse(jsonString);
+            if (
+              jsonData.promptTokenCount !== undefined &&
+              jsonData.candidatesTokenCount !== undefined
+            ) {
+              return {
+                promptTokenNumber: jsonData.promptTokenCount as number,
+                completionTokenNumber: jsonData.totalTokenCount as number,
+              };
+            }
+          }
+        }
+        console.warn(
+          "[ATTENTION] unable to find usage, username=" +
+            username +
+            ", url=" +
+            req.url +
+            ", responseBody=" +
+            responseBody,
+        );
+      })
+      .then((obj) => {
+        if (obj) {
+          return pay(
+            username,
+            modelChoice,
+            obj.promptTokenNumber,
+            obj.completionTokenNumber,
+          );
+        }
+      });
+
     // to prevent browser prompt for credentials
     const newHeaders = new Headers(res.headers);
     newHeaders.delete("www-authenticate");

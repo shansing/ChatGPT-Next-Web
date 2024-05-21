@@ -136,7 +136,7 @@ async function handle(
               openBracket,
               closeBracket + 1,
             );
-            console.log("[usage]", jsonString);
+            console.log("[usage][openai]", jsonString);
             const jsonData = JSON.parse(jsonString);
             if (
               jsonData.prompt_tokens !== undefined &&
