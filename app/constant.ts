@@ -117,7 +117,7 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$`;
 
 export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
-export const GEMINI_SUMMARIZE_MODEL = "gemini-pro";
+export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-latest";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "2021-09",
