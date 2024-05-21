@@ -178,8 +178,12 @@ async function handle(
           return pay(
             username,
             modelChoice,
-            obj.promptTokenNumber,
-            obj.completionTokenNumber,
+            obj.promptTokenNumber <= 128_000
+              ? obj.promptTokenNumber
+              : 128_000 + (obj.promptTokenNumber - 128_000) * 2,
+            obj.completionTokenNumber <= 128_000
+              ? obj.completionTokenNumber
+              : 128_000 + (obj.completionTokenNumber - 128_000) * 2,
           );
         }
       });
