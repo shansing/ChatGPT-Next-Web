@@ -149,6 +149,12 @@ async function handle(
             }
           }
         }
+        console.warn(
+          "[ATTENTION] unable to find usage, username=" +
+            username +
+            ", responseBody=" +
+            responseBody,
+        );
       })
       .then((obj) => {
         if (obj) {
