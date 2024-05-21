@@ -127,7 +127,7 @@ async function handle(
       .text()
       .then((responseBody) => {
         //console.log("[responseBody]" + responseBody)
-        const usageIndex = responseBody.lastIndexOf('"usage":{');
+        const usageIndex = responseBody.lastIndexOf('"usage"');
         if (usageIndex !== -1) {
           const openBracket = responseBody.indexOf("{", usageIndex);
           const closeBracket = responseBody.indexOf("}", openBracket);
@@ -136,7 +136,7 @@ async function handle(
               openBracket,
               closeBracket + 1,
             );
-            console.log("jsonString", jsonString);
+            console.log("[usage]", jsonString);
             const jsonData = JSON.parse(jsonString);
             if (
               jsonData.prompt_tokens !== undefined &&
