@@ -152,6 +152,8 @@ async function handle(
         console.warn(
           "[ATTENTION] unable to find usage, username=" +
             username +
+            ", url=" +
+            req.url +
             ", responseBody=" +
             responseBody,
         );
