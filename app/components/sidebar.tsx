@@ -166,15 +166,16 @@ export function SideBar(props: { className?: string }) {
           &{" "}
           <a href="https://ai.google.dev" target="_blank" className="link">
             Google
-          </a>{" "}
-          &{" "}
-          <a
-            href="https://github.com/shansing/ChatGPT-Next-Web"
-            target="_blank"
-            className="link"
-          >
-            GitHub
           </a>
+          {/*" "}*/}
+          {/*&{" "}*/}
+          {/*<a*/}
+          {/*  href="https://github.com/shansing/ChatGPT-Next-Web"*/}
+          {/*  target="_blank"*/}
+          {/*  className="link"*/}
+          {/*>*/}
+          {/*  GitHub*/}
+          {/*</a>*/}
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <ChatGptIcon />
@@ -232,20 +233,20 @@ export function SideBar(props: { className?: string }) {
               <IconButton icon={<SettingsIcon />} shadow />
             </Link>
           </div>
-          {/*<div className={styles["sidebar-action"]}>*/}
-          {/*  <a href={REPO_URL} target="_blank" rel="noopener noreferrer">*/}
-          {/*    <IconButton icon={<GithubIcon />} shadow />*/}
-          {/*  </a>*/}
-          {/*</div>*/}
           <div className={styles["sidebar-action"]}>
-            <a
-              href="https://helper.shansing.net"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconButton icon={<ReturnIcon />} shadow />
+            <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+              <IconButton icon={<GithubIcon />} shadow />
             </a>
           </div>
+          {/*<div className={styles["sidebar-action"]}>*/}
+          {/*  <a*/}
+          {/*    href="https://helper.shansing.net"*/}
+          {/*    target="_blank"*/}
+          {/*    rel="noopener noreferrer"*/}
+          {/*  >*/}
+          {/*    <IconButton icon={<ReturnIcon />} shadow />*/}
+          {/*  </a>*/}
+          {/*</div>*/}
         </div>
         <div>
           <IconButton
