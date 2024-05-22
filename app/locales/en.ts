@@ -494,6 +494,7 @@ const en: LocaleType = {
   Shansing: {
     userQuota: "User's Quota",
     userName: "Current User",
+    imageNotSuccess: "Image too big or format unsupported",
   },
 };
 

@@ -51,6 +51,7 @@ export async function pay(
 }
 
 export async function readUserQuota(username: string): Promise<Decimal> {
+  // return 600;
   return fetch(
     serverConfig.shansingQuotaAgentUrl +
       "?userName=" +
@@ -97,7 +98,7 @@ async function increaseUserQuota(
   if (!allowToNegative && newQuota.lt(0)) {
     return false;
   }
-  return fetch(serverConfig.shansingQuotaAgentUrl, {
+  await fetch(serverConfig.shansingQuotaAgentUrl, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -116,8 +117,8 @@ async function increaseUserQuota(
         );
       }
       return res.balance;
-    })
-    .then((i) => true);
+    });
+  return true;
 }
 async function decreaseUserQuota(
   username: string,
