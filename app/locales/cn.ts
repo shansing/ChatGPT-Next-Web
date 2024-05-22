@@ -487,7 +487,8 @@ const cn = {
   Shansing: {
     userQuota: "用户余额",
     userName: "当前用户",
-    imageNotSuccess: "图片过大或格式暂不支持",
+    imageSelectorFailure: "图片过大或格式暂不支持",
+    animationFailure: "打字机动画渲染失误",
   },
 };
 

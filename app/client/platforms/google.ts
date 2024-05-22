@@ -8,6 +8,8 @@ import {
   getMessageImages,
   isVisionModel,
 } from "@/app/utils";
+import { showToast } from "@/app/components/ui-lib";
+import Locale from "@/app/locales";
 
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
@@ -120,7 +122,9 @@ export class GeminiProApi implements LLMApi {
 
       if (!baseUrl) {
         baseUrl = isApp
-          ? DEFAULT_API_HOST + "/api/proxy/google/" + Google.ChatPath(modelConfig.model)
+          ? DEFAULT_API_HOST +
+            "/api/proxy/google/" +
+            Google.ChatPath(modelConfig.model)
           : this.path(Google.ChatPath(modelConfig.model));
       }
 
@@ -139,7 +143,7 @@ export class GeminiProApi implements LLMApi {
         () => controller.abort(),
         REQUEST_TIMEOUT_MS,
       );
-      
+
       if (shouldStream) {
         let responseText = "";
         let remainText = "";

@@ -51,7 +51,7 @@ export async function pay(
 }
 
 export async function readUserQuota(username: string): Promise<Decimal> {
-  // return 600;
+  // return new Decimal(600);
   return fetch(
     serverConfig.shansingQuotaAgentUrl +
       "?userName=" +

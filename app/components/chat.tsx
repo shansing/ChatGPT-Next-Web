@@ -1144,7 +1144,7 @@ function _Chat() {
                   })
                   .catch((e) => {
                     setUploading(false);
-                    showToast(Locale.Shansing.imageNotSuccess);
+                    showToast(Locale.Shansing.imageSelectorFailure);
                     rej(e);
                   });
               })),
@@ -1192,7 +1192,7 @@ function _Chat() {
               })
               .catch((e) => {
                 setUploading(false);
-                showToast(Locale.Shansing.imageNotSuccess);
+                showToast(Locale.Shansing.imageSelectorFailure);
                 rej(e);
               });
           }
