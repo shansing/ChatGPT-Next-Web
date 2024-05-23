@@ -513,58 +513,6 @@ export function ChatActions(props: {
         />
       )}
 
-      {showUploadImage && (
-        <ChatAction
-          onClick={props.uploadImage}
-          text={Locale.Chat.InputActions.UploadImage}
-          icon={props.uploading ? <LoadingButtonIcon /> : <ImageIcon />}
-        />
-      )}
-      <ChatAction
-        onClick={nextTheme}
-        text={Locale.Chat.InputActions.Theme[theme]}
-        icon={
-          <>
-            {theme === Theme.Auto ? (
-              <AutoIcon />
-            ) : theme === Theme.Light ? (
-              <LightIcon />
-            ) : theme === Theme.Dark ? (
-              <DarkIcon />
-            ) : null}
-          </>
-        }
-      />
-
-      <ChatAction
-        onClick={props.showPromptHints}
-        text={Locale.Chat.InputActions.Prompt}
-        icon={<PromptIcon />}
-      />
-
-      <ChatAction
-        onClick={() => {
-          navigate(Path.Masks);
-        }}
-        text={Locale.Chat.InputActions.Masks}
-        icon={<MaskIcon />}
-      />
-
-      <ChatAction
-        text={Locale.Chat.InputActions.Clear}
-        icon={<BreakIcon />}
-        onClick={() => {
-          chatStore.updateCurrentSession((session) => {
-            if (session.clearContextIndex === session.messages.length) {
-              session.clearContextIndex = undefined;
-            } else {
-              session.clearContextIndex = session.messages.length;
-              session.memoryPrompt = ""; // will clear memory
-            }
-          });
-        }}
-      />
-
       <ChatAction
         onClick={() => setShowModelSelector(true)}
         text={currentModel}
@@ -589,6 +537,59 @@ export function ChatActions(props: {
           }}
         />
       )}
+
+      {showUploadImage && (
+        <ChatAction
+          onClick={props.uploadImage}
+          text={Locale.Chat.InputActions.UploadImage}
+          icon={props.uploading ? <LoadingButtonIcon /> : <ImageIcon />}
+        />
+      )}
+
+      <ChatAction
+        onClick={props.showPromptHints}
+        text={Locale.Chat.InputActions.Prompt}
+        icon={<PromptIcon />}
+      />
+
+      {/*<ChatAction*/}
+      {/*  onClick={nextTheme}*/}
+      {/*  text={Locale.Chat.InputActions.Theme[theme]}*/}
+      {/*  icon={*/}
+      {/*    <>*/}
+      {/*      {theme === Theme.Auto ? (*/}
+      {/*        <AutoIcon />*/}
+      {/*      ) : theme === Theme.Light ? (*/}
+      {/*        <LightIcon />*/}
+      {/*      ) : theme === Theme.Dark ? (*/}
+      {/*        <DarkIcon />*/}
+      {/*      ) : null}*/}
+      {/*    </>*/}
+      {/*  }*/}
+      {/*/>*/}
+
+      {/*<ChatAction*/}
+      {/*  onClick={() => {*/}
+      {/*    navigate(Path.Masks);*/}
+      {/*  }}*/}
+      {/*  text={Locale.Chat.InputActions.Masks}*/}
+      {/*  icon={<MaskIcon />}*/}
+      {/*/>*/}
+
+      <ChatAction
+        text={Locale.Chat.InputActions.Clear}
+        icon={<BreakIcon />}
+        onClick={() => {
+          chatStore.updateCurrentSession((session) => {
+            if (session.clearContextIndex === session.messages.length) {
+              session.clearContextIndex = undefined;
+            } else {
+              session.clearContextIndex = session.messages.length;
+              session.memoryPrompt = ""; // will clear memory
+            }
+          });
+        }}
+      />
     </div>
   );
 }
