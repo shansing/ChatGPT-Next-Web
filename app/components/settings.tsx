@@ -728,7 +728,7 @@ export function Settings() {
           >
             {loadingQuota ? <div /> : <div>🪙{userAndQuota.userQuota}</div>}
           </ListItem>
-          <ListItem title="{Locale.Shansing.modelPrice}">
+          <ListItem title={Locale.Shansing.modelPrice}>
             <div className="about-html">
               <table>
                 <thead>
