@@ -114,13 +114,13 @@ const cn = {
   Memory: {
     Title: "历史摘要",
     EmptyContent: "对话内容过短，无需总结",
-    Send: "自动压缩聊天记录并作为上下文发送",
+    Send: "自动压缩历史上下文，牺牲少许质量换取长期低费用",
     Copy: "复制摘要",
     Reset: "[unused]",
     ResetConfirm: "确认清空历史摘要？",
   },
   Home: {
-    NewChat: "新的聊天",
+    NewChat: "新建聊天",
     DeleteChat: "确认删除选中的对话？",
     DeleteToast: "已删除会话",
     Revert: "撤销",
@@ -178,7 +178,7 @@ const cn = {
     },
     AutoGenerateTitle: {
       Title: "自动生成标题",
-      SubTitle: "根据对话内容生成合适的标题",
+      SubTitle: "根据对话生成合适的标题；产生少量费用",
     },
     Sync: {
       CloudState: "云端数据",
@@ -376,7 +376,7 @@ const cn = {
     },
   },
   Store: {
-    DefaultTopic: "新的聊天",
+    DefaultTopic: "新建聊天",
     BotHello: "有什么可以帮你的吗",
     Error: "出错了，稍后重试吧",
     Prompt: {
@@ -488,7 +488,12 @@ const cn = {
     userQuota: "用户余额",
     userName: "当前用户",
     imageSelectorFailure: "图片过大或格式暂不支持",
-    animationFailure: "打字机动画渲染失误",
+    animationFailure: "打字机动画渲染有误",
+    modelPrice: "模型价格",
+    modelAlias: "别名",
+    modelName: "模型名",
+    modelPromptUnitPrice: "输入单价",
+    modelCompletionUnitPrice: "输出单价",
   },
 };
 

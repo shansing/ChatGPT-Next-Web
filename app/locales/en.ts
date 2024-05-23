@@ -116,7 +116,7 @@ const en: LocaleType = {
   Memory: {
     Title: "Memory Prompt",
     EmptyContent: "Nothing yet.",
-    Send: "Send Memory",
+    Send: "Minimize historical context for lower ongoing costs",
     Copy: "Copy Memory",
     Reset: "Reset Session",
     ResetConfirm:
@@ -180,7 +180,8 @@ const en: LocaleType = {
     },
     AutoGenerateTitle: {
       Title: "Auto Generate Title",
-      SubTitle: "Generate a suitable title based on the conversation content",
+      SubTitle:
+        "Generate a suitable title based on the conversation; costs a few quota",
     },
     Sync: {
       CloudState: "Last Update",
@@ -496,6 +497,11 @@ const en: LocaleType = {
     userName: "Current User",
     imageSelectorFailure: "Image too big or format unsupported",
     animationFailure: "Animation failed to render",
+    modelPrice: "Model & Price",
+    modelAlias: "Alias",
+    modelName: "Model Name",
+    modelPromptUnitPrice: "Prompt",
+    modelCompletionUnitPrice: "Completion",
   },
 };
 

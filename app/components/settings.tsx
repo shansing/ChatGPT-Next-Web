@@ -728,15 +728,15 @@ export function Settings() {
           >
             {loadingQuota ? <div /> : <div>🪙{userAndQuota.userQuota}</div>}
           </ListItem>
-          <ListItem title="模型价格">
+          <ListItem title="{Locale.Shansing.modelPrice}">
             <div className="about-html">
               <table>
                 <thead>
                   <tr>
-                    <th>别名</th>
-                    <th>模型名</th>
-                    <th>输入单价</th>
-                    <th>输出单价</th>
+                    <th>{Locale.Shansing.modelAlias}</th>
+                    <th>{Locale.Shansing.modelName}</th>
+                    <th>{Locale.Shansing.modelPromptUnitPrice}</th>
+                    <th>{Locale.Shansing.modelCompletionUnitPrice}</th>
                   </tr>
                 </thead>
                 <tbody>

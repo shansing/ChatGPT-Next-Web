@@ -41,7 +41,7 @@ async function handle(
     return NextResponse.json(
       {
         error: true,
-        msg: "you are not allowed to request " + subpath,
+        msg: "[Shansing He2per] You are not allowed to request " + subpath,
       },
       {
         status: 403,
@@ -54,7 +54,7 @@ async function handle(
     return NextResponse.json(
       {
         error: true,
-        msg: "need http basic auth",
+        msg: "[Shansing He2per] Http basic auth is needed",
       },
       {
         status: 403,
@@ -65,7 +65,7 @@ async function handle(
     return NextResponse.json(
       {
         error: true,
-        msg: "Insufficient quota | 余额不足",
+        msg: "[Shansing He2per] Insufficient quota | 余额不足",
       },
       {
         status: 403,
@@ -80,7 +80,7 @@ async function handle(
     return NextResponse.json(
       {
         error: true,
-        msg: "Unsupported model",
+        msg: "[Shansing He2per] Unsupported model | 该模型不再支持",
       },
       {
         status: 401,
