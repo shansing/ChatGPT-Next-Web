@@ -34,7 +34,7 @@ export const DEFAULT_CONFIG = {
   fontSize: 14,
   theme: Theme.Auto as Theme,
   tightBorder: !!config?.isApp,
-  sendPreviewBubble: true,
+  sendPreviewBubble: false,
   enableAutoGenerateTitle: true,
   sidebarWidth: DEFAULT_SIDEBAR_WIDTH,
 
@@ -55,7 +55,7 @@ export const DEFAULT_CONFIG = {
     frequency_penalty: 0,
     sendMemory: true,
     historyMessageCount: 4,
-    compressMessageLengthThreshold: 1000,
+    compressMessageLengthThreshold: 2000,
     enableInjectSystemPrompts: true,
     template: config?.template ?? DEFAULT_INPUT_TEMPLATE,
   },
