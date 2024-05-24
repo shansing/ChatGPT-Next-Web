@@ -361,7 +361,7 @@ const en: LocaleType = {
     Model: "Model",
     Temperature: {
       Title: "Temperature",
-      SubTitle: "A larger value makes the more random output",
+      SubTitle: "A larger value makes the more random output; better ≤1",
     },
     TopP: {
       Title: "Top P",
@@ -502,6 +502,12 @@ const en: LocaleType = {
     modelName: "Model Name",
     modelPromptUnitPrice: "Prompt",
     modelCompletionUnitPrice: "Completion",
+    Refresh: {
+      Title: "Force Reload",
+      SubTitle: "Refresh to try getting the latest page",
+      Action: "Refresh",
+      Confirm: "Confirm Refresh? Unsaved changes will be lost.",
+    },
   },
 };
 

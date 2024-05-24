@@ -237,6 +237,21 @@ function DangerItems() {
   return (
     <List>
       <ListItem
+        title={Locale.Shansing.Refresh.Title}
+        subTitle={Locale.Shansing.Refresh.SubTitle}
+      >
+        <IconButton
+          text={Locale.Shansing.Refresh.Action}
+          icon={<ResetIcon />}
+          onClick={async () => {
+            if (await showConfirm(Locale.Shansing.Refresh.Confirm)) {
+              // @ts-ignore
+              location.reload(true);
+            }
+          }}
+        />
+      </ListItem>
+      <ListItem
         title={Locale.Settings.Danger.Reset.Title}
         subTitle={Locale.Settings.Danger.Reset.SubTitle}
       >

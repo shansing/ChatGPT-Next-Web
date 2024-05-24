@@ -356,7 +356,7 @@ const cn = {
     Model: "模型 (model)",
     Temperature: {
       Title: "随机性 (temperature)",
-      SubTitle: "值越大，回复越随机",
+      SubTitle: "值越大，回复越随机；不建议超过1",
     },
     TopP: {
       Title: "核采样 (top_p)",
@@ -494,6 +494,12 @@ const cn = {
     modelName: "模型名",
     modelPromptUnitPrice: "输入单价",
     modelCompletionUnitPrice: "输出单价",
+    Refresh: {
+      Title: "强制刷新",
+      SubTitle: "尝试更新到最新版，效果等同 Ctrl+F5",
+      Action: "立即刷新",
+      Confirm: "确定刷新？您正在编辑的文本可能丢失。",
+    },
   },
 };
 
