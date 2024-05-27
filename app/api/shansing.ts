@@ -5,8 +5,7 @@ import { NextRequest } from "next/server";
 const kilo = new Decimal("1000");
 const serverConfig = getServerSideConfig();
 
-//TODO
-const FACTORY_MODE = true;
+const FACTORY_MODE = false;
 
 export interface ShansingModelChoice {
   name: string;

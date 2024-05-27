@@ -184,7 +184,6 @@ export async function requestCompatibleOpenai(
 
   const fetchUrl = `${baseUrl}/${path}`;
 
-  // let socksAgent = socks ? new SocksProxyAgent(socks) : undefined;
   const fetchOptions: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -198,8 +197,6 @@ export async function requestCompatibleOpenai(
     // @ts-ignore
     duplex: "half",
     signal: controller.signal,
-    //TODO 要换别的
-    // agent: socksAgent
   };
 
   try {
