@@ -74,6 +74,9 @@ export function auth(req: NextRequest, modelProvider: ModelProvider) {
       case ModelProvider.Claude:
         systemApiKey = serverConfig.anthropicApiKey;
         break;
+      case ModelProvider.Alibaba:
+        systemApiKey = serverConfig.alibabaApiKey;
+        break;
       case ModelProvider.GPT:
       default:
         if (serverConfig.isAzure) {

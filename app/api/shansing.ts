@@ -5,6 +5,9 @@ import { NextRequest } from "next/server";
 const kilo = new Decimal("1000");
 const serverConfig = getServerSideConfig();
 
+//TODO
+const FACTORY_MODE = true;
+
 export interface ShansingModelChoice {
   name: string;
   model: string;
@@ -23,6 +26,9 @@ export async function pay(
   promptTokenNumber: number,
   completionTokenNumber: number,
 ) {
+  if (FACTORY_MODE) {
+    return true;
+  }
   if (!username) {
     throw Error("Username not found");
   }
@@ -51,7 +57,9 @@ export async function pay(
 }
 
 export async function readUserQuota(username: string): Promise<Decimal> {
-  // return new Decimal(600);
+  if (FACTORY_MODE) {
+    return new Decimal(600);
+  }
   return fetch(
     serverConfig.shansingQuotaAgentUrl +
       "?userName=" +

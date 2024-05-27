@@ -13,6 +13,8 @@ export const OPENAI_BASE_URL = "https://api.openai.com";
 export const ANTHROPIC_BASE_URL = "https://api.anthropic.com";
 
 export const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/";
+export const ALIBABA_BASE_URL =
+  "https://dashscope.aliyuncs.com/compatible-mode";
 
 export enum Path {
   Home = "/",
@@ -70,12 +72,14 @@ export enum ServiceProvider {
   Azure = "Azure",
   Google = "Google",
   Anthropic = "Anthropic",
+  Alibaba = "Alibaba",
 }
 
 export enum ModelProvider {
   GPT = "GPT",
   GeminiPro = "GeminiPro",
   Claude = "Claude",
+  Alibaba = "Alibaba",
 }
 
 export const Anthropic = {
@@ -101,6 +105,10 @@ export const Google = {
   ChatPath: (modelName: string) => `v1beta/models/${modelName}:generateContent`,
 };
 
+export const AlibabaPath = {
+  ChatPath: "v1/chat/completions",
+};
+
 export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lang
 // export const DEFAULT_SYSTEM_TEMPLATE = `
 // You are ChatGPT, a large language model trained by {{ServiceProvider}}.
@@ -118,6 +126,7 @@ Latex block: $$e=mc^2$$`;
 
 export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
 export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-latest";
+export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "2021-09",
@@ -165,6 +174,32 @@ const anthropicModels = [
   "claude-3-haiku-20240307",
 ];
 
+const alibabaModels = [
+  "qwen-turbo",
+  "qwen-plus",
+  "qwen-max",
+  "qwen-max-0428",
+  "qwen-max-0403",
+  "qwen-max-0107",
+  "qwen-max-longcontext",
+  "qwen-vl-plus",
+  "qwen-vl-max",
+  "qwen1.5-110b-chat",
+  "qwen1.5-72b-chat",
+  "qwen1.5-32b-chat",
+  "qwen1.5-14b-chat",
+  "qwen1.5-7b-chat",
+  "qwen1.5-1.8b-chat",
+  "qwen1.5-0.5b-chat",
+  "codeqwen1.5-7b-chat",
+  "qwen-72b-chat",
+  "qwen-14b-chat",
+  "qwen-7b-chat",
+  "qwen-1.8b-longcontext-chat",
+  "qwen-1.8b-chat",
+  "qwen-long",
+];
+
 export const DEFAULT_MODELS = [
   ...openaiModels.map((name) => ({
     name,
@@ -191,6 +226,15 @@ export const DEFAULT_MODELS = [
       id: "anthropic",
       providerName: "Anthropic",
       providerType: "anthropic",
+    },
+  })),
+  ...alibabaModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "alibaba",
+      providerName: "Alibaba",
+      providerType: "alibaba-compatible",
     },
   })),
 ] as const;

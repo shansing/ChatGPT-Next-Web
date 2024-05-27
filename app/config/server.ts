@@ -104,6 +104,7 @@ export const getServerSideConfig = () => {
   const isAzure = !!process.env.AZURE_URL;
   const isGoogle = !!process.env.GOOGLE_API_KEY;
   const isAnthropic = !!process.env.ANTHROPIC_API_KEY;
+  const isAlibaba = !!process.env.ALIBABA_API_KEY;
 
   // const apiKeyEnvVar = process.env.OPENAI_API_KEY ?? "";
   // const apiKeys = apiKeyEnvVar.split(",").map((v) => v.trim());
@@ -136,6 +137,10 @@ export const getServerSideConfig = () => {
     anthropicApiVersion: process.env.ANTHROPIC_API_VERSION,
     anthropicUrl: process.env.ANTHROPIC_URL,
 
+    isAlibaba,
+    alibabaApiKey: getApiKey(process.env.ALIBABA_API_KEY),
+    alibabaUrl: process.env.ALIBABA_URL,
+
     gtmId: process.env.GTM_ID,
 
     needCode: ACCESS_CODES.size > 0,
@@ -160,5 +165,8 @@ export const getServerSideConfig = () => {
       ? process.env.SHANSING_QUOTA_AGENT_URL
       : "",
     shansingModelChoices: shansingModelChoices,
+    shansingChinaSocksProxy: process.env.SHANSING_CHINA_SOCKS_PROXY
+      ? process.env.SHANSING_CHINA_SOCKS_PROXY
+      : undefined,
   };
 };

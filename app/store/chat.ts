@@ -13,6 +13,7 @@ import {
   StoreKey,
   SUMMARIZE_MODEL,
   GEMINI_SUMMARIZE_MODEL,
+  ALIBABA_SUMMARIZE_MODEL,
 } from "../constant";
 import { ClientApi, RequestMessage, MultimodalContent } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
@@ -103,6 +104,9 @@ function getSummarizeModel(currentModel: string) {
   }
   if (currentModel.startsWith("gemini")) {
     return GEMINI_SUMMARIZE_MODEL;
+  }
+  if (currentModel.startsWith("qwen-")) {
+    return ALIBABA_SUMMARIZE_MODEL;
   }
   return currentModel;
 }
@@ -377,6 +381,8 @@ export const useChatStore = createPersistStore(
           api = new ClientApi(ModelProvider.GeminiPro);
         } else if (identifyDefaultClaudeModel(modelConfig.model)) {
           api = new ClientApi(ModelProvider.Claude);
+        } else if (modelConfig.model.startsWith("qwen-")) {
+          api = new ClientApi(ModelProvider.Alibaba);
         } else {
           api = new ClientApi(ModelProvider.GPT);
         }
@@ -567,6 +573,8 @@ export const useChatStore = createPersistStore(
           api = new ClientApi(ModelProvider.GeminiPro);
         } else if (identifyDefaultClaudeModel(modelConfig.model)) {
           api = new ClientApi(ModelProvider.Claude);
+        } else if (modelConfig.model.startsWith("qwen-")) {
+          api = new ClientApi(ModelProvider.Alibaba);
         } else {
           api = new ClientApi(ModelProvider.GPT);
         }
