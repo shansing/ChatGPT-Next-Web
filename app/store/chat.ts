@@ -652,7 +652,7 @@ export const useChatStore = createPersistStore(
           api.llm.chat({
             messages: toBeSummarizedMsgs.concat(
               createMessage({
-                role: "system",
+                role: modelConfig.model.startsWith("gpt-") ? "system" : "user",
                 content: Locale.Store.Prompt.Summarize,
                 date: "",
               }),
