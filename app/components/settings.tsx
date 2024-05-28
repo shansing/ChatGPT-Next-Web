@@ -67,7 +67,7 @@ import { Prompt, SearchService, usePromptStore } from "../store/prompt";
 import { ErrorBoundary } from "./error";
 import { InputRange } from "./input-range";
 import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarPicker } from "./emoji";
+import { Avatar, AvatarPicker, getEmojiUrl } from "./emoji";
 import { getClientConfig } from "../config/client";
 import { useSyncStore } from "../store/sync";
 import { nanoid } from "nanoid";
@@ -75,6 +75,8 @@ import { useMaskStore } from "../store/mask";
 import { ProviderType } from "../utils/cloud";
 import { getHeaders } from "@/app/client/api";
 import { ShansingModelChoice } from "@/app/api/shansing";
+import { getServerSideConfig } from "@/app/config/server";
+import { Emoji } from "emoji-picker-react";
 
 function EditPromptModal(props: { id: string; onClose: () => void }) {
   const promptStore = usePromptStore();
@@ -726,7 +728,14 @@ export function Settings() {
                 : userAndQuota.userName
             }
           >
-            {loadingQuota ? <div /> : <div>🪙{userAndQuota.userQuota}</div>}
+            {loadingQuota ? (
+              <div />
+            ) : (
+              <div className="emoji-text">
+                <Emoji unified="1fa99" size={14} getEmojiUrl={getEmojiUrl} />
+                {userAndQuota.userQuota}
+              </div>
+            )}
           </ListItem>
           <ListItem title="">
             <div
@@ -750,8 +759,22 @@ export function Settings() {
                     <tr key={index}>
                       <td>{choice.name}</td>
                       <td>{choice.model}</td>
-                      <td>🪙{choice.promptTokenPrice1k}</td>
-                      <td>🪙{choice.completionTokenPrice1k}</td>
+                      <td className="emoji-text">
+                        <Emoji
+                          unified="1fa99"
+                          size={14}
+                          getEmojiUrl={getEmojiUrl}
+                        />
+                        {choice.promptTokenPrice1k}
+                      </td>
+                      <td className="emoji-text">
+                        <Emoji
+                          unified="1fa99"
+                          size={14}
+                          getEmojiUrl={getEmojiUrl}
+                        />
+                        {choice.completionTokenPrice1k}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
