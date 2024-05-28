@@ -496,7 +496,7 @@ const cn = {
     modelCompletionUnitPrice: "输出单价",
     Refresh: {
       Title: "强制刷新",
-      SubTitle: "尝试更新到最新版，效果等同 Ctrl+F5",
+      SubTitle: "尝试更新到最新版，效果等同于 Ctrl+F5",
       Action: "立即刷新",
       Confirm: "确定刷新？您正在编辑的文本可能丢失。",
     },

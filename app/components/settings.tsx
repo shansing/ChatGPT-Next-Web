@@ -237,21 +237,6 @@ function DangerItems() {
   return (
     <List>
       <ListItem
-        title={Locale.Shansing.Refresh.Title}
-        subTitle={Locale.Shansing.Refresh.SubTitle}
-      >
-        <IconButton
-          text={Locale.Shansing.Refresh.Action}
-          icon={<ResetIcon />}
-          onClick={async () => {
-            if (await showConfirm(Locale.Shansing.Refresh.Confirm)) {
-              // @ts-ignore
-              location.reload(true);
-            }
-          }}
-        />
-      </ListItem>
-      <ListItem
         title={Locale.Settings.Danger.Reset.Title}
         subTitle={Locale.Settings.Danger.Reset.SubTitle}
       >
@@ -743,6 +728,12 @@ export function Settings() {
           >
             {loadingQuota ? <div /> : <div>🪙{userAndQuota.userQuota}</div>}
           </ListItem>
+          <ListItem title="">
+            <div
+              className="about-html"
+              dangerouslySetInnerHTML={{ __html: `${userAndQuota.aboutHtml}` }}
+            ></div>
+          </ListItem>
           <ListItem title={Locale.Shansing.modelPrice}>
             <div className="about-html">
               <table>
@@ -767,11 +758,20 @@ export function Settings() {
               </table>
             </div>
           </ListItem>
-          <ListItem title="">
-            <div
-              className="about-html"
-              dangerouslySetInnerHTML={{ __html: `${userAndQuota.aboutHtml}` }}
-            ></div>
+          <ListItem
+            title={Locale.Shansing.Refresh.Title}
+            subTitle={Locale.Shansing.Refresh.SubTitle}
+          >
+            <IconButton
+              text={Locale.Shansing.Refresh.Action}
+              icon={<ResetIcon />}
+              onClick={async () => {
+                if (await showConfirm(Locale.Shansing.Refresh.Confirm)) {
+                  // @ts-ignore
+                  location.reload(true);
+                }
+              }}
+            />
           </ListItem>
         </List>
         <List>
