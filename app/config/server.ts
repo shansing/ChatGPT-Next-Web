@@ -61,11 +61,11 @@ function getApiKey(keys?: string) {
   const randomIndex = Math.floor(Math.random() * apiKeys.length);
   const apiKey = apiKeys[randomIndex];
   if (apiKey) {
-    console.debug(
-      `[Server Config] using ${randomIndex + 1} of ${
-        apiKeys.length
-      } api key - ${apiKey}`,
-    );
+    // console.log(
+    //   `[Server Config] using ${randomIndex + 1} of ${
+    //     apiKeys.length
+    //   } api key - ${apiKey}`,
+    // );
   }
 
   return apiKey;
