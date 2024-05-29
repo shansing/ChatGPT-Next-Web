@@ -1,11 +1,10 @@
 import Decimal from "decimal.js";
 import { getServerSideConfig } from "@/app/config/server";
-import { NextRequest } from "next/server";
 
 const kilo = new Decimal("1000");
 const serverConfig = getServerSideConfig();
 
-const FACTORY_MODE = true;
+const FACTORY_MODE = false;
 
 export interface ShansingModelChoice {
   name: string;

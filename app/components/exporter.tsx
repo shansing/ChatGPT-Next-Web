@@ -446,50 +446,27 @@ export function ImagePreviewer(props: {
     if (!dom) return;
     toBlob(dom).then((blob) => {
       if (!blob) return;
+      if (typeof ClipboardItem === "undefined") {
+        showToast(Locale.Shansing.copyNotSupported);
+        return;
+      }
       try {
-        copyImage(blob);
+        navigator.clipboard
+          .write([
+            new ClipboardItem({
+              "image/png": blob,
+            }),
+          ])
+          .then(() => {
+            showToast(Locale.Copy.Success);
+            refreshPreview();
+          });
       } catch (e) {
         console.error("[Copy Image] ", e);
         showToast(Locale.Copy.Failed);
       }
     });
   };
-
-  function copyImage(blob: Blob) {
-    if (typeof ClipboardItem !== "undefined") {
-      navigator.clipboard
-        .write([
-          new ClipboardItem({
-            "image/png": blob,
-          }),
-        ])
-        .then(() => {
-          showToast(Locale.Copy.Success);
-          refreshPreview();
-        });
-    } else if (window.getSelection != null && document.execCommand != null) {
-      const div = document.createElement("div");
-      div.className = "copyable";
-      div.setAttribute("contentEditable", "true");
-      document.body.appendChild(div);
-
-      const selection = window.getSelection();
-      if (selection == null) {
-        throw Error("Could not copy image");
-      }
-      const range = document.createRange();
-      range.selectNodeContents(div);
-      selection.removeAllRanges();
-      selection.addRange(range);
-
-      document.execCommand("copy");
-      selection.removeAllRanges();
-      console.log("used alternative copyImage");
-      document.body.removeChild(div);
-    } else {
-      throw Error("Could not copy image");
-    }
-  }
 
   const isMobile = useMobileScreen();
 

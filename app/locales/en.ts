@@ -508,6 +508,7 @@ const en: LocaleType = {
       Action: "Refresh",
       Confirm: "Confirm Refresh? Unsaved changes will be lost.",
     },
+    copyNotSupported: "Your browser does not support copying images",
   },
 };
 

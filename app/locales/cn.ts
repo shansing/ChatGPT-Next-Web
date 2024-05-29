@@ -500,6 +500,7 @@ const cn = {
       Action: "立即刷新",
       Confirm: "确定刷新？您正在编辑的文本可能丢失。",
     },
+    copyNotSupported: "您的浏览器暂不支持复制图片",
   },
 };
 
