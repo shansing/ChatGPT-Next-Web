@@ -135,9 +135,10 @@ export class ClientApi {
 
     console.log("[Share]", messages, msgs);
     const clientConfig = getClientConfig();
-    const proxyUrl = "/sharegpt";
-    const rawUrl = "https://sharegpt.com/api/conversations";
-    const shareUrl = clientConfig?.isApp ? rawUrl : proxyUrl;
+    // const proxyUrl = "/sharegpt";
+    // const rawUrl = "https://sharegpt.com/api/conversations";
+    // const shareUrl = clientConfig?.isApp ? rawUrl : proxyUrl;
+    const shareUrl = "https://sharegpt.com/api/conversations";
     const res = await fetch(shareUrl, {
       body: JSON.stringify({
         avatarUrl,

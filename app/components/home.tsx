@@ -110,11 +110,12 @@ const useHasHydrated = () => {
 
 const loadAsyncGoogleFont = () => {
   const linkEl = document.createElement("link");
-  const proxyFontUrl = "/google-fonts";
+  // const proxyFontUrl = "/google-fonts";
+  // // const remoteFontUrl = "https://fonts.googleapis.com";
   // const remoteFontUrl = "https://fonts.googleapis.com";
-  const remoteFontUrl = "https://fonts.googleapis.com";
-  const googleFontUrl =
-    getClientConfig()?.buildMode === "export" ? remoteFontUrl : proxyFontUrl;
+  // const googleFontUrl =
+  //   getClientConfig()?.buildMode === "export" ? remoteFontUrl : proxyFontUrl;
+  const googleFontUrl = "https://he2per.shansing.net/cache/fonts/css";
   linkEl.rel = "stylesheet";
   linkEl.href =
     googleFontUrl +
