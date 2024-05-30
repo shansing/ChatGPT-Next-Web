@@ -1,6 +1,7 @@
 import md5 from "spark-md5";
 import { DEFAULT_MODELS } from "../constant";
 import { ShansingModelChoice } from "../api/shansing";
+import Decimal from "decimal.js";
 
 declare global {
   namespace NodeJS {
@@ -171,5 +172,9 @@ export const getServerSideConfig = () => {
     shansingEmojiCdn: process.env.SHANSING_EMOJI_CDN
       ? process.env.SHANSING_EMOJI_CDN
       : "https://fastly.jsdelivr.net/npm/emoji-datasource-apple/img/",
+    shansingOnlineSearchPrice: new Decimal(
+      process.env.SHANSING_ONLINE_SEARCH_PRICE ?? 0,
+    ),
+    shansingOnlineSearchUrl: process.env.SHANSING_ONLINE_SEARCH_URL ?? "",
   };
 };

@@ -58,6 +58,7 @@ export const DEFAULT_CONFIG = {
     compressMessageLengthThreshold: 2000,
     enableInjectSystemPrompts: true,
     template: config?.template ?? DEFAULT_INPUT_TEMPLATE,
+    shansingOnlineSearch: false,
   },
 };
 

@@ -23,6 +23,7 @@ export async function pay(
   modelChoice: ShansingModelChoice,
   promptTokenNumber: number,
   completionTokenNumber: number,
+  extraFee: Decimal,
 ) {
   if (FACTORY_MODE) {
     return true;
@@ -43,7 +44,8 @@ export async function pay(
       new Decimal(modelChoice.completionTokenPrice1k)
         .div(kilo)
         .mul(completionTokenNumber),
-    );
+    )
+    .plus(extraFee);
   console.log(
     "[pay]",
     "username",

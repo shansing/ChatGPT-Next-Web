@@ -30,7 +30,8 @@ import EditIcon from "../icons/rename.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 import CancelIcon from "../icons/cancel.svg";
 import ImageIcon from "../icons/image.svg";
-
+import EarthIcon from "../icons/earth.svg";
+import EarthOffIcon from "../icons/earth-off.svg";
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
 import AutoIcon from "../icons/auto.svg";
@@ -442,6 +443,21 @@ export function ChatActions(props: {
     config.update((config) => (config.theme = nextTheme));
   }
 
+  // switch online search
+  const onlineSearch =
+    chatStore.currentSession().mask.modelConfig.shansingOnlineSearch;
+  function switchOnlineSearch() {
+    const newStatus = !onlineSearch;
+    chatStore.updateCurrentSession(
+      (session) => (session.mask.modelConfig.shansingOnlineSearch = newStatus),
+    );
+    showToast(
+      newStatus
+        ? Locale.Shansing.OnlineSearchOnTip
+        : Locale.Shansing.OnlineSearchOffTip,
+    );
+  }
+
   // stop all responses
   const couldStop = ChatControllerPool.hasPending();
   const stopAll = () => ChatControllerPool.stopAll();
@@ -545,6 +561,12 @@ export function ChatActions(props: {
           icon={props.uploading ? <LoadingButtonIcon /> : <ImageIcon />}
         />
       )}
+
+      <ChatAction
+        onClick={switchOnlineSearch}
+        text={Locale.Shansing.OnlineSearch}
+        icon={onlineSearch ? <EarthIcon /> : <EarthOffIcon />}
+      />
 
       <ChatAction
         onClick={props.showPromptHints}

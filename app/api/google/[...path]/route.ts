@@ -7,6 +7,7 @@ import {
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
+import Decimal from "decimal.js";
 
 async function handle(
   req: NextRequest,
@@ -184,6 +185,7 @@ async function handle(
             obj.completionTokenNumber <= 128_000
               ? obj.completionTokenNumber
               : obj.completionTokenNumber * 2,
+            new Decimal("0"),
           );
         }
       });

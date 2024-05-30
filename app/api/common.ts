@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import { OPENAI_BASE_URL } from "../constant";
 import { makeAzurePath } from "../azure";
+import { config } from "webpack";
 
 const serverConfig = getServerSideConfig();
 
@@ -40,8 +41,15 @@ export async function requestOpenai(req: NextRequest) {
     baseUrl = baseUrl.slice(0, -1);
   }
 
+  const aiBaseUrl = baseUrl;
+  const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
+  if (onlineSearch) {
+    baseUrl = serverConfig.shansingOnlineSearchUrl;
+  }
+
   console.log("[Proxy] ", path);
   console.log("[Base Url]", baseUrl);
+  console.log("[aiBaseUrl]", aiBaseUrl);
 
   const timeoutId = setTimeout(
     () => {
@@ -68,6 +76,9 @@ export async function requestOpenai(req: NextRequest) {
       [authHeaderName]: authValue,
       ...(serverConfig.openaiOrgId && {
         "OpenAI-Organization": serverConfig.openaiOrgId,
+      }),
+      ...(onlineSearch && {
+        "X-Shansing-Base-Url": aiBaseUrl,
       }),
     },
     method: req.method,
@@ -173,6 +184,13 @@ export async function requestCompatibleOpenai(
     baseUrl = baseUrl.slice(0, -1);
   }
 
+  const aiBaseUrl = baseUrl;
+  const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
+  if (onlineSearch) {
+    baseUrl = serverConfig.shansingOnlineSearchUrl;
+  }
+
+  console.log("[aiBaseUrl]", aiBaseUrl);
   console.log("[Base Url]", baseUrl);
 
   const timeoutId = setTimeout(
@@ -189,6 +207,9 @@ export async function requestCompatibleOpenai(
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
       [authHeaderName]: authValue,
+      ...(onlineSearch && {
+        "X-Shansing-Base-Url": aiBaseUrl,
+      }),
     },
     method: req.method,
     body: req.body,

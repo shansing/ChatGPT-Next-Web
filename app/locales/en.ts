@@ -509,6 +509,10 @@ const en: LocaleType = {
       Confirm: "Confirm Refresh? Unsaved changes will be lost.",
     },
     copyNotSupported: "Your browser does not support copying images",
+    OnlineSearch: "Online Search",
+    OnlineSearchOnTip:
+      "Online search is enabled, please be aware of the charges",
+    OnlineSearchOffTip: "Online search is disabled",
   },
 };
 

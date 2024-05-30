@@ -122,6 +122,22 @@ async function handle(
       });
     }
 
+    const firstPromptTokenNumber = parseInt(
+        response?.headers.get("X-Shansing-First-Prompt-Token-Number") ?? "0",
+      ),
+      firstCompletionTokenNumber = parseInt(
+        response?.headers.get("X-Shansing-First-Completion-Token-Number") ??
+          "0",
+      ),
+      searchCount = parseInt(
+        response?.headers.get("X-Shansing-Search-Count") ?? "0",
+      ),
+      newsCount = parseInt(
+        response?.headers.get("X-Shansing-News-Count") ?? "0",
+      ),
+      crawlerCount = parseInt(
+        response?.headers.get("X-Shansing-Crawler-Count") ?? "0",
+      );
     response
       .clone()
       .text()
@@ -136,7 +152,17 @@ async function handle(
               openBracket,
               closeBracket + 1,
             );
-            console.log("[usage][openai]", jsonString);
+            console.log(
+              "[usage][openai]",
+              {
+                firstPromptTokenNumber,
+                firstCompletionTokenNumber,
+                searchCount,
+                newsCount,
+                crawlerCount,
+              },
+              jsonString,
+            );
             const jsonData = JSON.parse(jsonString);
             if (
               jsonData.prompt_tokens !== undefined &&
@@ -163,8 +189,11 @@ async function handle(
           return pay(
             username,
             modelChoice,
-            obj.promptTokenNumber,
-            obj.completionTokenNumber,
+            obj.promptTokenNumber + firstPromptTokenNumber,
+            obj.completionTokenNumber + firstCompletionTokenNumber,
+            config.shansingOnlineSearchPrice.mul(
+              searchCount + newsCount + crawlerCount,
+            ),
           );
         }
       });
