@@ -265,3 +265,15 @@ export function isVisionModel(model: string) {
     visionKeywords.some((keyword) => model.includes(keyword)) || isGpt4Turbo
   );
 }
+
+export function isOnlineSearchModel(model: string) {
+  const visionKeywords = [
+    "gpt-",
+    "qwen-turbo",
+    "qwen-plus",
+    "qwen-max",
+    "qwen-long",
+  ];
+
+  return visionKeywords.some((keyword) => model.includes(keyword));
+}

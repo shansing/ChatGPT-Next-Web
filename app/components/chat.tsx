@@ -60,6 +60,7 @@ import {
   getMessageTextContent,
   getMessageImages,
   isVisionModel,
+  isOnlineSearchModel,
 } from "../utils";
 
 import { compressImage } from "@/app/utils/chat";
@@ -457,6 +458,11 @@ export function ChatActions(props: {
         : Locale.Shansing.OnlineSearchOffTip,
     );
   }
+  function turnOnlineSearchWithoutTip(newStatus: boolean) {
+    chatStore.updateCurrentSession(
+      (session) => (session.mask.modelConfig.shansingOnlineSearch = newStatus),
+    );
+  }
 
   // stop all responses
   const couldStop = ChatControllerPool.hasPending();
@@ -481,6 +487,7 @@ export function ChatActions(props: {
   }, [allModels]);
   const [showModelSelector, setShowModelSelector] = useState(false);
   const [showUploadImage, setShowUploadImage] = useState(false);
+  const [showOnlineSearch, setShowOnlineSearch] = useState(false);
 
   useEffect(() => {
     const show = isVisionModel(currentModel);
@@ -488,6 +495,11 @@ export function ChatActions(props: {
     if (!show) {
       props.setAttachImages([]);
       props.setUploading(false);
+    }
+    const showOnlineSearch = isOnlineSearchModel(currentModel);
+    setShowOnlineSearch(showOnlineSearch);
+    if (!showOnlineSearch && onlineSearch) {
+      turnOnlineSearchWithoutTip(false);
     }
 
     // if current model is not available
@@ -562,11 +574,13 @@ export function ChatActions(props: {
         />
       )}
 
-      <ChatAction
-        onClick={switchOnlineSearch}
-        text={Locale.Shansing.OnlineSearch}
-        icon={onlineSearch ? <EarthIcon /> : <EarthOffIcon />}
-      />
+      {showOnlineSearch && (
+        <ChatAction
+          onClick={switchOnlineSearch}
+          text={Locale.Shansing.OnlineSearch}
+          icon={onlineSearch ? <EarthIcon /> : <EarthOffIcon />}
+        />
+      )}
 
       <ChatAction
         onClick={props.showPromptHints}
