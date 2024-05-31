@@ -2,6 +2,7 @@
 import {
   ALIBABA_BASE_URL,
   AlibabaPath,
+  modelMaxTotalTokenNumber,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
 } from "@/app/constant";
@@ -72,6 +73,21 @@ export class AlibabaApi implements LLMApi {
       },
     };
 
+    // @ts-ignore
+    let max_tokens: number =
+      modelMaxTotalTokenNumber.find((obj) =>
+        modelConfig.model.startsWith(obj.name),
+      ).number -
+      modelConfig.compressMessageLengthThreshold -
+      1500;
+    if (modelConfig.max_tokens < max_tokens) {
+      max_tokens = modelConfig.max_tokens;
+    }
+    if (max_tokens > 2000) {
+      //qwen requires
+      max_tokens = 2000;
+    }
+
     const requestPayload: RequestPayload = {
       messages,
       stream: options.config.stream,
@@ -80,8 +96,7 @@ export class AlibabaApi implements LLMApi {
       presence_penalty: modelConfig.presence_penalty,
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
-      // max_tokens: Math.max(modelConfig.max_tokens, 1024),
-      // Please do not ask me why not send max_tokens, no reason, this param is just shit, I dont want to explain anymore.
+      max_tokens: max_tokens,
     };
     requestPayload["stream_options"] = options.config.stream
       ? {
@@ -89,7 +104,7 @@ export class AlibabaApi implements LLMApi {
         }
       : undefined;
     if (requestPayload.top_p >= 1.0) {
-      requestPayload.top_p = 0.999;
+      requestPayload.top_p = 0.99;
     }
     if (modelConfig.model.startsWith("qwen-vl")) {
       delete requestPayload.temperature;
@@ -108,7 +123,12 @@ export class AlibabaApi implements LLMApi {
         method: "POST",
         body: JSON.stringify(requestPayload),
         signal: controller.signal,
-        headers: getHeaders(),
+        headers: {
+          ...getHeaders(),
+          ...(options.config.checkShansingOnlineSearch && {
+            "X-Shansing-Base-Url": modelConfig.shansingOnlineSearch + "",
+          }),
+        },
       };
 
       // make a fetch request

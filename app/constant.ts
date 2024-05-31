@@ -239,17 +239,32 @@ export const DEFAULT_MODELS = [
   })),
 ] as const;
 
+export const modelMaxTotalTokenNumber = [
+  { name: "gpt-4o", number: 128_000 },
+  { name: "gpt-4-turbo", number: 128_000 },
+  { name: "gpt-4", number: 8192 },
+  { name: "gpt-3.5-turbo", number: 16385 },
+  { name: "qwen-turbo", number: 6_000 },
+  { name: "qwen-plus", number: 30_000 },
+  { name: "qwen-max-longcontext", number: 28_000 },
+  { name: "qwen-max", number: 6_000 },
+  { name: "qwen-long", number: 10_000_000 },
+  { name: "qwen-vl-", number: 6_000 },
+  { name: "gemini-", number: 128_000 },
+  { name: "", number: 4_000 }, //default
+] as const;
+
 export const CHAT_PAGE_SIZE = 15;
 export const MAX_RENDER_MSG_COUNT = 45;
 
 // some famous webdav endpoints
 export const internalAllowedWebDavEndpoints = [
-  "https://dav.jianguoyun.com/dav/",
-  "https://dav.dropdav.com/",
-  "https://dav.box.com/dav",
-  "https://nanao.teracloud.jp/dav/",
-  "https://webdav.4shared.com/",
-  "https://dav.idrivesync.com",
-  "https://webdav.yandex.com",
-  "https://app.koofr.net/dav/Koofr",
+  // "https://dav.jianguoyun.com/dav/",
+  // "https://dav.dropdav.com/",
+  // "https://dav.box.com/dav",
+  // "https://nanao.teracloud.jp/dav/",
+  // "https://webdav.4shared.com/",
+  // "https://dav.idrivesync.com",
+  // "https://webdav.yandex.com",
+  // "https://app.koofr.net/dav/Koofr",
 ];

@@ -41,7 +41,7 @@ export async function requestOpenai(req: NextRequest) {
     baseUrl = baseUrl.slice(0, -1);
   }
 
-  const aiBaseUrl = baseUrl;
+  const apiBaseUrl = baseUrl;
   const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
   if (onlineSearch) {
     baseUrl = serverConfig.shansingOnlineSearchUrl;
@@ -49,7 +49,7 @@ export async function requestOpenai(req: NextRequest) {
 
   console.log("[Proxy] ", path);
   console.log("[Base Url]", baseUrl);
-  console.log("[aiBaseUrl]", aiBaseUrl);
+  console.log("[apiBaseUrl]", apiBaseUrl);
 
   const timeoutId = setTimeout(
     () => {
@@ -78,7 +78,7 @@ export async function requestOpenai(req: NextRequest) {
         "OpenAI-Organization": serverConfig.openaiOrgId,
       }),
       ...(onlineSearch && {
-        "X-Shansing-Base-Url": aiBaseUrl,
+        "X-Shansing-Base-Url": apiBaseUrl,
       }),
     },
     method: req.method,
@@ -184,13 +184,13 @@ export async function requestCompatibleOpenai(
     baseUrl = baseUrl.slice(0, -1);
   }
 
-  const aiBaseUrl = baseUrl;
+  const apiBaseUrl = baseUrl;
   const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
   if (onlineSearch) {
     baseUrl = serverConfig.shansingOnlineSearchUrl;
   }
 
-  console.log("[aiBaseUrl]", aiBaseUrl);
+  console.log("[apiBaseUrl]", apiBaseUrl);
   console.log("[Base Url]", baseUrl);
 
   const timeoutId = setTimeout(
@@ -208,7 +208,7 @@ export async function requestCompatibleOpenai(
       "Cache-Control": "no-store",
       [authHeaderName]: authValue,
       ...(onlineSearch && {
-        "X-Shansing-Base-Url": aiBaseUrl,
+        "X-Shansing-Base-Url": apiBaseUrl,
       }),
     },
     method: req.method,

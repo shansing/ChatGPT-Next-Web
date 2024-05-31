@@ -1,4 +1,8 @@
-import { Google, REQUEST_TIMEOUT_MS } from "@/app/constant";
+import {
+  Google,
+  modelMaxTotalTokenNumber,
+  REQUEST_TIMEOUT_MS,
+} from "@/app/constant";
 import { ChatOptions, getHeaders, LLMApi, LLMModel, LLMUsage } from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
@@ -73,6 +77,18 @@ export class GeminiProApi implements LLMApi {
         model: options.config.model,
       },
     };
+
+    // @ts-ignore
+    let max_tokens: number =
+      modelMaxTotalTokenNumber.find((obj) =>
+        modelConfig.model.startsWith(obj.name),
+      ).number -
+      modelConfig.compressMessageLengthThreshold -
+      1500;
+    if (modelConfig.max_tokens < max_tokens) {
+      max_tokens = modelConfig.max_tokens;
+    }
+
     const requestPayload = {
       contents: messages,
       generationConfig: {
@@ -80,7 +96,7 @@ export class GeminiProApi implements LLMApi {
         //   "Title"
         // ],
         temperature: modelConfig.temperature,
-        maxOutputTokens: modelConfig.max_tokens,
+        maxOutputTokens: max_tokens,
         topP: modelConfig.top_p,
         // "topK": modelConfig.top_k,
       },
@@ -135,7 +151,12 @@ export class GeminiProApi implements LLMApi {
         method: "POST",
         body: JSON.stringify(requestPayload),
         signal: controller.signal,
-        headers: getHeaders(),
+        headers: {
+          ...getHeaders(),
+          ...(options.config.checkShansingOnlineSearch && {
+            "X-Shansing-Base-Url": modelConfig.shansingOnlineSearch + "",
+          }),
+        },
       };
 
       // make a fetch request

@@ -390,7 +390,11 @@ export const useChatStore = createPersistStore(
         // make request
         api.llm.chat({
           messages: sendMessages,
-          config: { ...modelConfig, stream: true },
+          config: {
+            ...modelConfig,
+            stream: true,
+            checkShansingOnlineSearch: true,
+          },
           onUpdate(message) {
             botMessage.streaming = true;
             if (message) {
@@ -600,6 +604,7 @@ export const useChatStore = createPersistStore(
             config: {
               model: getSummarizeModel(session.mask.modelConfig.model),
               stream: false,
+              checkShansingOnlineSearch: false,
             },
             onFinish(message) {
               get().updateCurrentSession(
@@ -661,6 +666,7 @@ export const useChatStore = createPersistStore(
               ...modelcfg,
               stream: true,
               model: getSummarizeModel(session.mask.modelConfig.model),
+              checkShansingOnlineSearch: false,
             },
             onUpdate(message) {
               session.memoryPrompt = message;

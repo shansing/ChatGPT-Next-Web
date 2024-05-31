@@ -3,6 +3,7 @@ import {
   ApiPath,
   DEFAULT_API_HOST,
   DEFAULT_MODELS,
+  modelMaxTotalTokenNumber,
   OpenaiPath,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
@@ -120,6 +121,17 @@ export class ChatGPTApi implements LLMApi {
       },
     };
 
+    // @ts-ignore
+    let max_tokens: number =
+      modelMaxTotalTokenNumber.find((obj) =>
+        modelConfig.model.startsWith(obj.name),
+      ).number -
+      modelConfig.compressMessageLengthThreshold -
+      1500;
+    if (modelConfig.max_tokens < max_tokens) {
+      max_tokens = modelConfig.max_tokens;
+    }
+
     const requestPayload: RequestPayload = {
       messages,
       stream: options.config.stream,
@@ -128,19 +140,13 @@ export class ChatGPTApi implements LLMApi {
       presence_penalty: modelConfig.presence_penalty,
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
-      // max_tokens: Math.max(modelConfig.max_tokens, 1024),
-      // Please do not ask me why not send max_tokens, no reason, this param is just shit, I dont want to explain anymore.
+      max_tokens: max_tokens,
     };
     requestPayload["stream_options"] = options.config.stream
       ? {
           include_usage: true,
         }
       : undefined;
-
-    // add max_tokens to vision model
-    if (visionModel && modelConfig.model.includes("preview")) {
-      requestPayload["max_tokens"] = Math.max(modelConfig.max_tokens, 4000);
-    }
 
     console.log("[Request] openai payload: ", requestPayload);
 
@@ -154,7 +160,12 @@ export class ChatGPTApi implements LLMApi {
         method: "POST",
         body: JSON.stringify(requestPayload),
         signal: controller.signal,
-        headers: getHeaders(),
+        headers: {
+          ...getHeaders(),
+          ...(options.config.checkShansingOnlineSearch && {
+            "X-Shansing-Base-Url": modelConfig.shansingOnlineSearch + "",
+          }),
+        },
       };
 
       // make a fetch request
