@@ -248,7 +248,7 @@ export const modelMaxTotalTokenNumber = [
   { name: "qwen-plus", number: 30_000 },
   { name: "qwen-max-longcontext", number: 28_000 },
   { name: "qwen-max", number: 6_000 },
-  { name: "qwen-long", number: 10_000_000 },
+  { name: "qwen-long", number: 9_000 }, // it's not 10_000_000
   { name: "qwen-vl-", number: 6_000 },
   { name: "gemini-", number: 128_000 },
   { name: "", number: 4_000 }, //default

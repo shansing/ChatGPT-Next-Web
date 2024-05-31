@@ -272,7 +272,7 @@ export function isOnlineSearchModel(model: string) {
     "qwen-turbo",
     "qwen-plus",
     "qwen-max",
-    "qwen-long",
+    // "qwen-long",
   ];
 
   return visionKeywords.some((keyword) => model.includes(keyword));
