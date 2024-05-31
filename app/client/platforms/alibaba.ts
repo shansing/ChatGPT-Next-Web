@@ -125,7 +125,7 @@ export class AlibabaApi implements LLMApi {
         headers: {
           ...getHeaders(),
           ...(options.config.checkShansingOnlineSearch && {
-            "X-Shansing-Base-Url": modelConfig.shansingOnlineSearch + "",
+            "X-Shansing-Online-Search": modelConfig.shansingOnlineSearch + "",
           }),
         },
       };
