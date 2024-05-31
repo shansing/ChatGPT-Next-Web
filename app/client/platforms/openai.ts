@@ -121,11 +121,10 @@ export class ChatGPTApi implements LLMApi {
       },
     };
 
-    // @ts-ignore
     let max_tokens: number =
-      modelMaxTotalTokenNumber.find((obj) =>
+      (modelMaxTotalTokenNumber?.find((obj) =>
         modelConfig.model.startsWith(obj.name),
-      ).number -
+      )?.number || 4000) -
       modelConfig.compressMessageLengthThreshold -
       1500;
     if (modelConfig.max_tokens < max_tokens) {
@@ -191,10 +190,12 @@ export class ChatGPTApi implements LLMApi {
           }
 
           if (remainText.length > 0) {
-            const fetchCount = Math.max(1, Math.round(remainText.length / 60));
-            const fetchText = remainText.slice(0, fetchCount);
+            // const fetchCount = Math.max(1, Math.round(remainText.length / 60));
+            // const fetchText = remainText.slice(0, fetchCount);
+            const fetchText = remainText;
             responseText += fetchText;
-            remainText = remainText.slice(fetchCount);
+            // remainText = remainText.slice(fetchCount);
+            remainText = "";
             options.onUpdate?.(responseText, fetchText);
           }
 
