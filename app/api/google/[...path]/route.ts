@@ -36,8 +36,15 @@ async function handle(
 
   let path = `${req.nextUrl.pathname}`.replaceAll("/api/google/", "");
 
+  const apiBaseUrl = baseUrl;
+  const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
+  if (onlineSearch) {
+    baseUrl = serverConfig.shansingOnlineSearchUrl;
+  }
+
   console.log("[Proxy] ", path);
   console.log("[Base Url]", baseUrl);
+  console.log("[apiBaseUrl]", apiBaseUrl);
 
   const timeoutId = setTimeout(
     () => {
@@ -69,7 +76,7 @@ async function handle(
       },
     );
   }
-  const modelGuess = path.split("/")?.slice(2).join("/");
+  let modelGuess = path.split("/")?.slice(2).join("/");
   if (modelGuess == null || modelGuess.includes("/")) {
     return NextResponse.json(
       {
@@ -81,8 +88,10 @@ async function handle(
       },
     );
   }
-  const modelChoice = config.shansingModelChoices.find((choice) =>
-    modelGuess.includes(choice.model),
+  modelGuess = modelGuess.split(":")[0];
+
+  const modelChoice = config.shansingModelChoices.find(
+    (choice) => modelGuess === choice.model,
   );
   if (!modelChoice) {
     return NextResponse.json(
@@ -125,6 +134,9 @@ async function handle(
     headers: {
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
+      ...(onlineSearch && {
+        "X-Shansing-Base-Url": apiBaseUrl,
+      }),
     },
     method: req.method,
     body: req.body,
@@ -136,9 +148,25 @@ async function handle(
   };
 
   try {
-    const res = await fetch(fetchUrl, fetchOptions);
+    const response = await fetch(fetchUrl, fetchOptions);
 
-    res
+    const firstPromptTokenNumber = parseInt(
+        response?.headers.get("X-Shansing-First-Prompt-Token-Number") ?? "0",
+      ),
+      firstCompletionTokenNumber = parseInt(
+        response?.headers.get("X-Shansing-First-Completion-Token-Number") ??
+          "0",
+      ),
+      searchCount = parseInt(
+        response?.headers.get("X-Shansing-Search-Count") ?? "0",
+      ),
+      newsCount = parseInt(
+        response?.headers.get("X-Shansing-News-Count") ?? "0",
+      ),
+      crawlerCount = parseInt(
+        response?.headers.get("X-Shansing-Crawler-Count") ?? "0",
+      );
+    response
       .clone()
       .text()
       .then((responseBody) => {
@@ -152,7 +180,17 @@ async function handle(
               openBracket,
               closeBracket + 1,
             );
-            console.log("[usage][google]", jsonString);
+            console.log(
+              "[usage][google]",
+              {
+                firstPromptTokenNumber,
+                firstCompletionTokenNumber,
+                searchCount,
+                newsCount,
+                crawlerCount,
+              },
+              jsonString,
+            );
             const jsonData = JSON.parse(jsonString);
             if (
               jsonData.promptTokenCount !== undefined &&
@@ -176,29 +214,30 @@ async function handle(
       })
       .then((obj) => {
         if (obj) {
+          const prompt = obj.promptTokenNumber + firstPromptTokenNumber;
+          const completion =
+            obj.completionTokenNumber + firstCompletionTokenNumber;
           return pay(
             username,
             modelChoice,
-            obj.promptTokenNumber <= 128_000
-              ? obj.promptTokenNumber
-              : obj.promptTokenNumber * 2,
-            obj.completionTokenNumber <= 128_000
-              ? obj.completionTokenNumber
-              : obj.completionTokenNumber * 2,
-            new Decimal("0"),
+            prompt <= 128_000 ? prompt : prompt * 2,
+            completion <= 128_000 ? completion : completion * 2,
+            config.shansingOnlineSearchPrice.mul(
+              searchCount + newsCount + crawlerCount,
+            ),
           );
         }
       });
 
     // to prevent browser prompt for credentials
-    const newHeaders = new Headers(res.headers);
+    const newHeaders = new Headers(response.headers);
     newHeaders.delete("www-authenticate");
     // to disable nginx buffering
     newHeaders.set("X-Accel-Buffering", "no");
 
-    return new Response(res.body, {
-      status: res.status,
-      statusText: res.statusText,
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
       headers: newHeaders,
     });
   } finally {
