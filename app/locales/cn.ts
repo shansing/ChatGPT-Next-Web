@@ -494,6 +494,7 @@ const cn = {
     modelName: "模型名",
     modelPromptUnitPrice: "输入单价",
     modelCompletionUnitPrice: "输出单价",
+    modelFeature: "特性",
     Refresh: {
       Title: "强制刷新",
       SubTitle: "尝试更新到最新版，效果等同于 Ctrl+F5",

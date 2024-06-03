@@ -49,7 +49,7 @@ import Locale, {
   changeLang,
   getLang,
 } from "../locales";
-import { copyToClipboard } from "../utils";
+import { copyToClipboard, isOnlineSearchModel, isVisionModel } from "../utils";
 import Link from "next/link";
 import {
   Anthropic,
@@ -752,6 +752,7 @@ export function Settings() {
                     <th>{Locale.Shansing.modelName}</th>
                     <th>{Locale.Shansing.modelPromptUnitPrice}</th>
                     <th>{Locale.Shansing.modelCompletionUnitPrice}</th>
+                    <th>{Locale.Shansing.modelFeature}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -774,6 +775,26 @@ export function Settings() {
                           getEmojiUrl={getEmojiUrl}
                         />
                         {choice.completionTokenPrice1k}
+                      </td>
+                      <td className="emoji-text">
+                        {isVisionModel(choice.model) ? (
+                          <Emoji
+                            unified="1f5bc-fe0f"
+                            size={14}
+                            getEmojiUrl={getEmojiUrl}
+                          />
+                        ) : (
+                          ""
+                        )}
+                        {isOnlineSearchModel(choice.model) ? (
+                          <Emoji
+                            unified="1f310"
+                            size={14}
+                            getEmojiUrl={getEmojiUrl}
+                          />
+                        ) : (
+                          ""
+                        )}
                       </td>
                     </tr>
                   ))}

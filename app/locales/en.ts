@@ -502,6 +502,7 @@ const en: LocaleType = {
     modelName: "Model Name",
     modelPromptUnitPrice: "Prompt",
     modelCompletionUnitPrice: "Completion",
+    modelFeature: "Feature",
     Refresh: {
       Title: "Force Reload",
       SubTitle: "Refresh to try getting the latest page",
