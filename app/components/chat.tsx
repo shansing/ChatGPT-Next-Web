@@ -764,18 +764,18 @@ function _Chat() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(measure, [userInput]);
 
-  // chat commands shortcuts
-  const chatCommands = useChatCommand({
-    new: () => chatStore.newSession(),
-    newm: () => navigate(Path.NewChat),
-    prev: () => chatStore.nextSession(-1),
-    next: () => chatStore.nextSession(1),
-    clear: () =>
-      chatStore.updateCurrentSession(
-        (session) => (session.clearContextIndex = session.messages.length),
-      ),
-    del: () => chatStore.deleteSession(chatStore.currentSessionIndex),
-  });
+  // // chat commands shortcuts
+  // const chatCommands = useChatCommand({
+  //   new: () => chatStore.newSession(),
+  //   newm: () => navigate(Path.NewChat),
+  //   prev: () => chatStore.nextSession(-1),
+  //   next: () => chatStore.nextSession(1),
+  //   clear: () =>
+  //     chatStore.updateCurrentSession(
+  //       (session) => (session.clearContextIndex = session.messages.length),
+  //     ),
+  //   del: () => chatStore.deleteSession(chatStore.currentSessionIndex),
+  // });
 
   // only search prompts when user input is short
   const SEARCH_TEXT_LIMIT = 30;
@@ -786,8 +786,8 @@ function _Chat() {
     // clear search results
     if (n === 0) {
       setPromptHints([]);
-    } else if (text.startsWith(ChatCommandPrefix)) {
-      setPromptHints(chatCommands.search(text));
+      // } else if (text.startsWith(ChatCommandPrefix)) {
+      //   setPromptHints(chatCommands.search(text));
     } else if (!config.disablePromptHint && n < SEARCH_TEXT_LIMIT) {
       // check if need to trigger auto completion
       if (text.startsWith("/")) {
@@ -799,13 +799,13 @@ function _Chat() {
 
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === "") return;
-    const matchCommand = chatCommands.match(userInput);
-    if (matchCommand.matched) {
-      setUserInput("");
-      setPromptHints([]);
-      matchCommand.invoke();
-      return;
-    }
+    // const matchCommand = chatCommands.match(userInput);
+    // if (matchCommand.matched) {
+    //   setUserInput("");
+    //   setPromptHints([]);
+    //   matchCommand.invoke();
+    //   return;
+    // }
     setIsLoading(true);
     chatStore
       .onUserInput(userInput, attachImages)
@@ -822,15 +822,15 @@ function _Chat() {
     setTimeout(() => {
       setPromptHints([]);
 
-      const matchedChatCommand = chatCommands.match(prompt.content);
-      if (matchedChatCommand.matched) {
-        // if user is selecting a chat command, just trigger it
-        matchedChatCommand.invoke();
-        setUserInput("");
-      } else {
-        // or fill the prompt
-        setUserInput(prompt.content);
-      }
+      // const matchedChatCommand = chatCommands.match(prompt.content);
+      // if (matchedChatCommand.matched) {
+      //   // if user is selecting a chat command, just trigger it
+      //   matchedChatCommand.invoke();
+      //   setUserInput("");
+      // } else {
+      //   // or fill the prompt
+      setUserInput(prompt.content);
+      // }
       inputRef.current?.focus();
     }, 30);
   };
