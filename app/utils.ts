@@ -272,7 +272,8 @@ export function isOnlineSearchModel(model: string) {
     "qwen-turbo",
     "qwen-plus",
     "qwen-max",
-    "qwen-long",
+    // "qwen-long",
+    // "gemini-1.5-",
     "gemini-1.5-pro",
   ];
 
