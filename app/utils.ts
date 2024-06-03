@@ -272,8 +272,8 @@ export function isOnlineSearchModel(model: string) {
     "qwen-turbo",
     "qwen-plus",
     "qwen-max",
-    // "qwen-long",
-    "gemini-1.5-",
+    "qwen-long",
+    "gemini-1.5-pro",
   ];
 
   return visionKeywords.some((keyword) => model.includes(keyword));
