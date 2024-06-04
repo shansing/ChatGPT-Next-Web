@@ -68,10 +68,10 @@ export async function payFixed(username: string, fee: Decimal) {
     throw Error("Username not found");
   }
   if (FACTORY_MODE) {
-    console.log("FAKE [payOnece]", "username", username, "fee", fee.toFixed());
+    console.log("FAKE [payFixed]", "username", username, "fee", fee.toFixed());
     return true;
   }
-  console.log("[payOnece]", "username", username, "fee", fee.toFixed());
+  console.log("[payFixed]", "username", username, "fee", fee.toFixed());
   return decreaseUserQuota(username, fee, true);
 }
 
