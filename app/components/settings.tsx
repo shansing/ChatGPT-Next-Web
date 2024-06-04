@@ -793,7 +793,7 @@ export function Settings() {
                         )}
                         {isUploadFileModel(choice.model) ? (
                           <Emoji
-                            unified="1f4ce"
+                            unified="1f4c4"
                             size={14}
                             getEmojiUrl={getEmojiUrl}
                           />
