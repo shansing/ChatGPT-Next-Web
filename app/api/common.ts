@@ -309,7 +309,7 @@ export async function requestCompatibleOpenaiUploadFile(
     // The browser will try to decode the response with brotli and fail
     // newHeaders.delete("content-encoding");
 
-    console.log("body", await res.clone().json());
+    // console.log("body", await res.clone().json());
     return new Response(res.body, {
       status: res.status,
       statusText: res.statusText,

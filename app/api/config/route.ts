@@ -6,6 +6,7 @@ import {
   readUserQuota,
   ShansingModelChoice,
 } from "@/app/api/shansing";
+import Decimal from "decimal.js";
 
 const serverConfig = getServerSideConfig();
 
@@ -24,6 +25,11 @@ const DANGER_CONFIG = {
   modelChoices: serverConfig.shansingModelChoices,
   userName: "",
   userQuota: "",
+  shansingOnlineSearchSearchPrice:
+    serverConfig.shansingOnlineSearchSearchPrice.toFixed(),
+  shansingOnlineSearchCrawlerPrice:
+    serverConfig.shansingOnlineSearchCrawlerPrice.toFixed(),
+  shansingUploadFilePrice: serverConfig.shansingUploadFilePrice.toFixed(),
 };
 
 declare global {

@@ -25,9 +25,6 @@ export async function pay(
   completionTokenNumber: number,
   extraFee: Decimal,
 ) {
-  if (FACTORY_MODE) {
-    return true;
-  }
   if (!username) {
     throw Error("Username not found");
   }
@@ -46,6 +43,16 @@ export async function pay(
         .mul(completionTokenNumber),
     )
     .plus(extraFee);
+  if (FACTORY_MODE) {
+    console.log(
+      "FAKE [pay]",
+      "username",
+      username,
+      "thisBilling",
+      thisBilling.toFixed(),
+    );
+    return true;
+  }
   console.log(
     "[pay]",
     "username",
@@ -54,6 +61,18 @@ export async function pay(
     thisBilling.toFixed(),
   );
   return decreaseUserQuota(username, thisBilling, true);
+}
+
+export async function payFixed(username: string, fee: Decimal) {
+  if (!username) {
+    throw Error("Username not found");
+  }
+  if (FACTORY_MODE) {
+    console.log("FAKE [payOnece]", "username", username, "fee", fee.toFixed());
+    return true;
+  }
+  console.log("[payOnece]", "username", username, "fee", fee.toFixed());
+  return decreaseUserQuota(username, fee, true);
 }
 
 export async function readUserQuota(username: string): Promise<Decimal> {

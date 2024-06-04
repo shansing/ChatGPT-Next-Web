@@ -191,9 +191,9 @@ async function handle(
             modelChoice,
             obj.promptTokenNumber + firstPromptTokenNumber,
             obj.completionTokenNumber + firstCompletionTokenNumber,
-            config.shansingOnlineSearchPrice.mul(
-              searchCount + newsCount + crawlerCount,
-            ),
+            config.shansingOnlineSearchSearchPrice
+              .mul(searchCount + newsCount)
+              .plus(config.shansingOnlineSearchCrawlerPrice.mul(crawlerCount)),
           );
         }
       });

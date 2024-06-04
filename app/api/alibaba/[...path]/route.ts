@@ -11,6 +11,7 @@ import { auth } from "../../auth";
 import {
   getUsernameFromHttpBasicAuth,
   pay,
+  payFixed,
   readUserQuota,
 } from "@/app/api/shansing";
 import {
@@ -84,6 +85,9 @@ async function handle(
       req,
       ALIBABA_BASE_URL,
     );
+    if (response.ok) {
+      payFixed(username, config.shansingUploadFilePrice.mul(1)).then();
+    }
     return NextResponse.json(await response.json(), {
       status: response.status,
     });
@@ -192,9 +196,9 @@ async function handle(
             modelChoice,
             obj.promptTokenNumber + firstPromptTokenNumber,
             obj.completionTokenNumber + firstCompletionTokenNumber,
-            config.shansingOnlineSearchPrice.mul(
-              searchCount + newsCount + crawlerCount,
-            ),
+            config.shansingOnlineSearchSearchPrice
+              .mul(searchCount + newsCount)
+              .plus(config.shansingOnlineSearchCrawlerPrice.mul(crawlerCount)),
           );
         }
       });

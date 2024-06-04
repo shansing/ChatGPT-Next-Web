@@ -503,6 +503,12 @@ const en: LocaleType = {
     modelPromptUnitPrice: "Prompt",
     modelCompletionUnitPrice: "Completion",
     modelFeature: "Feature",
+    otherPrice: {
+      title: "Additional Fee",
+      onlineSearchSearchPrice: "Online Search (per search)",
+      onlineSearchCrawlerPrice: "Online Search (per crawl)",
+      uploadFilePrice: "Upload File (Each, excluding Upload Images entry)",
+    },
     Refresh: {
       Title: "Force Reload",
       SubTitle: "Refresh to try getting the latest page",

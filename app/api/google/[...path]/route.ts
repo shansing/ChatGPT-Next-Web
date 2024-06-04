@@ -222,9 +222,9 @@ async function handle(
             modelChoice,
             prompt <= 128_000 ? prompt : prompt * 2,
             completion <= 128_000 ? completion : completion * 2,
-            config.shansingOnlineSearchPrice.mul(
-              searchCount + newsCount + crawlerCount,
-            ),
+            config.shansingOnlineSearchSearchPrice
+              .mul(searchCount + newsCount)
+              .plus(config.shansingOnlineSearchCrawlerPrice.mul(crawlerCount)),
           );
         }
       });

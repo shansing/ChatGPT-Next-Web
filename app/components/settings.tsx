@@ -641,6 +641,9 @@ export function Settings() {
     userQuota: "",
     aboutHtml: "",
     modelChoices: [] as ShansingModelChoice[],
+    shansingOnlineSearchSearchPrice: "",
+    shansingOnlineSearchCrawlerPrice: "",
+    shansingUploadFilePrice: "",
   });
   const [loadingQuota, setLoadingQuota] = useState(false);
   function getUserAndQuota() {
@@ -660,6 +663,10 @@ export function Settings() {
           userQuota: res.userQuota,
           aboutHtml: res.aboutHtml,
           modelChoices: res.modelChoices,
+          shansingOnlineSearchSearchPrice: res.shansingOnlineSearchSearchPrice,
+          shansingOnlineSearchCrawlerPrice:
+            res.shansingOnlineSearchCrawlerPrice,
+          shansingUploadFilePrice: res.shansingUploadFilePrice,
         });
       })
       .catch(() => {
@@ -812,6 +819,51 @@ export function Settings() {
                       </td>
                     </tr>
                   ))}
+                </tbody>
+              </table>
+            </div>
+          </ListItem>
+          <ListItem title={Locale.Shansing.otherPrice.title}>
+            <div className="about-html">
+              <table>
+                <tbody>
+                  <tr key="0">
+                    <td>
+                      {Locale.Shansing.otherPrice.onlineSearchSearchPrice}
+                    </td>
+                    <td className="emoji-text">
+                      <Emoji
+                        unified="1fa99"
+                        size={14}
+                        getEmojiUrl={getEmojiUrl}
+                      />
+                      {userAndQuota.shansingOnlineSearchSearchPrice}
+                    </td>
+                  </tr>
+                  <tr key="1">
+                    <td>
+                      {Locale.Shansing.otherPrice.onlineSearchCrawlerPrice}
+                    </td>
+                    <td className="emoji-text">
+                      <Emoji
+                        unified="1fa99"
+                        size={14}
+                        getEmojiUrl={getEmojiUrl}
+                      />
+                      {userAndQuota.shansingOnlineSearchCrawlerPrice}
+                    </td>
+                  </tr>
+                  <tr key="2">
+                    <td>{Locale.Shansing.otherPrice.uploadFilePrice}</td>
+                    <td className="emoji-text">
+                      <Emoji
+                        unified="1fa99"
+                        size={14}
+                        getEmojiUrl={getEmojiUrl}
+                      />
+                      {userAndQuota.shansingUploadFilePrice}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
