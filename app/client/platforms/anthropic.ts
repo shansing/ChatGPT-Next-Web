@@ -1,8 +1,12 @@
-import { ACCESS_CODE_PREFIX, Anthropic, ApiPath } from "@/app/constant";
+import {
+  ACCESS_CODE_PREFIX,
+  Anthropic,
+  ApiPath,
+  DEFAULT_API_HOST,
+} from "@/app/constant";
 import { ChatOptions, LLMApi, MultimodalContent } from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
-import { DEFAULT_API_HOST } from "@/app/constant";
 import { RequestMessage } from "@/app/typing";
 import {
   EventStreamContentType,
@@ -306,52 +310,6 @@ export class ClaudeApi implements LLMApi {
       }
     }
   }
-  async usage() {
-    return {
-      used: 0,
-      total: 0,
-    };
-  }
-  async models() {
-    // const provider = {
-    //   id: "anthropic",
-    //   providerName: "Anthropic",
-    //   providerType: "anthropic",
-    // };
-
-    return [
-      // {
-      //   name: "claude-instant-1.2",
-      //   available: true,
-      //   provider,
-      // },
-      // {
-      //   name: "claude-2.0",
-      //   available: true,
-      //   provider,
-      // },
-      // {
-      //   name: "claude-2.1",
-      //   available: true,
-      //   provider,
-      // },
-      // {
-      //   name: "claude-3-opus-20240229",
-      //   available: true,
-      //   provider,
-      // },
-      // {
-      //   name: "claude-3-sonnet-20240229",
-      //   available: true,
-      //   provider,
-      // },
-      // {
-      //   name: "claude-3-haiku-20240307",
-      //   available: true,
-      //   provider,
-      // },
-    ];
-  }
   path(path: string): string {
     const accessStore = useAccessStore.getState();
 
@@ -377,6 +335,10 @@ export class ClaudeApi implements LLMApi {
     baseUrl = trimEnd(baseUrl, "/");
 
     return `${baseUrl}/${path}`;
+  }
+
+  uploadFile(file: File): Promise<string> {
+    throw Error("Method not implemented");
   }
 }
 

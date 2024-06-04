@@ -49,7 +49,12 @@ import Locale, {
   changeLang,
   getLang,
 } from "../locales";
-import { copyToClipboard, isOnlineSearchModel, isVisionModel } from "../utils";
+import {
+  copyToClipboard,
+  isOnlineSearchModel,
+  isUploadFileModel,
+  isVisionModel,
+} from "../utils";
 import Link from "next/link";
 import {
   Anthropic,
@@ -732,7 +737,7 @@ export function Settings() {
               <div />
             ) : (
               <div className="emoji-text">
-                <Emoji unified="1fa99" size={14} getEmojiUrl={getEmojiUrl} />
+                <Emoji unified="1fa99" size={15} getEmojiUrl={getEmojiUrl} />
                 {userAndQuota.userQuota}
               </div>
             )}
@@ -780,6 +785,15 @@ export function Settings() {
                         {isVisionModel(choice.model) ? (
                           <Emoji
                             unified="1f5bc-fe0f"
+                            size={14}
+                            getEmojiUrl={getEmojiUrl}
+                          />
+                        ) : (
+                          ""
+                        )}
+                        {isUploadFileModel(choice.model) ? (
+                          <Emoji
+                            unified="1f4ce"
                             size={14}
                             getEmojiUrl={getEmojiUrl}
                           />

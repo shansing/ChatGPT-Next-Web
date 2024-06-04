@@ -59,6 +59,7 @@ export const DEFAULT_CONFIG = {
     enableInjectSystemPrompts: true,
     template: config?.template ?? DEFAULT_INPUT_TEMPLATE,
     shansingOnlineSearch: false,
+    shansingFileIds: [] as string[],
   },
 };
 

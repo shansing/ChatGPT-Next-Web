@@ -14,6 +14,7 @@ import {
   SUMMARIZE_MODEL,
   GEMINI_SUMMARIZE_MODEL,
   ALIBABA_SUMMARIZE_MODEL,
+  uploadFileModels,
 } from "../constant";
 import { ClientApi, RequestMessage, MultimodalContent } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
@@ -24,6 +25,7 @@ import { createPersistStore } from "../utils/store";
 import { identifyDefaultClaudeModel } from "../utils/checkers";
 import { collectModelsWithDefaultModel } from "../utils/model";
 import { useAccessStore } from "./access";
+import { file } from "@babel/types";
 
 export type ChatMessage = RequestMessage & {
   date: string;
@@ -376,16 +378,44 @@ export const useChatStore = createPersistStore(
           ]);
         });
 
-        var api: ClientApi;
-        if (modelConfig.model.startsWith("gemini")) {
-          api = new ClientApi(ModelProvider.GeminiPro);
-        } else if (identifyDefaultClaudeModel(modelConfig.model)) {
-          api = new ClientApi(ModelProvider.Claude);
-        } else if (modelConfig.model.startsWith("qwen-")) {
-          api = new ClientApi(ModelProvider.Alibaba);
-        } else {
-          api = new ClientApi(ModelProvider.GPT);
+        const uploadFileModel = uploadFileModels.find(
+          (uploadFileModel) => uploadFileModel.name === modelConfig.model,
+        );
+        //包含文件，目前以qwen模式为准
+        if (
+          uploadFileModel &&
+          modelConfig.shansingFileIds &&
+          modelConfig.shansingFileIds.length > 0
+        ) {
+          console.log("[shansingFileIds]", modelConfig.shansingFileIds);
+          if (!sendMessages[0] || sendMessages[0].role !== "system") {
+            sendMessages.unshift(
+              createMessage({
+                role: "system",
+                content: fillTemplateWith("", {
+                  ...modelConfig,
+                  template: DEFAULT_SYSTEM_TEMPLATE,
+                }),
+              }),
+            );
+          }
+          const content = modelConfig.shansingFileIds
+            .map((fileId) => uploadFileModel.prefix + fileId)
+            .join(uploadFileModel.split);
+          if (!sendMessages[1] || sendMessages[1].role !== "system") {
+            sendMessages.splice(
+              1,
+              0,
+              createMessage({
+                role: "system",
+                content: content,
+              }),
+            );
+          }
         }
+        // console.log('sendMessages', sendMessages)
+
+        const api = this.getClientApi(modelConfig.model);
 
         // make request
         api.llm.chat({
@@ -572,16 +602,7 @@ export const useChatStore = createPersistStore(
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
 
-        var api: ClientApi;
-        if (modelConfig.model.startsWith("gemini")) {
-          api = new ClientApi(ModelProvider.GeminiPro);
-        } else if (identifyDefaultClaudeModel(modelConfig.model)) {
-          api = new ClientApi(ModelProvider.Claude);
-        } else if (modelConfig.model.startsWith("qwen-")) {
-          api = new ClientApi(ModelProvider.Alibaba);
-        } else {
-          api = new ClientApi(ModelProvider.GPT);
-        }
+        const api = this.getClientApi(modelConfig.model);
 
         // remove error messages if any
         const messages = session.messages;
@@ -682,6 +703,34 @@ export const useChatStore = createPersistStore(
               console.error("[Summarize] ", err);
             },
           });
+        }
+      },
+
+      async uploadFiles(files: File[]): Promise<string[]> {
+        const session = get().currentSession();
+        const modelConfig = session.mask.modelConfig;
+        const api = this.getClientApi(modelConfig.model);
+
+        const fileIds: string[] = [];
+        for (const file of files) {
+          const fileId = await api.llm.uploadFile(file);
+          if (!fileId) {
+            throw Error(`[uploadFiles] fileId not found.`);
+          }
+          fileIds.push(fileId);
+        }
+        return fileIds;
+      },
+
+      getClientApi(model: string) {
+        if (model.startsWith("gemini")) {
+          return new ClientApi(ModelProvider.GeminiPro);
+        } else if (identifyDefaultClaudeModel(model)) {
+          return new ClientApi(ModelProvider.Claude);
+        } else if (model.startsWith("qwen-")) {
+          return new ClientApi(ModelProvider.Alibaba);
+        } else {
+          return new ClientApi(ModelProvider.GPT);
         }
       },
 

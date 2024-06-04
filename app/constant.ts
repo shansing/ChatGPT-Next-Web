@@ -107,6 +107,7 @@ export const Google = {
 
 export const AlibabaPath = {
   ChatPath: "v1/chat/completions",
+  FilePath: "v1/files",
 };
 
 export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lang
@@ -129,7 +130,10 @@ export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-latest";
 export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
-  default: "2021-09",
+  default: "as it is",
+  "gpt-3.5-turbo": "2021-09",
+  "gpt-3.5-turbo-1106": "2021-09",
+  "gpt-3.5-turbo-0125": "2021-09",
   "gpt-4-turbo": "2023-12",
   "gpt-4-turbo-2024-04-09": "2023-12",
   "gpt-4-turbo-preview": "2023-12",
@@ -267,4 +271,37 @@ export const internalAllowedWebDavEndpoints = [
   // "https://dav.idrivesync.com",
   // "https://webdav.yandex.com",
   // "https://app.koofr.net/dav/Koofr",
+];
+
+export const visionKeywords = [
+  "vision",
+  "claude-3",
+  "gemini-1.5-pro",
+  "gemini-1.5-flash",
+  "gpt-4o",
+  "-vl",
+];
+
+export const onlineSearchKeywords = [
+  "gpt-",
+  "qwen-turbo",
+  "qwen-plus",
+  "qwen-max",
+  // "qwen-long",
+  // "gemini-1.5-",
+  "gemini-1.5-pro",
+];
+
+export const uploadFileModels: {
+  name: string;
+  accept: string;
+  prefix: string;
+  split: string;
+}[] = [
+  {
+    name: "qwen-long",
+    accept: ".txt,.docx,.pdf,.epub,.mobi,.md",
+    prefix: "fileid://",
+    split: ",",
+  },
 ];

@@ -32,6 +32,7 @@ import {
   isVisionModel,
 } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
+import { finish } from "@hello-pangea/dnd/src/debug/timings";
 
 export interface OpenAIListModelResponse {
   object: string;
@@ -317,7 +318,7 @@ export class ChatGPTApi implements LLMApi {
         .getDate()
         .toString()
         .padStart(2, "0")}`;
-    const ONE_DAY = 1 * 24 * 60 * 60 * 1000;
+    const ONE_DAY = 24 * 60 * 60 * 1000;
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startDate = formatDate(startOfMonth);
@@ -406,6 +407,10 @@ export class ChatGPTApi implements LLMApi {
         providerType: "openai",
       },
     }));
+  }
+
+  uploadFile(file: File): Promise<string> {
+    throw Error("Method not implemented");
   }
 }
 export { OpenaiPath };

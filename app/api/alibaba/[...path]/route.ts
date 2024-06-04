@@ -1,5 +1,10 @@
 import { getServerSideConfig } from "@/app/config/server";
-import { ModelProvider, AlibabaPath, ALIBABA_BASE_URL } from "@/app/constant";
+import {
+  ModelProvider,
+  AlibabaPath,
+  ALIBABA_BASE_URL,
+  OpenaiPath,
+} from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
@@ -8,7 +13,11 @@ import {
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
-import { requestCompatibleOpenai } from "@/app/api/common";
+import {
+  requestCompatibleOpenai,
+  requestCompatibleOpenaiUploadFile,
+} from "@/app/api/common";
+import type { OpenAIListModelResponse } from "@/app/client/platforms/openai";
 
 const ALLOWD_PATH = new Set(Object.values(AlibabaPath));
 const config = getServerSideConfig();
@@ -61,6 +70,25 @@ async function handle(
       },
     );
   }
+
+  const authResult = auth(req, ModelProvider.Alibaba);
+  if (authResult.error) {
+    return NextResponse.json(authResult, {
+      status: 401,
+    });
+  }
+
+  if (subpath === AlibabaPath.FilePath) {
+    console.log("[Alibaba Route] upload file; username=" + username);
+    const response = await requestCompatibleOpenaiUploadFile(
+      req,
+      ALIBABA_BASE_URL,
+    );
+    return NextResponse.json(await response.json(), {
+      status: response.status,
+    });
+  }
+
   const requestJson = await req.clone().json();
   const modelChoice = config.shansingModelChoices.find(
     (choice) => choice.model === requestJson.model,
@@ -92,19 +120,8 @@ async function handle(
     );
   }
 
-  const authResult = auth(req, ModelProvider.Alibaba);
-  if (authResult.error) {
-    return NextResponse.json(authResult, {
-      status: 401,
-    });
-  }
-
   try {
-    const response = await requestCompatibleOpenai(
-      req,
-      ALIBABA_BASE_URL,
-      config.shansingChinaSocksProxy,
-    );
+    const response = await requestCompatibleOpenai(req, ALIBABA_BASE_URL);
 
     const firstPromptTokenNumber = parseInt(
         response?.headers.get("X-Shansing-First-Prompt-Token-Number") ?? "0",

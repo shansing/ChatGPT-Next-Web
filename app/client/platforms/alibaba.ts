@@ -27,6 +27,8 @@ import {
   getMessageImages,
   isVisionModel,
 } from "@/app/utils";
+import { finish } from "@hello-pangea/dnd/src/debug/timings";
+import { Readable } from "node:stream";
 
 //ref: openai.ts
 
@@ -275,10 +277,40 @@ export class AlibabaApi implements LLMApi {
     }
   }
 
-  usage(): Promise<LLMUsage> {
-    throw new Error("Method not implemented.");
-  }
-  async models(): Promise<LLMModel[]> {
-    return [];
+  async uploadFile(file: File): Promise<string> {
+    const controller = new AbortController();
+    const requestTimeoutId = setTimeout(
+      () => controller.abort(),
+      REQUEST_TIMEOUT_MS,
+    );
+
+    const formData = new FormData();
+    formData.append("purpose", "file-extract");
+    // formData.append('file',
+    //     new Readable({
+    //       read() {
+    //         this.push(file.stream().getBuffer());
+    //         this.push(null);
+    //       }
+    //     }),
+    //     file.name
+    // );
+    formData.append("file", file, file.name);
+    const headers = getHeaders();
+    delete headers["Content-Type"];
+    delete headers["application/json"];
+    const response = await fetch(this.path(AlibabaPath.FilePath), {
+      method: "POST",
+      body: formData,
+      signal: controller.signal,
+      headers: {
+        ...headers,
+      },
+    });
+    clearTimeout(requestTimeoutId);
+
+    const responseJson = await response.json();
+    // @ts-ignore
+    return responseJson.id;
   }
 }

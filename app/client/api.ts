@@ -68,8 +68,9 @@ export interface LLMModelProvider {
 
 export abstract class LLMApi {
   abstract chat(options: ChatOptions): Promise<void>;
-  abstract usage(): Promise<LLMUsage>;
-  abstract models(): Promise<LLMModel[]>;
+  // abstract usage(): Promise<LLMUsage>;
+  // abstract models(): Promise<LLMModel[]>;
+  abstract uploadFile(file: File): Promise<string>;
 }
 
 type ProviderName = "openai" | "azure" | "claude" | "palm";

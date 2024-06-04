@@ -35,6 +35,8 @@ import EarthOffIcon from "../icons/earth-off.svg";
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
 import AutoIcon from "../icons/auto.svg";
+import FileIcon from "../icons/file-document-outline.svg";
+import FileCheckIcon from "../icons/file-document-check-outline.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
@@ -61,6 +63,7 @@ import {
   getMessageImages,
   isVisionModel,
   isOnlineSearchModel,
+  isUploadFileModel,
 } from "../utils";
 
 import { compressImage } from "@/app/utils/chat";
@@ -90,6 +93,7 @@ import {
   Path,
   REQUEST_TIMEOUT_MS,
   UNFINISHED_INPUT,
+  uploadFileModels,
 } from "../constant";
 import { Avatar } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
@@ -100,6 +104,7 @@ import { ExportMessageModal } from "./exporter";
 import { getClientConfig } from "../config/client";
 import { useAllModels } from "../utils/hooks";
 import { MultimodalContent } from "../client/api";
+import { images } from "next/dist/build/webpack/config/blocks/images";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -422,6 +427,9 @@ function useScrollToBottom(
 
 export function ChatActions(props: {
   uploadImage: () => void;
+  uploadFile: () => void;
+  uploadedFileIds: string[];
+  setUploadedFileIds: (newFilesId: string[]) => void;
   setAttachImages: (images: string[]) => void;
   setUploading: (uploading: boolean) => void;
   showPromptModal: () => void;
@@ -454,8 +462,8 @@ export function ChatActions(props: {
     );
     showToast(
       newStatus
-        ? Locale.Shansing.OnlineSearchOnTip
-        : Locale.Shansing.OnlineSearchOffTip,
+        ? Locale.Shansing.OnlineSearch.OnTip
+        : Locale.Shansing.OnlineSearch.OffTip,
     );
   }
   function turnOnlineSearchWithoutTip(newStatus: boolean) {
@@ -487,6 +495,7 @@ export function ChatActions(props: {
   }, [allModels]);
   const [showModelSelector, setShowModelSelector] = useState(false);
   const [showUploadImage, setShowUploadImage] = useState(false);
+  const [showUploadFile, setShowUploadFile] = useState(false);
   const [showOnlineSearch, setShowOnlineSearch] = useState(false);
 
   useEffect(() => {
@@ -500,6 +509,18 @@ export function ChatActions(props: {
     setShowOnlineSearch(showOnlineSearch);
     if (!showOnlineSearch && onlineSearch) {
       turnOnlineSearchWithoutTip(false);
+    }
+    const showUploadFile = isUploadFileModel(currentModel);
+    setShowUploadFile(showUploadFile);
+    if (
+      !showUploadFile &&
+      props.uploadedFileIds &&
+      props.uploadedFileIds.length > 0
+    ) {
+      props.setUploadedFileIds([]);
+    }
+    if (!props.uploadedFileIds) {
+      props.setUploadedFileIds([]);
     }
 
     // if current model is not available
@@ -574,10 +595,31 @@ export function ChatActions(props: {
         />
       )}
 
+      {showUploadFile && (
+        <ChatAction
+          onClick={props.uploadFile}
+          text={
+            props.uploadedFileIds && props.uploadedFileIds.length > 0
+              ? props.uploadedFileIds.length +
+                Locale.Shansing.UploadFile.UploadedTitle
+              : Locale.Shansing.UploadFile.Title
+          }
+          icon={
+            props.uploading ? (
+              <LoadingButtonIcon />
+            ) : props.uploadedFileIds && props.uploadedFileIds.length > 0 ? (
+              <FileCheckIcon />
+            ) : (
+              <FileIcon />
+            )
+          }
+        />
+      )}
+
       {showOnlineSearch && (
         <ChatAction
           onClick={switchOnlineSearch}
-          text={Locale.Shansing.OnlineSearch}
+          text={Locale.Shansing.OnlineSearch.Title}
           icon={onlineSearch ? <EarthIcon /> : <EarthOffIcon />}
         />
       )}
@@ -1200,6 +1242,9 @@ function _Chat() {
   );
 
   async function uploadImage() {
+    if (uploading) {
+      return;
+    }
     const images: string[] = [];
     images.push(...attachImages);
 
@@ -1243,6 +1288,67 @@ function _Chat() {
       images.splice(3, imagesLength - 3);
     }
     setAttachImages(images);
+  }
+
+  const uploadedFileIds =
+    chatStore.currentSession().mask.modelConfig.shansingFileIds;
+  function setUploadedFileIds(newFileIds: string[]) {
+    chatStore.updateCurrentSession(
+      (session) => (session.mask.modelConfig.shansingFileIds = newFileIds),
+    );
+  }
+
+  async function uploadFile() {
+    if (uploading) {
+      return;
+    }
+    if (
+      uploadedFileIds.length === 0 &&
+      !(await showConfirm(Locale.Shansing.UploadFile.ConfirmTip))
+    ) {
+      return;
+    }
+    const modelName = session.mask.modelConfig.model;
+    const uploadFileModel = uploadFileModels.find(
+      (uploadFileModel) => uploadFileModel.name === modelName,
+    );
+    if (!uploadFileModel) {
+      console.error("Unable to match uploadFileModel");
+      return;
+    }
+
+    const files: string[] = [];
+    files.push(...uploadedFileIds);
+
+    files.push(
+      ...(await new Promise<string[]>((res, rej) => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = uploadFileModel.accept;
+        fileInput.multiple = true;
+        fileInput.onchange = (event: any) => {
+          setUploading(true);
+          chatStore
+            .uploadFiles(event.target.files)
+            .then((fileIds) => {
+              setIsLoading(false);
+              res(fileIds);
+            })
+            .catch((e) => {
+              setUploading(false);
+              showToast(Locale.Shansing.UploadFile.FailureTip);
+              rej(e);
+            });
+        };
+        fileInput.click();
+      })),
+    );
+
+    const filesLength = files.length;
+    if (filesLength > 3) {
+      files.splice(3, filesLength - 3);
+    }
+    setUploadedFileIds(files);
   }
 
   return (
@@ -1512,6 +1618,9 @@ function _Chat() {
 
         <ChatActions
           uploadImage={uploadImage}
+          uploadFile={uploadFile}
+          uploadedFileIds={uploadedFileIds}
+          setUploadedFileIds={setUploadedFileIds}
           setAttachImages={setAttachImages}
           setUploading={setUploading}
           showPromptModal={() => setShowPromptModal(true)}

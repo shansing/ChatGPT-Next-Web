@@ -286,14 +286,11 @@ export class GeminiProApi implements LLMApi {
       options.onError?.(e as Error);
     }
   }
-  usage(): Promise<LLMUsage> {
-    throw new Error("Method not implemented.");
-  }
-  async models(): Promise<LLMModel[]> {
-    return [];
-  }
   path(path: string): string {
     return "/api/google/" + path;
+  }
+  uploadFile(file: File): Promise<string> {
+    throw Error("Method not implemented");
   }
 }
 

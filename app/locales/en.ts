@@ -510,10 +510,20 @@ const en: LocaleType = {
       Confirm: "Confirm Refresh? Unsaved changes will be lost.",
     },
     copyNotSupported: "Your browser does not support copying images",
-    OnlineSearch: "Online Search",
-    OnlineSearchOnTip:
-      "Online search is enabled, please be aware of the charges",
-    OnlineSearchOffTip: "Online search is disabled",
+    OnlineSearch: {
+      Title: "Online Search",
+      OnTip: "Online search is enabled; please be aware of the charges",
+      OffTip: "Online search is disabled",
+    },
+    UploadFile: {
+      Title: "Upload File",
+      UploadedTitle: " file(s)",
+      ConfirmTip:
+        "Shansing He2per provides limited support for file uploads, aiming to ensure functionality without prioritizing interface refinement.\n" +
+        "Please select the model you wish to use first, then click on Upload File. After confirming this dialog, choose local files and wait for the icon to change, displaying a 'small tick,' indicating that you can now pose questions about the uploaded files in this chat.\n" +
+        "Files are periodically cleared, and session longevity is not guaranteed. Please be mindful of associated costs when using this feature.",
+      FailureTip: "Failed to upload files; please try again later",
+    },
   },
 };
 

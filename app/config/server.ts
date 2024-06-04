@@ -166,9 +166,6 @@ export const getServerSideConfig = () => {
       ? process.env.SHANSING_QUOTA_AGENT_URL
       : "",
     shansingModelChoices: shansingModelChoices,
-    shansingChinaSocksProxy: process.env.SHANSING_CHINA_SOCKS_PROXY
-      ? process.env.SHANSING_CHINA_SOCKS_PROXY
-      : undefined,
     shansingEmojiCdn: process.env.SHANSING_EMOJI_CDN
       ? process.env.SHANSING_EMOJI_CDN
       : "https://fastly.jsdelivr.net/npm/emoji-datasource-apple/img/",

@@ -245,3 +245,77 @@ export async function requestCompatibleOpenai(
     clearTimeout(timeoutId);
   }
 }
+
+export async function requestCompatibleOpenaiUploadFile(
+  req: NextRequest,
+  baseUrl: string,
+) {
+  const controller = new AbortController();
+
+  var authValue = req.headers.get("Authorization") ?? "",
+    authHeaderName = "Authorization";
+
+  let path = `${req.nextUrl.pathname}`.replaceAll("/api/alibaba/", ""); //${req.nextUrl.search}
+
+  if (!baseUrl.startsWith("http")) {
+    baseUrl = `https://${baseUrl}`;
+  }
+
+  if (baseUrl.endsWith("/")) {
+    baseUrl = baseUrl.slice(0, -1);
+  }
+
+  console.log("[Base Url]", baseUrl);
+
+  const timeoutId = setTimeout(
+    () => {
+      controller.abort();
+    },
+    10 * 60 * 1000,
+  );
+
+  const fetchUrl = `${baseUrl}/${path}`;
+  // const formData: FormData = await req.formData()
+  // console.log("formData", formData)
+  const fetchOptions: RequestInit = {
+    headers: {
+      // "Content-Type": "multipart/form-data",
+      "Content-Type": req.headers.get("Content-Type") ?? "",
+      "Cache-Control": "no-store",
+      [authHeaderName]: authValue,
+    },
+    method: req.method,
+    // body: formData,
+    body: req.body,
+    redirect: "follow",
+    // @ts-ignore
+    duplex: "half",
+    signal: controller.signal,
+  };
+
+  try {
+    // console.log("[fetchUrl]", fetchUrl);
+    const res = await fetch(fetchUrl, fetchOptions);
+
+    // to prevent browser prompt for credentials
+    const newHeaders = new Headers(res.headers);
+    newHeaders.delete("www-authenticate");
+    // to disable nginx buffering
+    // newHeaders.set("X-Accel-Buffering", "no");
+
+    // The latest version of the OpenAI API forced the content-encoding to be "br" in json response
+    // So if the streaming is disabled, we need to remove the content-encoding header
+    // Because Vercel uses gzip to compress the response, if we don't remove the content-encoding header
+    // The browser will try to decode the response with brotli and fail
+    // newHeaders.delete("content-encoding");
+
+    console.log("body", await res.clone().json());
+    return new Response(res.body, {
+      status: res.status,
+      statusText: res.statusText,
+      headers: newHeaders,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}

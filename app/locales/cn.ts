@@ -498,13 +498,24 @@ const cn = {
     Refresh: {
       Title: "强制刷新",
       SubTitle: "尝试更新到最新版，效果等同于 Ctrl+F5",
-      Action: "立即刷新",
+      Action: "刷新",
       Confirm: "确定刷新？您正在编辑的文本可能丢失。",
     },
     copyNotSupported: "您的浏览器暂不支持复制图片",
-    OnlineSearch: "联网搜索",
-    OnlineSearchOnTip: "联网搜索已开启，请留意费用",
-    OnlineSearchOffTip: "联网搜索已关闭",
+    OnlineSearch: {
+      Title: "联网搜索",
+      OnTip: "联网搜索已开启，请留意费用",
+      OffTip: "联网搜索已关闭",
+    },
+    UploadFile: {
+      Title: "上传文件",
+      UploadedTitle: " 个文件",
+      ConfirmTip:
+        "Shansing He2per 为文件上传提供有限支持，尽力确保功能可用，而不求界面完善。" +
+        "请先选择您要使用的模型，然后点击上传文件。确认该对话框后选择本地文件，等待图标变化显示“小勾”，即可在当前对话连续对所传文件提问。\n" +
+        "文件不定期清理，会话不保证长期可用。使用时敬请留意费用。",
+      FailureTip: "文件上传失败，请稍候再试",
+    },
   },
 };
 

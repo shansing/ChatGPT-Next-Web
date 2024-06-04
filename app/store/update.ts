@@ -11,6 +11,7 @@ import Locale from "../locales";
 import { use } from "react";
 import { useAppConfig } from ".";
 import { ClientApi } from "../client/api";
+import { usage } from "browserslist";
 
 const ONE_MINUTE = 60 * 1000;
 const isApp = !!getClientConfig()?.isApp;
@@ -144,14 +145,15 @@ export const useUpdateStore = createPersistStore(
 
       try {
         const api = new ClientApi(ModelProvider.GPT);
-        const usage = await api.llm.usage();
+        // const usage = await api.llm.usage();
+        throw Error("method not allowed");
 
-        if (usage) {
-          set(() => ({
-            used: usage.used,
-            subscription: usage.total,
-          }));
-        }
+        // if (usage) {
+        //   set(() => ({
+        //     used: usage.used,
+        //     subscription: usage.total,
+        //   }));
+        // }
       } catch (e) {
         console.error((e as Error).message);
       }
