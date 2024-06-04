@@ -809,7 +809,7 @@ export function Settings() {
                         )}
                         {isOnlineSearchModel(choice.model) ? (
                           <Emoji
-                            unified="1f310"
+                            unified="1f30e"
                             size={14}
                             getEmojiUrl={getEmojiUrl}
                           />
@@ -828,7 +828,12 @@ export function Settings() {
               <table>
                 <tbody>
                   <tr key="0">
-                    <td>
+                    <td className="emoji-text">
+                      <Emoji
+                        unified="1f30e"
+                        size={14}
+                        getEmojiUrl={getEmojiUrl}
+                      />
                       {Locale.Shansing.otherPrice.onlineSearchSearchPrice}
                     </td>
                     <td className="emoji-text">
@@ -841,7 +846,12 @@ export function Settings() {
                     </td>
                   </tr>
                   <tr key="1">
-                    <td>
+                    <td className="emoji-text">
+                      <Emoji
+                        unified="1f30e"
+                        size={14}
+                        getEmojiUrl={getEmojiUrl}
+                      />
                       {Locale.Shansing.otherPrice.onlineSearchCrawlerPrice}
                     </td>
                     <td className="emoji-text">
@@ -854,7 +864,14 @@ export function Settings() {
                     </td>
                   </tr>
                   <tr key="2">
-                    <td>{Locale.Shansing.otherPrice.uploadFilePrice}</td>
+                    <td className="emoji-text">
+                      <Emoji
+                        unified="1f4c4"
+                        size={14}
+                        getEmojiUrl={getEmojiUrl}
+                      />
+                      {Locale.Shansing.otherPrice.uploadFilePrice}
+                    </td>
                     <td className="emoji-text">
                       <Emoji
                         unified="1fa99"
