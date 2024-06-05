@@ -153,9 +153,9 @@ async function handle(
             responseBody,
         );
       })
-      .then((usageObj) => {
-        if (usageObj && usageObj.promptTokenNumber == null) {
-          const responseBody = usageObj.responseBody;
+      .then((obj) => {
+        if (obj && obj.promptTokenNumber == null) {
+          const responseBody = obj.responseBody;
           //console.log("[responseBody]" + responseBody)
           const usageIndex = responseBody.indexOf('"usage"');
           if (usageIndex !== -1) {
@@ -171,7 +171,7 @@ async function handle(
               if (jsonData.input_tokens !== undefined) {
                 return {
                   promptTokenNumber: jsonData.input_tokens as number,
-                  completionTokenNumber: usageObj.completionTokenNumber,
+                  completionTokenNumber: obj.completionTokenNumber,
                 };
               }
             }
@@ -185,9 +185,11 @@ async function handle(
               responseBody,
           );
         }
+        return obj;
       })
       .then((obj) => {
         if (obj) {
+          console.log("[usage][anthropic][final]", obj);
           return pay(
             username,
             modelChoice,
@@ -310,17 +312,17 @@ async function request(req: NextRequest) {
       console.error(`[Anthropic] filter`, e);
     }
   }
-  console.log("[Anthropic request]", fetchOptions.headers, req.method);
+  // console.log("[Anthropic request]", fetchOptions.headers, req.method);
   try {
     const res = await fetch(fetchUrl, fetchOptions);
 
-    console.log(
-      "[Anthropic response]",
-      res.status,
-      "   ",
-      res.headers,
-      res.url,
-    );
+    // console.log(
+    //   "[Anthropic response]",
+    //   res.status,
+    //   "   ",
+    //   res.headers,
+    //   res.url,
+    // );
     // to prevent browser prompt for credentials
     const newHeaders = new Headers(res.headers);
     newHeaders.delete("www-authenticate");
