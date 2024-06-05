@@ -125,7 +125,10 @@ Current date: {{ShansingHelperUserDate}}
 Latex inline: \\(x^2\\) 
 Latex block: $$e=mc^2$$`;
 
-export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
+export const GPT_4_MODEL = "gpt-4o-2024-05-13";
+export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
+
+export const SUMMARIZE_MODEL = GPT_35_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-latest";
 export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
 
