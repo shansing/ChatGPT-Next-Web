@@ -84,7 +84,7 @@ export enum ModelProvider {
 
 export const Anthropic = {
   ChatPath: "v1/messages",
-  ChatPath1: "v1/complete",
+  // ChatPath1: "v1/complete",
   ExampleEndpoint: "https://api.anthropic.com",
   Vision: "2023-06-01",
 };
@@ -127,9 +127,11 @@ Latex block: $$e=mc^2$$`;
 
 export const GPT_4_MODEL = "gpt-4o-2024-05-13";
 export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
+export const CLAUDE_3_HAIKU = "claude-3-haiku-20240307";
 
 export const SUMMARIZE_MODEL = GPT_35_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-latest";
+export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_3_HAIKU;
 export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
@@ -147,6 +149,9 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
   "gemini-pro-vision": "2023-12",
+  "claude-3-opus-20240229": "2023-08",
+  "claude-3-sonnet-20240229": "2023-08",
+  "claude-3-haiku-20240307": "2023-08",
 };
 
 const openaiModels = [
@@ -258,6 +263,9 @@ export const modelMaxTotalTokenNumber = [
   { name: "qwen-long", number: 9_000 }, // it's not 10_000_000
   { name: "qwen-vl-", number: 6_000 },
   { name: "gemini-", number: 128_000 },
+  { name: "claude-3-opus-20240229", number: 200_000 },
+  { name: "claude-3-sonnet-20240229", number: 200_000 },
+  { name: "claude-3-haiku-20240307", number: 200_000 },
   { name: "", number: 4_000 }, //default
 ] as const;
 

@@ -15,6 +15,7 @@ import {
   GEMINI_SUMMARIZE_MODEL,
   ALIBABA_SUMMARIZE_MODEL,
   uploadFileModels,
+  CLAUDE_SUMMARIZE_MODEL,
 } from "../constant";
 import { ClientApi, RequestMessage, MultimodalContent } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
@@ -106,6 +107,9 @@ function getSummarizeModel(currentModel: string) {
   }
   if (currentModel.startsWith("gemini")) {
     return GEMINI_SUMMARIZE_MODEL;
+  }
+  if (currentModel.startsWith("claude")) {
+    return CLAUDE_SUMMARIZE_MODEL;
   }
   if (currentModel.startsWith("qwen-")) {
     return ALIBABA_SUMMARIZE_MODEL;

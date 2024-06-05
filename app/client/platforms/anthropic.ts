@@ -4,7 +4,7 @@ import {
   ApiPath,
   DEFAULT_API_HOST,
 } from "@/app/constant";
-import { ChatOptions, LLMApi, MultimodalContent } from "../api";
+import { ChatOptions, getHeaders, LLMApi, MultimodalContent } from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
 import { RequestMessage } from "@/app/typing";
@@ -194,12 +194,19 @@ export class ClaudeApi implements LLMApi {
       body: JSON.stringify(requestBody),
       signal: controller.signal,
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "x-api-key": accessStore.anthropicApiKey,
-        "anthropic-version": accessStore.anthropicApiVersion,
-        Authorization: getAuthKey(accessStore.anthropicApiKey),
+        ...getHeaders(),
+        ...(options.config.checkShansingOnlineSearch && {
+          "X-Shansing-Online-Search": modelConfig.shansingOnlineSearch + "",
+        }),
+        "anthropic-version": "2023-06-01",
       },
+      // headers: {
+      // "Content-Type": "application/json",
+      // Accept: "application/json",
+      // "x-api-key": accessStore.anthropicApiKey,
+      // "anthropic-version": accessStore.anthropicApiVersion,
+      // Authorization: getAuthKey(accessStore.anthropicApiKey),
+      // },
     };
 
     if (shouldStream) {
@@ -356,22 +363,22 @@ function bearer(value: string) {
   return `Bearer ${value.trim()}`;
 }
 
-function getAuthKey(apiKey = "") {
-  const accessStore = useAccessStore.getState();
-  const isApp = !!getClientConfig()?.isApp;
-  let authKey = "";
-
-  if (apiKey) {
-    // use user's api key first
-    authKey = bearer(apiKey);
-  } else if (
-    accessStore.enabledAccessControl() &&
-    !isApp &&
-    !!accessStore.accessCode
-  ) {
-    // or use access code
-    authKey = bearer(ACCESS_CODE_PREFIX + accessStore.accessCode);
-  }
-
-  return authKey;
-}
+// function getAuthKey(apiKey = "") {
+//   const accessStore = useAccessStore.getState();
+//   const isApp = !!getClientConfig()?.isApp;
+//   let authKey = "";
+//
+//   if (apiKey) {
+//     // use user's api key first
+//     authKey = bearer(apiKey);
+//   } else if (
+//     accessStore.enabledAccessControl() &&
+//     !isApp &&
+//     !!accessStore.accessCode
+//   ) {
+//     // or use access code
+//     authKey = bearer(ACCESS_CODE_PREFIX + accessStore.accessCode);
+//   }
+//
+//   return authKey;
+// }

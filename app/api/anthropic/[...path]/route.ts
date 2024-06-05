@@ -10,8 +10,13 @@ import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
 import { collectModelTable } from "@/app/utils/model";
+import {
+  getUsernameFromHttpBasicAuth,
+  pay,
+  readUserQuota,
+} from "@/app/api/shansing";
 
-const ALLOWD_PATH = new Set([Anthropic.ChatPath, Anthropic.ChatPath1]);
+const ALLOWD_PATH = new Set([Anthropic.ChatPath]);
 
 async function handle(
   req: NextRequest,
@@ -38,6 +43,30 @@ async function handle(
     );
   }
 
+  const username = getUsernameFromHttpBasicAuth(req);
+  if (!username) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "[Shansing He2per] Http basic auth is needed",
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+  if ((await readUserQuota(username)).lessThanOrEqualTo(0)) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "[Shansing He2per] Insufficient quota | 余额不足",
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+
   const authResult = auth(req, ModelProvider.Claude);
   if (authResult.error) {
     return NextResponse.json(authResult, {
@@ -45,8 +74,132 @@ async function handle(
     });
   }
 
+  const requestJson = await req.clone().json();
+  const modelChoice = config.shansingModelChoices.find(
+    (choice) => choice.model === requestJson.model,
+  );
+  if (!modelChoice) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "[Shansing He2per] Unsupported model | 该模型不再支持",
+      },
+      {
+        status: 401,
+      },
+    );
+  }
+
   try {
     const response = await request(req);
+
+    const firstPromptTokenNumber = parseInt(
+        response?.headers.get("X-Shansing-First-Prompt-Token-Number") ?? "0",
+      ),
+      firstCompletionTokenNumber = parseInt(
+        response?.headers.get("X-Shansing-First-Completion-Token-Number") ??
+          "0",
+      ),
+      searchCount = parseInt(
+        response?.headers.get("X-Shansing-Search-Count") ?? "0",
+      ),
+      newsCount = parseInt(
+        response?.headers.get("X-Shansing-News-Count") ?? "0",
+      ),
+      crawlerCount = parseInt(
+        response?.headers.get("X-Shansing-Crawler-Count") ?? "0",
+      );
+    response
+      .clone()
+      .text()
+      .then((responseBody) => {
+        //console.log("[responseBody]" + responseBody)
+        const usageIndex = responseBody.lastIndexOf('"usage"');
+        if (usageIndex !== -1) {
+          const openBracket = responseBody.indexOf("{", usageIndex);
+          const closeBracket = responseBody.indexOf("}", openBracket);
+          if (openBracket !== -1 && closeBracket !== -1) {
+            const jsonString = responseBody.substring(
+              openBracket,
+              closeBracket + 1,
+            );
+            console.log(
+              "[usage][anthropic]",
+              {
+                firstPromptTokenNumber,
+                firstCompletionTokenNumber,
+                searchCount,
+                newsCount,
+                crawlerCount,
+              },
+              jsonString,
+            );
+            const jsonData = JSON.parse(jsonString);
+            if (jsonData.output_tokens !== undefined) {
+              return {
+                promptTokenNumber: jsonData.input_tokens as number,
+                completionTokenNumber: jsonData.output_tokens as number,
+                responseBody,
+              };
+            }
+          }
+        }
+        console.warn(
+          "[ATTENTION] unable to find usage, username=" +
+            username +
+            ", url=" +
+            req.url +
+            ", responseBody=" +
+            responseBody,
+        );
+      })
+      .then((usageObj) => {
+        if (usageObj && usageObj.promptTokenNumber == null) {
+          const responseBody = usageObj.responseBody;
+          //console.log("[responseBody]" + responseBody)
+          const usageIndex = responseBody.indexOf('"usage"');
+          if (usageIndex !== -1) {
+            const openBracket = responseBody.indexOf("{", usageIndex);
+            const closeBracket = responseBody.indexOf("}", openBracket);
+            if (openBracket !== -1 && closeBracket !== -1) {
+              const jsonString = responseBody.substring(
+                openBracket,
+                closeBracket + 1,
+              );
+              console.log("[usage][anthropic][fromStart]", jsonString);
+              const jsonData = JSON.parse(jsonString);
+              if (jsonData.input_tokens !== undefined) {
+                return {
+                  promptTokenNumber: jsonData.input_tokens as number,
+                  completionTokenNumber: usageObj.completionTokenNumber,
+                };
+              }
+            }
+          }
+          console.warn(
+            "[ATTENTION] unable to find usage (fromStart), username=" +
+              username +
+              ", url=" +
+              req.url +
+              ", responseBody=" +
+              responseBody,
+          );
+        }
+      })
+      .then((obj) => {
+        if (obj) {
+          return pay(
+            username,
+            modelChoice,
+            obj.promptTokenNumber + firstPromptTokenNumber,
+            obj.completionTokenNumber + firstCompletionTokenNumber,
+            config.shansingOnlineSearchSearchPrice
+              .mul(searchCount + newsCount)
+              .plus(config.shansingOnlineSearchCrawlerPrice.mul(crawlerCount)),
+          );
+        }
+      });
+
     return response;
   } catch (e) {
     console.error("[Anthropic] ", e);
@@ -78,7 +231,7 @@ export const preferredRegion = [
   "syd1",
 ];
 
-const serverConfig = getServerSideConfig();
+const config = getServerSideConfig();
 
 async function request(req: NextRequest) {
   const controller = new AbortController();
@@ -87,13 +240,12 @@ async function request(req: NextRequest) {
   let authValue =
     req.headers.get(authHeaderName) ||
     req.headers.get("Authorization")?.replaceAll("Bearer ", "").trim() ||
-    serverConfig.anthropicApiKey ||
+    config.anthropicApiKey ||
     "";
 
   let path = `${req.nextUrl.pathname}`.replaceAll(ApiPath.Anthropic, "");
 
-  let baseUrl =
-    serverConfig.anthropicUrl || serverConfig.baseUrl || ANTHROPIC_BASE_URL;
+  let baseUrl = config.anthropicUrl || config.baseUrl || ANTHROPIC_BASE_URL;
 
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;
@@ -122,7 +274,7 @@ async function request(req: NextRequest) {
       [authHeaderName]: authValue,
       "anthropic-version":
         req.headers.get("anthropic-version") ||
-        serverConfig.anthropicApiVersion ||
+        config.anthropicApiVersion ||
         Anthropic.Vision,
     },
     method: req.method,
@@ -134,12 +286,9 @@ async function request(req: NextRequest) {
   };
 
   // #1815 try to refuse some request to some models
-  if (serverConfig.customModels && req.body) {
+  if (config.customModels && req.body) {
     try {
-      const modelTable = collectModelTable(
-        DEFAULT_MODELS,
-        serverConfig.customModels,
-      );
+      const modelTable = collectModelTable(DEFAULT_MODELS, config.customModels);
       const clonedBody = await req.text();
       fetchOptions.body = clonedBody;
 
