@@ -287,9 +287,9 @@ export const visionKeywords = [
 
 export const onlineSearchKeywords = [
   "gpt-",
-  "qwen-turbo",
-  "qwen-plus",
-  "qwen-max",
+  // "qwen-turbo",
+  // "qwen-plus",
+  // "qwen-max",
   // "qwen-long",
   // "gemini-1.5-",
   "gemini-1.5-pro",
