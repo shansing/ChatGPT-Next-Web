@@ -118,13 +118,13 @@ async function handle(
         const endUsage = parseUsageObj(responseBody, "usage", false);
         console.log(
           "[usage][anthropic]",
-          {
+          JSON.stringify({
             firstPromptTokenNumber,
             firstCompletionTokenNumber,
             searchCount,
             newsCount,
             crawlerCount,
-          },
+          }),
           startUsage,
           endUsage,
         );

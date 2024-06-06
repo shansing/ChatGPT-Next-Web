@@ -180,13 +180,13 @@ async function handle(
         );
         console.log(
           "[usage][google]",
-          {
+          JSON.stringify({
             firstPromptTokenNumber,
             firstCompletionTokenNumber,
             searchCount,
             newsCount,
             crawlerCount,
-          },
+          }),
           usageMetadata,
         );
         if (

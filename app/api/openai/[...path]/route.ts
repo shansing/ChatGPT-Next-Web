@@ -146,13 +146,13 @@ async function handle(
         const usage = parseUsageObj(responseBody, "usage", false);
         console.log(
           "[usage][openai]",
-          {
+          JSON.stringify({
             firstPromptTokenNumber,
             firstCompletionTokenNumber,
             searchCount,
             newsCount,
             crawlerCount,
-          },
+          }),
           usage,
         );
         if (

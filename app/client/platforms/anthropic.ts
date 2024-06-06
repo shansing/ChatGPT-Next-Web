@@ -4,6 +4,7 @@ import {
   ApiPath,
   DEFAULT_API_HOST,
   modelMaxTotalTokenNumber,
+  REQUEST_TIMEOUT_MS,
 } from "@/app/constant";
 import { ChatOptions, getHeaders, LLMApi, MultimodalContent } from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
@@ -17,6 +18,7 @@ import {
 import Locale from "../../locales";
 import { prettyObject } from "@/app/utils/format";
 import { getMessageTextContent, isVisionModel } from "@/app/utils";
+import context from "react-redux/src/components/Context";
 
 export type MultiBlockContent = {
   type: "image" | "text";
@@ -224,17 +226,48 @@ export class ClaudeApi implements LLMApi {
       // },
     };
 
-    if (shouldStream) {
-      try {
-        const context = {
-          text: "",
-          finished: false,
-        };
+    try {
+      const requestTimeoutId = setTimeout(
+        () => controller.abort(),
+        REQUEST_TIMEOUT_MS,
+      );
+
+      if (shouldStream) {
+        let responseText = "";
+        let remainText = "";
+        let finished = false;
+
+        // animate response to make it looks smooth
+        function animateResponseText() {
+          if (finished || controller.signal.aborted) {
+            responseText += remainText;
+            console.log("[Response Animation] finished");
+            if (responseText?.length === 0) {
+              options.onError?.(new Error("empty response from server"));
+            }
+            return;
+          }
+
+          if (remainText.length > 0) {
+            // const fetchCount = Math.max(1, Math.round(remainText.length / 60));
+            // const fetchText = remainText.slice(0, fetchCount);
+            const fetchText = remainText;
+            responseText += fetchText;
+            // remainText = remainText.slice(fetchCount);
+            remainText = "";
+            options.onUpdate?.(responseText, fetchText);
+          }
+
+          requestAnimationFrame(animateResponseText);
+        }
+
+        // start animaion
+        animateResponseText();
 
         const finish = () => {
-          if (!context.finished) {
-            options.onFinish(context.text);
-            context.finished = true;
+          if (!finished) {
+            finished = true;
+            options.onFinish(responseText + remainText);
           }
         };
 
@@ -242,11 +275,12 @@ export class ClaudeApi implements LLMApi {
         fetchEventSource(path, {
           ...payload,
           async onopen(res) {
+            clearTimeout(requestTimeoutId);
             const contentType = res.headers.get("content-type");
-            console.log("response content type: ", contentType);
+            console.log("[Anthropic] response content type: ", contentType);
 
             if (contentType?.startsWith("text/plain")) {
-              context.text = await res.clone().text();
+              responseText = await res.clone().text();
               return finish();
             }
 
@@ -257,7 +291,7 @@ export class ClaudeApi implements LLMApi {
                 ?.startsWith(EventStreamContentType) ||
               res.status !== 200
             ) {
-              const responseTexts = [context.text];
+              const responseTexts = [responseText];
               let extraInfo = await res.clone().text();
               try {
                 const resJson = await res.clone().json();
@@ -272,7 +306,7 @@ export class ClaudeApi implements LLMApi {
                 responseTexts.push(extraInfo);
               }
 
-              context.text = responseTexts.join("\n\n");
+              responseText = responseTexts.join("\n\n");
 
               return finish();
             }
@@ -300,8 +334,7 @@ export class ClaudeApi implements LLMApi {
 
             const { delta } = chunkJson;
             if (delta?.text) {
-              context.text += delta.text;
-              options.onUpdate?.(context.text, delta.text);
+              remainText += delta.text;
             }
           },
           onclose() {
@@ -313,12 +346,7 @@ export class ClaudeApi implements LLMApi {
           },
           openWhenHidden: true,
         });
-      } catch (e) {
-        console.error("failed to chat", e);
-        options.onError?.(e as Error);
-      }
-    } else {
-      try {
+      } else {
         controller.signal.onabort = () => options.onFinish("");
 
         const res = await fetch(path, payload);
@@ -326,10 +354,10 @@ export class ClaudeApi implements LLMApi {
 
         const message = this.extractMessage(resJson);
         options.onFinish(message);
-      } catch (e) {
-        console.error("failed to chat", e);
-        options.onError?.(e as Error);
       }
+    } catch (e) {
+      console.error("failed to chat", e);
+      options.onError?.(e as Error);
     }
   }
   path(path: string): string {
