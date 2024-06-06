@@ -495,7 +495,7 @@ const en: LocaleType = {
   Shansing: {
     userQuota: "User's Quota",
     userName: "Current User",
-    userQuotaDescription: "CNY",
+    userQuotaDescription: "Yuan",
     imageSelectorFailure: "Image too big or format unsupported",
     animationFailure: "Animation failed to render",
     modelPrice: "Model & Price",
@@ -507,6 +507,7 @@ const en: LocaleType = {
     modelFeature: "Option",
     otherPrice: {
       title: "Additional Fee",
+      description: "Yuan",
       onlineSearchSearchPrice: "Online Search (per search)",
       onlineSearchCrawlerPrice: "Online Search (per crawl)",
       uploadFilePrice: "Upload File (Each, excluding Upload Images entry)",

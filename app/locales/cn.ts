@@ -486,7 +486,7 @@ const cn = {
   },
   Shansing: {
     userQuota: "用户余额",
-    userQuotaDescription: "人民币元",
+    userQuotaDescription: "元",
     userName: "当前用户",
     imageSelectorFailure: "图片过大或格式暂不支持",
     animationFailure: "打字机动画渲染有误",
@@ -499,6 +499,7 @@ const cn = {
     modelFeature: "可选",
     otherPrice: {
       title: "附加费用",
+      description: "元",
       onlineSearchSearchPrice: "联网搜索（每次搜索）",
       onlineSearchCrawlerPrice: "联网搜索（每次爬取）",
       uploadFilePrice: "上传文件（每个，不含上传图片入口）",

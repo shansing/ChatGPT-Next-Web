@@ -824,7 +824,10 @@ export function Settings() {
               </table>
             </div>
           </ListItem>
-          <ListItem title={Locale.Shansing.otherPrice.title}>
+          <ListItem
+            title={Locale.Shansing.otherPrice.title}
+            subTitle={Locale.Shansing.otherPrice.description}
+          >
             <div className="about-html">
               <table>
                 <tbody>
