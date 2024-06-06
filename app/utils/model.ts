@@ -6,30 +6,30 @@ const customProvider = (modelName: string) => ({
   providerType: "custom",
 });
 
-export function collectModelTable(
+export function collectModelArray(
   models: readonly LLMModel[],
   customModels: string,
 ) {
-  const modelTable: Record<
-    string,
-    {
-      available: boolean;
-      name: string;
-      displayName: string;
-      provider?: LLMModel["provider"]; // Marked as optional
-      isDefault?: boolean;
-    }
-  > = {};
+  const modelArray: {
+    name: string;
+    displayName: string;
+    available: boolean;
+    provider?: LLMModel["provider"];
+    isDefault?: boolean;
+  }[] = [];
 
-  // default models
   models.forEach((m) => {
-    modelTable[m.name] = {
-      ...m,
-      displayName: m.name, // 'provider' is copied over if it exists
-    };
+    modelArray.push({
+      name: m.name,
+      displayName: m.name,
+      available: m.available,
+      provider: m.provider,
+    });
   });
 
-  // server custom models
+  const customModelConfig: {
+    [key: string]: { available: boolean; displayName?: string };
+  } = {};
   customModels
     .split(",")
     .filter((v) => !!v && v.length > 0)
@@ -39,39 +39,41 @@ export function collectModelTable(
         m.startsWith("+") || m.startsWith("-") ? m.slice(1) : m;
       const [name, displayName] = nameConfig.split("=");
 
-      // enable or disable all models
       if (name === "all") {
-        Object.values(modelTable).forEach(
-          (model) => (model.available = available),
-        );
+        modelArray.forEach((model) => (model.available = available));
       } else {
-        modelTable[name] = {
-          name,
-          displayName: displayName || name,
-          available,
-          provider: modelTable[name]?.provider ?? customProvider(name), // Use optional chaining
-        };
+        customModelConfig[name] = { available, displayName };
       }
     });
 
-  return modelTable;
+  modelArray.forEach((model) => {
+    const customConfig = customModelConfig[model.name];
+    if (customConfig) {
+      model.available = customConfig.available;
+      model.displayName = customConfig.displayName || model.name;
+      model.provider = model?.provider ?? customProvider(model.name);
+    }
+  });
+
+  return modelArray;
 }
 
-export function collectModelTableWithDefaultModel(
+export function collectModelArrayWithDefaultModel(
   models: readonly LLMModel[],
   customModels: string,
   defaultModel: string,
 ) {
-  let modelTable = collectModelTable(models, customModels);
+  let modelArray = collectModelArray(models, customModels);
   if (defaultModel && defaultModel !== "") {
-    modelTable[defaultModel] = {
-      ...modelTable[defaultModel],
-      name: defaultModel,
-      available: true,
-      isDefault: true,
-    };
+    modelArray
+      .filter((m) => m.name === defaultModel)
+      .forEach((m) => {
+        m.name = defaultModel;
+        m.available = true;
+        m.isDefault = true;
+      });
   }
-  return modelTable;
+  return modelArray;
 }
 
 /**
@@ -81,10 +83,7 @@ export function collectModels(
   models: readonly LLMModel[],
   customModels: string,
 ) {
-  const modelTable = collectModelTable(models, customModels);
-  const allModels = Object.values(modelTable);
-
-  return allModels;
+  return collectModelArray(models, customModels);
 }
 
 export function collectModelsWithDefaultModel(
@@ -92,11 +91,5 @@ export function collectModelsWithDefaultModel(
   customModels: string,
   defaultModel: string,
 ) {
-  const modelTable = collectModelTableWithDefaultModel(
-    models,
-    customModels,
-    defaultModel,
-  );
-  const allModels = Object.values(modelTable);
-  return allModels;
+  return collectModelArrayWithDefaultModel(models, customModels, defaultModel);
 }

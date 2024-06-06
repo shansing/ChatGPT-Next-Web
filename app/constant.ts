@@ -155,47 +155,48 @@ export const KnowledgeCutOffDate: Record<string, string> = {
 };
 
 const openaiModels = [
-  "gpt-3.5-turbo",
-  "gpt-3.5-turbo-1106",
-  "gpt-3.5-turbo-0125",
+  "gpt-4o",
+  "gpt-4o-2024-05-13",
   "gpt-4",
+  "gpt-4-turbo-preview",
+  "gpt-4-turbo",
+  "gpt-4-vision-preview",
+  "gpt-4-turbo-2024-04-09",
   "gpt-4-0613",
   "gpt-4-32k",
   "gpt-4-32k-0613",
-  "gpt-4-turbo",
-  "gpt-4-turbo-preview",
-  "gpt-4o",
-  "gpt-4o-2024-05-13",
-  "gpt-4-vision-preview",
-  "gpt-4-turbo-2024-04-09",
+  "gpt-3.5-turbo",
+  "gpt-3.5-turbo-1106",
+  "gpt-3.5-turbo-0125",
 ];
 
 const googleModels = [
-  "gemini-1.0-pro",
   "gemini-1.5-pro-latest",
   "gemini-1.5-flash-latest",
+  "gemini-1.0-pro",
   "gemini-pro-vision",
 ];
 
 const anthropicModels = [
-  "claude-instant-1.2",
-  "claude-2.0",
-  "claude-2.1",
-  "claude-3-sonnet-20240229",
   "claude-3-opus-20240229",
+  "claude-3-sonnet-20240229",
   "claude-3-haiku-20240307",
+  "claude-2.1",
+  "claude-2.0",
+  "claude-instant-1.2",
 ];
 
 const alibabaModels = [
-  "qwen-turbo",
-  "qwen-plus",
   "qwen-max",
   "qwen-max-0428",
   "qwen-max-0403",
   "qwen-max-0107",
   "qwen-max-longcontext",
-  "qwen-vl-plus",
+  "qwen-plus",
+  "qwen-turbo",
   "qwen-vl-max",
+  "qwen-vl-plus",
+  "qwen-long",
   "qwen1.5-110b-chat",
   "qwen1.5-72b-chat",
   "qwen1.5-32b-chat",
@@ -209,7 +210,6 @@ const alibabaModels = [
   "qwen-7b-chat",
   "qwen-1.8b-longcontext-chat",
   "qwen-1.8b-chat",
-  "qwen-long",
 ];
 
 export const DEFAULT_MODELS = [
@@ -263,9 +263,9 @@ export const modelMaxTotalTokenNumber = [
   { name: "qwen-long", number: 9_000 }, // it's not 10_000_000
   { name: "qwen-vl-", number: 6_000 },
   { name: "gemini-", number: 128_000 },
-  { name: "claude-3-opus-20240229", number: 200_000 },
-  { name: "claude-3-sonnet-20240229", number: 200_000 },
-  { name: "claude-3-haiku-20240307", number: 200_000 },
+  { name: "claude-3-", number: 200_000 },
+  { name: "claude-2.1", number: 200_000 },
+  { name: "claude-", number: 100_000 },
   { name: "", number: 4_000 }, //default
 ] as const;
 
@@ -297,10 +297,11 @@ export const onlineSearchKeywords = [
   "gpt-",
   // "qwen-turbo",
   // "qwen-plus",
-  // "qwen-max",
+  "qwen-max",
   // "qwen-long",
   // "gemini-1.5-",
   "gemini-1.5-pro",
+  "claude-3-",
 ];
 
 export const uploadFileModels: {

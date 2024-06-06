@@ -9,12 +9,12 @@ import {
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
-import { collectModelTable } from "@/app/utils/model";
 import {
   getUsernameFromHttpBasicAuth,
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
+import { parseUsageObj } from "@/app/api/common";
 
 const ALLOWD_PATH = new Set([Anthropic.ChatPath]);
 
@@ -75,7 +75,7 @@ async function handle(
   }
 
   const requestJson = await req.clone().json();
-  const modelChoice = config.shansingModelChoices.find(
+  const modelChoice = serverConfig.shansingModelChoices.find(
     (choice) => choice.model === requestJson.model,
   );
   if (!modelChoice) {
@@ -114,78 +114,53 @@ async function handle(
       .text()
       .then((responseBody) => {
         //console.log("[responseBody]" + responseBody)
-        const usageIndex = responseBody.lastIndexOf('"usage"');
-        if (usageIndex !== -1) {
-          const openBracket = responseBody.indexOf("{", usageIndex);
-          const closeBracket = responseBody.indexOf("}", openBracket);
-          if (openBracket !== -1 && closeBracket !== -1) {
-            const jsonString = responseBody.substring(
-              openBracket,
-              closeBracket + 1,
-            );
-            console.log(
-              "[usage][anthropic]",
-              {
-                firstPromptTokenNumber,
-                firstCompletionTokenNumber,
-                searchCount,
-                newsCount,
-                crawlerCount,
-              },
-              jsonString,
-            );
-            const jsonData = JSON.parse(jsonString);
-            if (jsonData.output_tokens !== undefined) {
-              return {
-                promptTokenNumber: jsonData.input_tokens as number,
-                completionTokenNumber: jsonData.output_tokens as number,
-                responseBody,
-              };
-            }
+        const startUsage = parseUsageObj(responseBody, "usage", true);
+        const endUsage = parseUsageObj(responseBody, "usage", false);
+        console.log(
+          "[usage][anthropic]",
+          {
+            firstPromptTokenNumber,
+            firstCompletionTokenNumber,
+            searchCount,
+            newsCount,
+            crawlerCount,
+          },
+          startUsage,
+          endUsage,
+        );
+        if (endUsage && endUsage.output_tokens != null) {
+          const result = {
+            promptTokenNumber: endUsage.input_tokens as
+              | number
+              | null
+              | undefined,
+            completionTokenNumber: endUsage.output_tokens as number,
+          };
+          if (
+            result.promptTokenNumber == null &&
+            startUsage &&
+            startUsage.input_tokens != null
+          ) {
+            result.promptTokenNumber = startUsage.input_tokens as number;
+          }
+          if (
+            result.promptTokenNumber != null &&
+            result.completionTokenNumber != null
+          ) {
+            return {
+              promptTokenNumber: result.promptTokenNumber as number,
+              completionTokenNumber: result.completionTokenNumber as number,
+            };
           }
         }
         console.warn(
-          "[ATTENTION] unable to find usage, username=" +
+          "[ATTENTION][anthropic] unable to find usage, username=" +
             username +
             ", url=" +
             req.url +
             ", responseBody=" +
             responseBody,
         );
-      })
-      .then((obj) => {
-        if (obj && obj.promptTokenNumber == null) {
-          const responseBody = obj.responseBody;
-          //console.log("[responseBody]" + responseBody)
-          const usageIndex = responseBody.indexOf('"usage"');
-          if (usageIndex !== -1) {
-            const openBracket = responseBody.indexOf("{", usageIndex);
-            const closeBracket = responseBody.indexOf("}", openBracket);
-            if (openBracket !== -1 && closeBracket !== -1) {
-              const jsonString = responseBody.substring(
-                openBracket,
-                closeBracket + 1,
-              );
-              console.log("[usage][anthropic][fromStart]", jsonString);
-              const jsonData = JSON.parse(jsonString);
-              if (jsonData.input_tokens !== undefined) {
-                return {
-                  promptTokenNumber: jsonData.input_tokens as number,
-                  completionTokenNumber: obj.completionTokenNumber,
-                };
-              }
-            }
-          }
-          console.warn(
-            "[ATTENTION] unable to find usage (fromStart), username=" +
-              username +
-              ", url=" +
-              req.url +
-              ", responseBody=" +
-              responseBody,
-          );
-        }
-        return obj;
       })
       .then((obj) => {
         if (obj) {
@@ -195,9 +170,11 @@ async function handle(
             modelChoice,
             obj.promptTokenNumber + firstPromptTokenNumber,
             obj.completionTokenNumber + firstCompletionTokenNumber,
-            config.shansingOnlineSearchSearchPrice
+            serverConfig.shansingOnlineSearchSearchPrice
               .mul(searchCount + newsCount)
-              .plus(config.shansingOnlineSearchCrawlerPrice.mul(crawlerCount)),
+              .plus(
+                serverConfig.shansingOnlineSearchCrawlerPrice.mul(crawlerCount),
+              ),
           );
         }
       });
@@ -233,21 +210,28 @@ export const preferredRegion = [
   "syd1",
 ];
 
-const config = getServerSideConfig();
+const serverConfig = getServerSideConfig();
 
 async function request(req: NextRequest) {
   const controller = new AbortController();
 
   let authHeaderName = "x-api-key";
   let authValue =
-    req.headers.get(authHeaderName) ||
-    req.headers.get("Authorization")?.replaceAll("Bearer ", "").trim() ||
-    config.anthropicApiKey ||
-    "";
+    // req.headers.get(authHeaderName) ||
+    // req.headers.get("Authorization")?.replaceAll("Bearer ", "").trim() ||
+    serverConfig.anthropicApiKey || "";
 
   let path = `${req.nextUrl.pathname}`.replaceAll(ApiPath.Anthropic, "");
 
-  let baseUrl = config.anthropicUrl || config.baseUrl || ANTHROPIC_BASE_URL;
+  const timeoutId = setTimeout(
+    () => {
+      controller.abort();
+    },
+    10 * 60 * 1000,
+  );
+
+  let baseUrl =
+    serverConfig.anthropicUrl || serverConfig.baseUrl || ANTHROPIC_BASE_URL;
 
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;
@@ -257,15 +241,17 @@ async function request(req: NextRequest) {
     baseUrl = baseUrl.slice(0, -1);
   }
 
-  console.log("[Proxy] ", path);
   console.log("[Base Url]", baseUrl);
 
-  const timeoutId = setTimeout(
-    () => {
-      controller.abort();
-    },
-    10 * 60 * 1000,
-  );
+  const apiBaseUrl = baseUrl;
+  const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
+  if (onlineSearch) {
+    baseUrl = serverConfig.shansingOnlineSearchUrl;
+  }
+
+  console.log("[Proxy] ", path);
+  console.log("[Base Url]", baseUrl);
+  console.log("[apiBaseUrl]", apiBaseUrl);
 
   const fetchUrl = `${baseUrl}${path}`;
 
@@ -276,8 +262,11 @@ async function request(req: NextRequest) {
       [authHeaderName]: authValue,
       "anthropic-version":
         req.headers.get("anthropic-version") ||
-        config.anthropicApiVersion ||
+        serverConfig.anthropicApiVersion ||
         Anthropic.Vision,
+      ...(onlineSearch && {
+        "X-Shansing-Base-Url": apiBaseUrl,
+      }),
     },
     method: req.method,
     body: req.body,
@@ -287,31 +276,31 @@ async function request(req: NextRequest) {
     signal: controller.signal,
   };
 
-  // #1815 try to refuse some request to some models
-  if (config.customModels && req.body) {
-    try {
-      const modelTable = collectModelTable(DEFAULT_MODELS, config.customModels);
-      const clonedBody = await req.text();
-      fetchOptions.body = clonedBody;
-
-      const jsonBody = JSON.parse(clonedBody) as { model?: string };
-
-      // not undefined and is false
-      if (modelTable[jsonBody?.model ?? ""].available === false) {
-        return NextResponse.json(
-          {
-            error: true,
-            message: `you are not allowed to use ${jsonBody?.model} model`,
-          },
-          {
-            status: 403,
-          },
-        );
-      }
-    } catch (e) {
-      console.error(`[Anthropic] filter`, e);
-    }
-  }
+  // // #1815 try to refuse some request to some models
+  // if (serverConfig.customModels && req.body) {
+  //   try {
+  //     const modelTable = collectModelTable(DEFAULT_MODELS, serverConfig.customModels);
+  //     const clonedBody = await req.text();
+  //     fetchOptions.body = clonedBody;
+  //
+  //     const jsonBody = JSON.parse(clonedBody) as { model?: string };
+  //
+  //     // not undefined and is false
+  //     if (!modelTable[jsonBody?.model ?? ""].available) {
+  //       return NextResponse.json(
+  //         {
+  //           error: true,
+  //           message: `you are not allowed to use ${jsonBody?.model} model`,
+  //         },
+  //         {
+  //           status: 403,
+  //         },
+  //       );
+  //     }
+  //   } catch (e) {
+  //     console.error(`[Anthropic] filter`, e);
+  //   }
+  // }
   // console.log("[Anthropic request]", fetchOptions.headers, req.method);
   try {
     const res = await fetch(fetchUrl, fetchOptions);

@@ -8,6 +8,8 @@ import {
   readUserQuota,
 } from "@/app/api/shansing";
 import Decimal from "decimal.js";
+import { parseUsageObj } from "@/app/api/common";
+import { usage } from "browserslist";
 
 async function handle(
   req: NextRequest,
@@ -171,40 +173,34 @@ async function handle(
       .text()
       .then((responseBody) => {
         //console.log("[responseBody]" + responseBody)
-        const usageIndex = responseBody.lastIndexOf('"usageMetadata"');
-        if (usageIndex !== -1) {
-          const openBracket = responseBody.indexOf("{", usageIndex);
-          const closeBracket = responseBody.indexOf("}", openBracket);
-          if (openBracket !== -1 && closeBracket !== -1) {
-            const jsonString = responseBody.substring(
-              openBracket,
-              closeBracket + 1,
-            );
-            console.log(
-              "[usage][google]",
-              {
-                firstPromptTokenNumber,
-                firstCompletionTokenNumber,
-                searchCount,
-                newsCount,
-                crawlerCount,
-              },
-              jsonString,
-            );
-            const jsonData = JSON.parse(jsonString);
-            if (
-              jsonData.promptTokenCount !== undefined &&
-              jsonData.candidatesTokenCount !== undefined
-            ) {
-              return {
-                promptTokenNumber: jsonData.promptTokenCount as number,
-                completionTokenNumber: jsonData.totalTokenCount as number,
-              };
-            }
-          }
+        const usageMetadata = parseUsageObj(
+          responseBody,
+          "usageMetadata",
+          false,
+        );
+        console.log(
+          "[usage][google]",
+          {
+            firstPromptTokenNumber,
+            firstCompletionTokenNumber,
+            searchCount,
+            newsCount,
+            crawlerCount,
+          },
+          usageMetadata,
+        );
+        if (
+          usageMetadata &&
+          usageMetadata.promptTokenCount != null &&
+          usageMetadata.candidatesTokenCount != null
+        ) {
+          return {
+            promptTokenNumber: usageMetadata.promptTokenCount as number,
+            completionTokenNumber: usageMetadata.candidatesTokenCount as number,
+          };
         }
         console.warn(
-          "[ATTENTION] unable to find usage, username=" +
+          "[ATTENTION][google] unable to find usage, username=" +
             username +
             ", url=" +
             req.url +

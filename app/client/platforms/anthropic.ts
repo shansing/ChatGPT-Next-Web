@@ -3,6 +3,7 @@ import {
   Anthropic,
   ApiPath,
   DEFAULT_API_HOST,
+  modelMaxTotalTokenNumber,
 } from "@/app/constant";
 import { ChatOptions, getHeaders, LLMApi, MultimodalContent } from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
@@ -172,16 +173,30 @@ export class ClaudeApi implements LLMApi {
       });
     }
 
+    let max_tokens: number =
+      (modelMaxTotalTokenNumber?.find((obj) =>
+        modelConfig.model.startsWith(obj.name),
+      )?.number || 4000) -
+      modelConfig.compressMessageLengthThreshold -
+      1500;
+    if (modelConfig.max_tokens < max_tokens) {
+      max_tokens = modelConfig.max_tokens;
+    }
+    if (max_tokens > 4096) {
+      //claude requires
+      max_tokens = 4096;
+    }
+
     const requestBody: AnthropicChatRequest = {
       messages: prompt,
       stream: shouldStream,
 
       model: modelConfig.model,
-      max_tokens: modelConfig.max_tokens,
-      temperature: modelConfig.temperature,
+      max_tokens: max_tokens,
+      temperature:
+        modelConfig.temperature > 1.0 ? 1.0 : modelConfig.temperature,
       top_p: modelConfig.top_p,
       // top_k: modelConfig.top_k,
-      top_k: 5,
     };
 
     const path = this.path(Anthropic.ChatPath);

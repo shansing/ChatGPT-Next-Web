@@ -15,6 +15,7 @@ import {
   readUserQuota,
 } from "@/app/api/shansing";
 import {
+  parseUsageObj,
   requestCompatibleOpenai,
   requestCompatibleOpenaiUploadFile,
 } from "@/app/api/common";
@@ -148,40 +149,30 @@ async function handle(
       .text()
       .then((responseBody) => {
         //console.log("[responseBody]" + responseBody)
-        const usageIndex = responseBody.lastIndexOf('"usage"');
-        if (usageIndex !== -1) {
-          const openBracket = responseBody.indexOf("{", usageIndex);
-          const closeBracket = responseBody.indexOf("}", openBracket);
-          if (openBracket !== -1 && closeBracket !== -1) {
-            const jsonString = responseBody.substring(
-              openBracket,
-              closeBracket + 1,
-            );
-            console.log(
-              "[usage][alibaba]",
-              {
-                firstPromptTokenNumber,
-                firstCompletionTokenNumber,
-                searchCount,
-                newsCount,
-                crawlerCount,
-              },
-              jsonString,
-            );
-            const jsonData = JSON.parse(jsonString);
-            if (
-              jsonData.prompt_tokens !== undefined &&
-              jsonData.completion_tokens !== undefined
-            ) {
-              return {
-                promptTokenNumber: jsonData.prompt_tokens as number,
-                completionTokenNumber: jsonData.completion_tokens as number,
-              };
-            }
-          }
+        const usage = parseUsageObj(responseBody, "usage", false);
+        console.log(
+          "[usage][alibaba]",
+          {
+            firstPromptTokenNumber,
+            firstCompletionTokenNumber,
+            searchCount,
+            newsCount,
+            crawlerCount,
+          },
+          usage,
+        );
+        if (
+          usage &&
+          usage.prompt_tokens != null &&
+          usage.completion_tokens != null
+        ) {
+          return {
+            promptTokenNumber: usage.prompt_tokens as number,
+            completionTokenNumber: usage.completion_tokens as number,
+          };
         }
         console.warn(
-          "[ATTENTION] unable to find usage, username=" +
+          "[ATTENTION][alibaba] unable to find usage, username=" +
             username +
             ", url=" +
             req.url +

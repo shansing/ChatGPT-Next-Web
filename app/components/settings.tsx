@@ -80,7 +80,6 @@ import { useMaskStore } from "../store/mask";
 import { ProviderType } from "../utils/cloud";
 import { getHeaders } from "@/app/client/api";
 import { ShansingModelChoice } from "@/app/api/shansing";
-import { getServerSideConfig } from "@/app/config/server";
 import { Emoji } from "emoji-picker-react";
 
 function EditPromptModal(props: { id: string; onClose: () => void }) {
