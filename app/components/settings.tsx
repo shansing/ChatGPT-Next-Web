@@ -731,13 +731,12 @@ export function Settings() {
       </div>
       <div className={styles["settings"]}>
         <List>
+          <ListItem title={Locale.Shansing.userName}>
+            {loadingQuota ? <div /> : <div>{userAndQuota.userName}</div>}
+          </ListItem>
           <ListItem
             title={Locale.Shansing.userQuota}
-            subTitle={
-              loadingQuota
-                ? Locale.Settings.Usage.IsChecking
-                : userAndQuota.userName
-            }
+            subTitle={Locale.Shansing.userQuotaDescription}
           >
             {loadingQuota ? (
               <div />
@@ -754,7 +753,10 @@ export function Settings() {
               dangerouslySetInnerHTML={{ __html: `${userAndQuota.aboutHtml}` }}
             ></div>
           </ListItem>
-          <ListItem title={Locale.Shansing.modelPrice}>
+          <ListItem
+            title={Locale.Shansing.modelPrice}
+            subTitle={Locale.Shansing.modelPriceDescription}
+          >
             <div className="about-html">
               <table>
                 <thead>

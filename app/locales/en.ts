@@ -495,14 +495,16 @@ const en: LocaleType = {
   Shansing: {
     userQuota: "User's Quota",
     userName: "Current User",
+    userQuotaDescription: "CNY",
     imageSelectorFailure: "Image too big or format unsupported",
     animationFailure: "Animation failed to render",
     modelPrice: "Model & Price",
+    modelPriceDescription: "Yuan / 1000 tokens",
     modelAlias: "Alias",
     modelName: "Model Name",
     modelPromptUnitPrice: "Prompt",
     modelCompletionUnitPrice: "Completion",
-    modelFeature: "Feature",
+    modelFeature: "Option",
     otherPrice: {
       title: "Additional Fee",
       onlineSearchSearchPrice: "Online Search (per search)",

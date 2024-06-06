@@ -486,15 +486,17 @@ const cn = {
   },
   Shansing: {
     userQuota: "用户余额",
+    userQuotaDescription: "人民币元",
     userName: "当前用户",
     imageSelectorFailure: "图片过大或格式暂不支持",
     animationFailure: "打字机动画渲染有误",
     modelPrice: "模型单价",
+    modelPriceDescription: "元 / 1000 tokens",
     modelAlias: "别名",
     modelName: "模型名",
     modelPromptUnitPrice: "输入",
     modelCompletionUnitPrice: "输出",
-    modelFeature: "特性",
+    modelFeature: "可选",
     otherPrice: {
       title: "附加费用",
       onlineSearchSearchPrice: "联网搜索（每次搜索）",
