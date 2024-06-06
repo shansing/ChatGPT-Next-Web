@@ -18,7 +18,6 @@ import {
 import Locale from "../../locales";
 import { prettyObject } from "@/app/utils/format";
 import { getMessageTextContent, isVisionModel } from "@/app/utils";
-import context from "react-redux/src/components/Context";
 
 export type MultiBlockContent = {
   type: "image" | "text";
