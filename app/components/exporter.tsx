@@ -21,7 +21,8 @@ import {
 
 import CopyIcon from "../icons/copy.svg";
 import LoadingIcon from "../icons/three-dots.svg";
-import ChatGptIcon from "../icons/chatgpt.png";
+// import ChatGptIcon from "../icons/chatgpt.png";
+import StarOutlineIcon from "../icons/star-outline.png";
 import ShareIcon from "../icons/share.svg";
 import BotIcon from "../icons/bot.png";
 
@@ -543,7 +544,7 @@ export function ImagePreviewer(props: {
         <div className={styles["chat-info"]}>
           <div className={styles["logo"] + " no-dark"}>
             <NextImage
-              src={ChatGptIcon.src}
+              src={StarOutlineIcon.src}
               alt="logo"
               width={50}
               height={50}

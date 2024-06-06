@@ -6,7 +6,8 @@ import {
 } from "../constant";
 import { getClientConfig } from "../config/client";
 import { createPersistStore } from "../utils/store";
-import ChatGptIcon from "../icons/chatgpt.png";
+// import ChatGptIcon from "../icons/chatgpt.png";
+import StarOutlineIcon from "../icons/star-outline.png";
 import Locale from "../locales";
 import { use } from "react";
 import { useAppConfig } from ".";
@@ -109,7 +110,7 @@ export const useUpdateStore = createPersistStore(
                         window.__TAURI__?.notification.sendNotification({
                           title: "Shansing He2per",
                           body: `${Locale.Settings.Update.IsLatest}`,
-                          icon: `${ChatGptIcon.src}`,
+                          icon: `${StarOutlineIcon.src}`,
                           sound: "Default",
                         });
                       } else {
@@ -119,7 +120,7 @@ export const useUpdateStore = createPersistStore(
                         window.__TAURI__?.notification.sendNotification({
                           title: "Shansing He2per",
                           body: updateMessage,
-                          icon: `${ChatGptIcon.src}`,
+                          icon: `${StarOutlineIcon.src}`,
                           sound: "Default",
                         });
                       }

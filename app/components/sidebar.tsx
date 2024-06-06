@@ -6,7 +6,7 @@ import { IconButton } from "./button";
 import SettingsIcon from "../icons/settings.svg";
 import ReturnIcon from "../icons/return.svg";
 import GithubIcon from "../icons/github.svg";
-import ChatGptIcon from "../icons/chatgpt.svg";
+import StarOutlineIcon from "../icons/star-outline.svg";
 import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
 import DeleteIcon from "../icons/delete.svg";
@@ -181,7 +181,7 @@ export function SideBar(props: { className?: string }) {
           </a>
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
-          <ChatGptIcon />
+          <StarOutlineIcon />
         </div>
       </div>
 
