@@ -75,6 +75,15 @@
       pointer-events: none;
     }
 
+    &.full-width {
+      max-width: fit-content;
+
+      .text {
+        opacity: 1;
+        transform: translate(0);
+      }
+    }
+
     &:hover {
       --delay: 0.5s;
       width: var(--full-width);
@@ -458,7 +467,7 @@
     width: $calc-image-width;
     height: $calc-image-width;
   }
-  
+
   .chat-message-item-image {
     max-width: calc(100vw/3*2);
   }

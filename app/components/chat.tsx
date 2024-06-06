@@ -348,6 +348,7 @@ function ChatAction(props: {
   text: string;
   icon: JSX.Element;
   onClick: () => void;
+  fullWidth?: boolean;
 }) {
   const iconRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -367,7 +368,20 @@ function ChatAction(props: {
     });
   }
 
-  return (
+  return props.fullWidth ? (
+    //ref: https://github.com/mlc-ai/web-llm-chat/blob/5b438761c82fa228ffb5ab709314420e186ffb5c/app/components/chat.tsx#L412C10-L424C7
+    <div
+      className={`${styles["chat-input-action"]} clickable ${styles["full-width"]}`}
+      onClick={props.onClick}
+    >
+      <div ref={iconRef} className={styles["icon"]}>
+        {props.icon}
+      </div>
+      <div className={styles["text"]} ref={textRef}>
+        {props.text}
+      </div>
+    </div>
+  ) : (
     <div
       className={`${styles["chat-input-action"]} clickable`}
       onClick={() => {
@@ -476,6 +490,8 @@ export function ChatActions(props: {
   const couldStop = ChatControllerPool.hasPending();
   const stopAll = () => ChatControllerPool.stopAll();
 
+  const isMobileScreen = useMobileScreen();
+
   // switch model
   const currentModel = chatStore.currentSession().mask.modelConfig.model;
   const allModels = useAllModels();
@@ -566,6 +582,7 @@ export function ChatActions(props: {
         onClick={() => setShowModelSelector(true)}
         text={currentModel}
         icon={<RobotIcon />}
+        fullWidth={!isMobileScreen}
       />
 
       {showModelSelector && (
