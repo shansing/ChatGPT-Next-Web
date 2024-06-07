@@ -491,7 +491,7 @@ const cn = {
     imageSelectorFailure: "图片过大或格式暂不支持",
     animationFailure: "打字机动画渲染有误",
     modelPrice: "模型单价",
-    modelPriceDescription: "单位：元 / 千 tokens",
+    modelPriceDescription: "单位：元 / 1000 tokens",
     modelAlias: "别名",
     modelName: "模型名",
     modelPromptUnitPrice: "输入",
