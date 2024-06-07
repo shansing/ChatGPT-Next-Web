@@ -95,7 +95,7 @@ import {
   UNFINISHED_INPUT,
   uploadFileModels,
 } from "../constant";
-import { Avatar } from "./emoji";
+import { Avatar, getEmojiUrl } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
 import { useMaskStore } from "../store/mask";
 import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
@@ -105,6 +105,7 @@ import { getClientConfig } from "../config/client";
 import { useAllModels } from "../utils/hooks";
 import { MultimodalContent } from "../client/api";
 import { images } from "next/dist/build/webpack/config/blocks/images";
+import { Emoji } from "emoji-picker-react";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -1450,6 +1451,7 @@ function _Chat() {
         {messages.map((message, i) => {
           const isUser = message.role === "user";
           const isContext = i < context.length;
+          const isOnlineSearch = message.isOnlineSearch;
           const showActions =
             i > 0 &&
             !(message.preview || message.content.length === 0) &&
@@ -1617,7 +1619,16 @@ function _Chat() {
                     )}
                   </div>
 
-                  <div className={styles["chat-message-action-date"]}>
+                  <div
+                    className={`${styles["chat-message-action-date"]} emoji-text`}
+                  >
+                    {!isContext && isOnlineSearch && (
+                      <Emoji
+                        unified="1f30e"
+                        size={12}
+                        getEmojiUrl={getEmojiUrl}
+                      />
+                    )}
                     {isContext
                       ? Locale.Chat.IsContext
                       : message.date.toLocaleString()}

@@ -190,7 +190,7 @@ export class GeminiProApi implements LLMApi {
             responseText += fetchText;
             // remainText = remainText.slice(fetchCount);
             remainText = "";
-            options.onUpdate?.(responseText, fetchText);
+            // options.onUpdate?.(responseText, fetchText);
           }
 
           requestAnimationFrame(animateResponseText);
@@ -207,6 +207,19 @@ export class GeminiProApi implements LLMApi {
             const reader = response?.body?.getReader();
             const decoder = new TextDecoder();
             let partialData = "";
+
+            const searchCount = parseInt(
+              response.headers.get("x-shansing-search-count") ?? "0",
+            );
+            const newsCount = parseInt(
+              response.headers.get("x-shansing-news-count") ?? "0",
+            );
+            const crawlerCount = parseInt(
+              response.headers.get("x-shansing-crawler-count") ?? "0",
+            );
+            options.onBegin?.(
+              searchCount > 0 || newsCount > 0 || crawlerCount > 0,
+            );
 
             return reader?.read().then(function processText({
               done,
@@ -252,7 +265,9 @@ export class GeminiProApi implements LLMApi {
                 if (textArray.length > existingTexts.length) {
                   const deltaArray = textArray.slice(existingTexts.length);
                   existingTexts = textArray;
-                  remainText += deltaArray.join("");
+                  const delta = deltaArray.join("");
+                  remainText += delta;
+                  options.onUpdate?.(responseText, delta);
                 }
               } catch (error) {
                 // console.log("[Response Animation] error: ", error,partialData);

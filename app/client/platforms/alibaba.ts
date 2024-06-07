@@ -161,7 +161,7 @@ export class AlibabaApi implements LLMApi {
             responseText += fetchText;
             // remainText = remainText.slice(fetchCount);
             remainText = "";
-            options.onUpdate?.(responseText, fetchText);
+            // options.onUpdate?.(responseText, fetchText);
           }
 
           requestAnimationFrame(animateResponseText);
@@ -220,6 +220,19 @@ export class AlibabaApi implements LLMApi {
 
               return finish();
             }
+
+            const searchCount = parseInt(
+              res.headers.get("x-shansing-search-count") ?? "0",
+            );
+            const newsCount = parseInt(
+              res.headers.get("x-shansing-news-count") ?? "0",
+            );
+            const crawlerCount = parseInt(
+              res.headers.get("x-shansing-crawler-count") ?? "0",
+            );
+            options.onBegin?.(
+              searchCount > 0 || newsCount > 0 || crawlerCount > 0,
+            );
           },
           onmessage(msg) {
             if (msg.data === "[DONE]" || finished) {
@@ -236,6 +249,7 @@ export class AlibabaApi implements LLMApi {
 
               if (delta) {
                 remainText += delta;
+                options.onUpdate?.(responseText, delta);
               }
 
               if (

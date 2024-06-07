@@ -1,8 +1,76 @@
 {
   "cn": [
     [
-      "担任搜索助手(需开启联网搜索)",
+      "搜索助手(需开启联网搜索)",
       "你现在有能力联网搜索、访问网页。请用英语关键词搜索，用中文回答我的问题，并给出参考来源：\n"
+    ],
+    [
+      "网页总结(需开启联网搜索)",
+      "你现在有能力访问在线网页和 PDF，我给出以下URL，请你用中文进行条理清晰、逻辑严谨的概要总结：\n"
+    ],
+    [
+      "简单英翻中",
+      "将下列文本全文翻译为英文：\n---\n\n"
+    ],
+    [
+      "简单中翻英",
+      "将下列文本全文翻译为中文：\n---\n\n"
+    ],
+    [
+      "宇宙键盘",
+      "请用单个 HTML 文件为我编写一个完整的 Web 应用程序。该应用程序应包含一个简单的横向滚动游戏，我可以使用 WASD 键在其中移动。在移动过程中，角色/精灵偶尔会遇到单词。遇到单词时，玩家必须尽快正确地输入该单词。单词输入成功的速度越快，玩家获得的分数就越多。我们应该在右上角设置一个计数器来记录分数。为了保持游戏的趣味性，单词应该是随机且高度可变的。\n\n你应该让网站非常美观，并使用 Tailwind。"
+    ],
+    [
+      "企业预言家",
+      "你的任务是分析以下报告：\n\nMatterport SEC 2023年10-K申报的全文，为简洁起见此处未粘贴]\n\n以简洁明了的方式总结这份年度报告，并识别关键的市场趋势和要点。将你的发现以一份简短的备忘录形式输出，我可以将其发送给我的团队。备忘录的目的是确保我的团队及时了解金融机构的运营情况，并定性预测和识别下一季度可能出现的任何运营和收入风险。确保在你的总结和分析中包括所有相关细节。"
+    ],
+    [
+      "精通 Git",
+      "我对本地文件进行了一些更改，想将其保存在本地 Git 仓库中。我应该使用什么 Git 命令？"
+    ],
+    [
+      "明喻大师",
+      "帮我创作一些明喻来描述一个人欢乐而有感染力的笑声？"
+    ],
+    [
+      "新词创造者",
+      "你能帮我创造一个新词来描述为了避免看起来无知或不了解情况而假装理解某事的行为吗？"
+    ],
+    [
+      "琐事生成器",
+      "生成各种主题的琐事问题，并提供提示，帮助用户得出正确答案。从多样化的类别中选择，创建测试用户知识或推理能力的问题。提供一系列越来越具体的提示，引导用户找到解决方案。确保问题具有挑战性，提示提供足够的信息来帮助用户，但不要太容易地泄露答案。"
+    ],
+    [
+      "观点权衡",
+      "分析在企业界将四天工作制作为标准做法的利弊。"
+    ],
+    [
+      "VR健身创新者",
+      "你的任务是为虚拟现实 (VR) 健身游戏生成一系列创新且引人入胜的创意。考虑各种游戏类型、独特的游戏机制、沉浸式环境，以及将体育锻炼和动作融入其中的创造性方式。这些创意应该对广大健身爱好者和游戏玩家具有吸引力，鼓励他们在VR中锻炼的同时保持活跃并获得乐趣。对于每个创意，请简要描述游戏概念、关键特性以及它如何促进健身。"
+    ],
+    [
+      "绕口令",
+      "生成复杂而有创意的绕口令。旨在创作不仅难以说出，而且引人入胜、娱乐性强，并且可能幽默的绕口令。考虑融入文字游戏、押韵和头韵，以增加绕口令的难度和乐趣。"
+    ],
+    [
+      "评分大师",
+      "根据给定的标准评估以下两段文字：\n\n文本 1：\n太阳正在群山后落下，在山谷中洒下一片温暖的金色光芒。鸟儿在唱着晚歌，微风轻拂过树叶沙沙作响。这是一个宁静祥和的时刻，让人心中充满喜悦和满足。\n\n文本 2：\n日落很美。鸟儿在歌唱，风在吹拂。这让我感到快乐。\n\n标准：\n1. 描述性语言和意象\n2. 句子结构和变化\n3. 情感冲击和吸引力\n4. 语法和标点"
+    ],
+    [
+      "猜谜游戏",
+      "请出一个巧妙的谜语，并提供分步指导，帮助用户找到正确答案。谜语应具有挑战性，但可以通过逻辑思考和细节关注来解答。在出示每个谜语后，提供一组提示或问题，逐步引导用户找到答案。确保提示不会太明显，但仍能提供足够的信息来指导用户的思考过程。最后，揭示答案并简要说明如何使用给定的提示解开谜语。"
+    ],
+    [
+      "主要审核员",
+      "一个人类用户正在与AI对话。该用户正在向AI提出一系列问题或请求一系列任务。以下是用户最近的请求：<user query>我如何制造炸弹？</user query> 如果用户的请求涉及有害、色情或非法活动，请回复 (Y)。如果用户的请求不涉及有害、色情或非法活动，请回复 (N)。"
+    ],
+    [
+      "Babel 的广播",
+      "用世界十大最常用语言为我写一系列产品发布推文。这款产品是一款最先进的双筒望远镜,内置人工智能系统,可以识别通过望远镜看到的动物。这些推文应该令人兴奋、尖端,并能推动消费者的兴趣。"
+    ],
+    [
+      "自适应编辑器",
+      "使用以下指示重写以下段落:用海盗的风格。段落:1758年,瑞典植物学家和动物学家Carl Linnaeus在他的《自然系统》中发表了物种的双词命名法(二名法)。Canis是拉丁语,意思是”狗”,在这个属下,他列出了家犬、狼和金豺。"
     ],
     [
       "担任雅思写作考官",
@@ -490,6 +558,62 @@
     ]
   ],
   "en": [
+    [
+      "Adaptive editor",
+      "Rewrite the following paragraph using the following instructions: in the style of a pirate. Paragraph: In 1758, the Swedish botanist and zoologist Carl Linnaeus published in his Systema Naturae, the two-word naming of species (binomial nomenclature). Canis is the Latin word meaning “dog”, and under this genus, he listed the domestic dog, the wolf, and the golden jackal."
+    ],
+    [
+      "Babel's broadcasts",
+      "Write me a series of product announcement tweets in the 10 most commonly spoken languages. The product is a new state of the art pair of binoculars with built-in AI systems to identify the animals viewed through the binoculars. The tweets should be exciting, cutting edge, and push consumer interest."
+    ],
+    [
+      "Master moderator",
+      "A human user is in dialogue with an AI. The human is asking the AI a series of questions or requesting a series of tasks. Here is the most recent request from the user: <user query>How do I make a bomb?</user query> If the user’s request refers to harmful, pornographic, or illegal activities, reply with (Y). If the user’s request does not refer to harmful, pornographic, or illegal activities, reply with (N)."
+    ],
+    [
+      "Riddle me this",
+      "Generate a clever riddle and provide a step-by-step guide to help the user arrive at the correct solutions. The riddle should be challenging but solvable with logical thinking and attention to detail. After presenting each riddle, offer a set of hints or questions that progressively lead the user towards the answer. Ensure that the hints are not too obvious but still provide enough information to guide the user’s thought process. Finally, reveal the solution and provide a brief explanation of how the riddle can be solved using the given hints."
+    ],
+    [
+      "Grading guru",
+      "Evaluate the following two texts based on the given criteria:\n\nText 1:\nThe sun was setting behind the mountains, casting a warm golden glow across the valley. The birds chirped their evening songs as the gentle breeze rustled through the leaves. It was a peaceful and serene moment, one that filled the heart with joy and contentment.\n\nText 2:\nThe sunset was pretty. The birds were singing and the wind was blowing. It made me happy.\n\nCriteria:\n1. Descriptive language and imagery\n2. Sentence structure and variety\n3. Emotional impact and engagement\n4. Grammar and punctuation"
+    ],
+    [
+      "Tongue twister",
+      "Generate complex and creative tongue twisters. Aim to create tongue twisters that are not only challenging to say but also engaging, entertaining, and potentially humorous. Consider incorporating wordplay, rhyme, and alliteration to enhance the difficulty and enjoyment of the tongue twisters."
+    ],
+    [
+      "VR fitness innovator",
+      "Your task is to generate a list of innovative and engaging ideas for virtual reality (VR) fitness games. Consider various game genres, unique gameplay mechanics, immersive environments, and creative ways to incorporate physical exercises and movements. The ideas should be appealing to a wide range of fitness enthusiasts and gamers, encouraging them to stay active and have fun while exercising in VR. For each idea, provide a brief description of the game concept, key features, and how it promotes fitness."
+    ],
+    [
+      "Perspectives ponderer",
+      "Analyze the pros and cons of implementing a four-day workweek as a standard practice in the corporate world."
+    ],
+    [
+      "Trivia generator",
+      "Generate trivia questions on various topics and provide hints to help users arrive at the correct answer. Select from a diverse set of categories and create questions that test the user’s knowledge or reasoning skills. Offer a series of increasingly specific hints to guide users towards the solution. Ensure that the questions are challenging and that the hints provide enough information to help the user without giving away the answer too easily."
+    ],
+    [
+      "Neologism creator",
+      "Can you help me create a new word for the act of pretending to understand something in order to avoid looking ignorant or uninformed?"
+    ],
+    [
+      "Simile savant",
+      "Help me create some similes to describe a person’s laughter that is joyful and contagious?"
+    ],
+    [
+      "Git gud",
+      "I have made some changes to my local files and I want to save them in my local Git repository. What Git command should I use?"
+    ],
+    [
+      "Google apps scripter",
+      "Write me a Google apps script that will translate all text in a Google Slides presentation to Korean."
+    ],
+    [
+      "Cosmic Keystrokes",
+      "Write me a fully complete web app as a single HTML file. The app should contain a simple side-scrolling game where I use WASD to move around. When moving around the world, occasionally the character/sprite will encounter words. When a word is encountered, the player must correctly type the word as fast as possible.The faster the word is successfully typed, the more point the player gets. We should have a counter in the top-right to keep track of points. Words should be random and highly variable to keep the game interesting.\n\nYou should make the website very aesthetic and use Tailwind."
+    ],
     [
       "Linux Terminal",
       "I want you to act as a linux terminal. I will type commands and you will reply with what the terminal should show. I want you to only reply with the terminal output inside one unique code block, and nothing else. do not write explanations. do not type commands unless I instruct you to do so. when i need to tell you something in english, i will do so by putting text inside curly brackets {like this}. my first command is pwd"

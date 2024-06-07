@@ -34,6 +34,7 @@ export type ChatMessage = RequestMessage & {
   isError?: boolean;
   id: string;
   model?: ModelType;
+  isOnlineSearch?: boolean;
 };
 
 export function createMessage(override: Partial<ChatMessage>): ChatMessage {
@@ -426,20 +427,26 @@ export const useChatStore = createPersistStore(
             stream: true,
             checkShansingOnlineSearch: true,
           },
+          onBegin(isOnlineSearch) {
+            botMessage.isOnlineSearch = isOnlineSearch;
+            get().updateCurrentSession((session) => {
+              session.messages = session.messages.concat();
+            });
+          },
           onUpdate(message) {
             botMessage.streaming = true;
             if (message) {
               botMessage.content = message;
             }
-            try {
-              get().updateCurrentSession((session) => {
-                session.messages = session.messages.concat();
-              });
-            } catch (error) {
-              //workaround: Minified React error #185
-              // showToast(Locale.Shansing.animationFailure);
-              console.warn("[animateResponseText]", error);
-            }
+            // try {
+            get().updateCurrentSession((session) => {
+              session.messages = session.messages.concat();
+            });
+            // } catch (error) {
+            //   //workaround: Minified React error #185
+            //   // showToast(Locale.Shansing.animationFailure);
+            //   console.warn("[animateResponseText]", error);
+            // }
           },
           onFinish(message) {
             botMessage.streaming = false;

@@ -47,6 +47,7 @@ export interface ChatOptions {
   onFinish: (message: string) => void;
   onError?: (err: Error) => void;
   onController?: (controller: AbortController) => void;
+  onBegin?: (isOnlineSearch: boolean) => void;
 }
 
 export interface LLMUsage {
