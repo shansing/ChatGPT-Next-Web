@@ -527,9 +527,9 @@ const en: LocaleType = {
     UploadFile: {
       Title: "Upload File",
       UploadedTitle: " file(s)",
-      SuccessTip: "File uploaded; session is not long-term valid",
+      SuccessTip: "File uploaded; chat files are not long-term valid",
       OverNumberTip: "Some files uploaded, except the excess ones",
-      FullTip: "Maximum number of session files reached",
+      FullTip: "Maximum number of chat files reached",
       FailureTip: "Failed to upload files; please try again later",
     },
     UploadImageFullTip: "Maximum number of session images reached",

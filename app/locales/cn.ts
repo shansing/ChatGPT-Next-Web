@@ -519,9 +519,9 @@ const cn = {
     UploadFile: {
       Title: "上传文件",
       UploadedTitle: " 个文件",
-      SuccessTip: "文件上传成功；会话不保证长期有效",
+      SuccessTip: "文件上传成功；对话不保证长期有效",
       OverNumberTip: "部分文件上传成功，超出部分被移出",
-      FullTip: "单会话文件数达到上限",
+      FullTip: "当前对话文件数达到上限",
       FailureTip: "文件上传失败，请稍候再试",
     },
     UploadImageFullTip: "单会话图片数达到上限",
