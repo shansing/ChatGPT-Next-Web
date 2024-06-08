@@ -532,7 +532,9 @@ const en: LocaleType = {
       FullTip: "Maximum number of session files reached",
       FailureTip: "Failed to upload files; please try again later",
     },
-    ImageFullTip: "Maximum number of session images reached",
+    UploadImageFullTip: "Maximum number of session images reached",
+    UploadImageIncompatibleTip:
+      "Image compression unavailable; is Lockdown Mode enabled?",
   },
 };
 

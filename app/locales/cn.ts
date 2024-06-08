@@ -524,7 +524,8 @@ const cn = {
       FullTip: "单会话文件数达到上限",
       FailureTip: "文件上传失败，请稍候再试",
     },
-    ImageFullTip: "单会话图片数达到上限",
+    UploadImageFullTip: "单会话图片数达到上限",
+    UploadImageIncompatibleTip: "图片压缩不可用。浏览器处于锁定模式吗？",
   },
 };
 

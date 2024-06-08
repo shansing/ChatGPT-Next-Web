@@ -1,6 +1,9 @@
 import heic2any from "heic2any";
-import { compressAccurately, EImageType } from "image-conversion";
-import { blob } from "node:stream/consumers";
+import {
+  compressAccurately,
+  dataURLtoFile,
+  EImageType,
+} from "image-conversion";
 
 //ref: https://platform.openai.com/docs/guides/vision/managing-images
 //ref: https://docs.anthropic.com/en/docs/vision#image-size
@@ -8,7 +11,6 @@ const MAX_SHORT_SIDE_PIXEL = 768;
 export function compressImage(file: File, maxSize: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.onload = (readerEvent: any) => {
       const image = new Image();
       image.onload = () => {
@@ -18,19 +20,25 @@ export function compressImage(file: File, maxSize: number): Promise<string> {
         if (scale > 1) {
           scale = 1;
         }
-        compressAccurately(file, {
-          size: Math.floor(maxSize / 1024),
-          accuracy: 0.9,
-          type: EImageType.JPEG,
-          orientation: 1,
-          scale: scale,
-        }).then((blob) => {
-          const fr = new FileReader();
-          fr.onload = function (e) {
-            resolve(e?.target?.result as string);
-          };
-          fr.readAsDataURL(blob);
-        });
+        dataURLtoFile(image.src)
+          .then((jpgFile) => {
+            compressAccurately(jpgFile, {
+              size: Math.floor(maxSize / 1024),
+              accuracy: 0.9,
+              type: EImageType.JPEG,
+              orientation: 1,
+              scale: scale,
+            })
+              .then((blob) => {
+                const fr = new FileReader();
+                fr.onload = function (e) {
+                  resolve(e?.target?.result as string);
+                };
+                fr.readAsDataURL(blob);
+              })
+              .catch((err) => reject(err));
+          })
+          .catch((err) => reject(err));
       };
       image.onerror = reject;
       // console.log("readerEvent.target",readerEvent.target,readerEvent.target.result)
