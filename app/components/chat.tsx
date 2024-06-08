@@ -1203,6 +1203,9 @@ function _Chat() {
   // edit / insert message modal
   const [isEditingMessage, setIsEditingMessage] = useState(false);
 
+  const UPLOAD_FILE_MAX_NUMBER = 5;
+  const UPLOAD_IMAGE_MAX_NUMBER = 3;
+
   // remember unfinished input
   useEffect(() => {
     // try to load from local storage
@@ -1232,6 +1235,13 @@ function _Chat() {
           event.preventDefault();
           const file = item.getAsFile();
           if (file) {
+            if (
+              attachImages &&
+              attachImages.length >= UPLOAD_IMAGE_MAX_NUMBER
+            ) {
+              showToast(Locale.Shansing.ImageFullTip);
+              return;
+            }
             const images: string[] = [];
             images.push(...attachImages);
             images.push(
@@ -1253,8 +1263,11 @@ function _Chat() {
             );
             const imagesLength = images.length;
 
-            if (imagesLength > 3) {
-              images.splice(3, imagesLength - 3);
+            if (imagesLength > UPLOAD_IMAGE_MAX_NUMBER) {
+              images.splice(
+                UPLOAD_IMAGE_MAX_NUMBER,
+                imagesLength - UPLOAD_IMAGE_MAX_NUMBER,
+              );
             }
             setAttachImages(images);
           }
@@ -1266,6 +1279,10 @@ function _Chat() {
 
   async function uploadImage() {
     if (uploading) {
+      return;
+    }
+    if (attachImages && attachImages.length >= UPLOAD_IMAGE_MAX_NUMBER) {
+      showToast(Locale.Shansing.ImageFullTip);
       return;
     }
     const images: string[] = [];
@@ -1309,8 +1326,11 @@ function _Chat() {
     );
 
     const imagesLength = images.length;
-    if (imagesLength > 3) {
-      images.splice(3, imagesLength - 3);
+    if (imagesLength > UPLOAD_IMAGE_MAX_NUMBER) {
+      images.splice(
+        UPLOAD_IMAGE_MAX_NUMBER,
+        imagesLength - UPLOAD_IMAGE_MAX_NUMBER,
+      );
     }
     setAttachImages(images);
   }
@@ -1327,12 +1347,16 @@ function _Chat() {
     if (uploading) {
       return;
     }
-    if (
-      uploadedFileIds.length === 0 &&
-      !(await showConfirm(Locale.Shansing.UploadFile.ConfirmTip))
-    ) {
+    if (uploadedFileIds && uploadedFileIds.length >= UPLOAD_FILE_MAX_NUMBER) {
+      showToast(Locale.Shansing.UploadFile.FullTip);
       return;
     }
+    // if (
+    //   uploadedFileIds.length === 0 &&
+    //   !(await showConfirm(Locale.Shansing.UploadFile.ConfirmTip))
+    // ) {
+    //   return;
+    // }
     const modelName = session.mask.modelConfig.model;
     const uploadFileModel = uploadFileModels.find(
       (uploadFileModel) => uploadFileModel.name === modelName,
@@ -1371,8 +1395,14 @@ function _Chat() {
     );
 
     const filesLength = files.length;
-    if (filesLength > 3) {
-      files.splice(3, filesLength - 3);
+    if (filesLength > UPLOAD_FILE_MAX_NUMBER) {
+      files.splice(
+        UPLOAD_FILE_MAX_NUMBER,
+        filesLength - UPLOAD_FILE_MAX_NUMBER,
+      );
+      showToast(Locale.Shansing.UploadFile.OverNumberTip);
+    } else {
+      showToast(Locale.Shansing.UploadFile.SuccessTip);
     }
     setUploadedFileIds(files);
   }

@@ -527,12 +527,12 @@ const en: LocaleType = {
     UploadFile: {
       Title: "Upload File",
       UploadedTitle: " file(s)",
-      ConfirmTip:
-        "Shansing He2per provides limited support for file uploads, aiming to ensure functionality without prioritizing interface refinement.\n" +
-        "Please select the model you wish to use first, then click on Upload File. After confirming this dialog, choose local files and wait for the icon to change, displaying a 'small tick,' indicating that you can now pose questions about the uploaded files in this chat.\n" +
-        "Files are periodically cleared, and session longevity is not guaranteed. Please be mindful of associated costs when using this feature.",
+      SuccessTip: "File uploaded; session is not long-term valid",
+      OverNumberTip: "Some files uploaded, except the excess ones",
+      FullTip: "Maximum number of session files reached",
       FailureTip: "Failed to upload files; please try again later",
     },
+    ImageFullTip: "Maximum number of session images reached",
   },
 };
 
