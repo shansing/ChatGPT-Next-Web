@@ -631,6 +631,12 @@ export function ChatActions(props: {
               <FileIcon />
             )
           }
+          fullWidth={
+            !isMobileScreen &&
+            props.uploadedFileIds &&
+            props.uploadedFileIds.length > 0 &&
+            !props.uploading
+          }
         />
       )}
 
@@ -1343,7 +1349,8 @@ function _Chat() {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.accept = uploadFileModel.accept;
-        fileInput.multiple = true;
+        //workaround: it's easy to reach rate limit of aliyun if true, so let's set it to false
+        fileInput.multiple = false;
         fileInput.onchange = (event: any) => {
           setUploading(true);
           chatStore

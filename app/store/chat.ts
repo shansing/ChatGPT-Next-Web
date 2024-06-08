@@ -27,6 +27,7 @@ import { identifyDefaultClaudeModel } from "../utils/checkers";
 import { collectModelsWithDefaultModel } from "../utils/model";
 import { useAccessStore } from "./access";
 import { file } from "@babel/types";
+import { config } from "webpack";
 
 export type ChatMessage = RequestMessage & {
   date: string;
@@ -715,6 +716,9 @@ export const useChatStore = createPersistStore(
       },
 
       async uploadFiles(files: File[]): Promise<string[]> {
+        if (files.length <= 0) {
+          return [];
+        }
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
         const api = this.getClientApi(modelConfig.model);
@@ -727,6 +731,18 @@ export const useChatStore = createPersistStore(
           }
           fileIds.push(fileId);
         }
+
+        const config = useAppConfig.getState();
+        if (config.enableAutoGenerateTitle && session.topic === DEFAULT_TOPIC) {
+          const fileName = files[0].name;
+          const fileNameWithoutExtension = fileName.includes(".")
+            ? fileName.split(".").slice(0, -1).join(".")
+            : fileName;
+          get().updateCurrentSession(
+            (session) => (session.topic = fileNameWithoutExtension),
+          );
+        }
+
         return fileIds;
       },
 
