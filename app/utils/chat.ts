@@ -1,5 +1,10 @@
 import heic2any from "heic2any";
+import { compressAccurately, EImageType } from "image-conversion";
+import { blob } from "node:stream/consumers";
 
+//ref: https://platform.openai.com/docs/guides/vision/managing-images
+//ref: https://docs.anthropic.com/en/docs/vision#image-size
+const MAX_SHORT_SIDE_PIXEL = 768;
 export function compressImage(file: File, maxSize: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -7,34 +12,25 @@ export function compressImage(file: File, maxSize: number): Promise<string> {
     reader.onload = (readerEvent: any) => {
       const image = new Image();
       image.onload = () => {
-        // console.log("image.onload")
-        let canvas = document.createElement("canvas");
-        let ctx = canvas.getContext("2d");
-        let width = image.width;
-        let height = image.height;
-        let quality = 0.9;
-        let dataUrl;
-
-        do {
-          canvas.width = width;
-          canvas.height = height;
-          ctx?.clearRect(0, 0, canvas.width, canvas.height);
-          ctx?.drawImage(image, 0, 0, width, height);
-          dataUrl = canvas.toDataURL("image/jpeg", quality);
-
-          if (dataUrl.length < maxSize) break;
-
-          if (quality > 0.5) {
-            // Prioritize quality reduction
-            quality -= 0.1;
-          } else {
-            // Then reduce the size
-            width *= 0.9;
-            height *= 0.9;
-          }
-        } while (dataUrl.length > maxSize);
-
-        resolve(dataUrl);
+        const shortSidePixel =
+          image.width <= image.height ? image.width : image.height;
+        let scale = MAX_SHORT_SIDE_PIXEL / shortSidePixel;
+        if (scale > 1) {
+          scale = 1;
+        }
+        compressAccurately(file, {
+          size: Math.floor(maxSize / 1024),
+          accuracy: 0.9,
+          type: EImageType.JPEG,
+          orientation: 1,
+          scale: scale,
+        }).then((blob) => {
+          const fr = new FileReader();
+          fr.onload = function (e) {
+            resolve(e?.target?.result as string);
+          };
+          fr.readAsDataURL(blob);
+        });
       };
       image.onerror = reject;
       // console.log("readerEvent.target",readerEvent.target,readerEvent.target.result)

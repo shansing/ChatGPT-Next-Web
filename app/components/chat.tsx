@@ -1205,6 +1205,7 @@ function _Chat() {
 
   const UPLOAD_FILE_MAX_NUMBER = 5;
   const UPLOAD_IMAGE_MAX_NUMBER = 3;
+  const UPLOAD_IMAGE_MAX_SIZE = 256 * 1024;
 
   // remember unfinished input
   useEffect(() => {
@@ -1248,7 +1249,7 @@ function _Chat() {
               ...(await new Promise<string[]>((res, rej) => {
                 setUploading(true);
                 const imagesData: string[] = [];
-                compressImage(file, 256 * 1024)
+                compressImage(file, UPLOAD_IMAGE_MAX_SIZE)
                   .then((dataUrl) => {
                     imagesData.push(dataUrl);
                     setUploading(false);
@@ -1303,7 +1304,7 @@ function _Chat() {
           const imagesData: string[] = [];
           for (let i = 0; i < files.length; i++) {
             const file = event.target.files[i];
-            compressImage(file, 256 * 1024)
+            compressImage(file, UPLOAD_IMAGE_MAX_SIZE)
               .then((dataUrl) => {
                 imagesData.push(dataUrl);
                 if (

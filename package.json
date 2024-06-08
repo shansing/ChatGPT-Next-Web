@@ -28,6 +28,7 @@
     "hash.js": "^1.1.7",
     "heic2any": "^0.0.4",
     "html-to-image": "^1.11.11",
+    "image-conversion": "^2.1.1",
     "mermaid": "^10.6.1",
     "nanoid": "^5.0.3",
     "next": "^14.1.1",
