@@ -1276,7 +1276,9 @@ function _Chat() {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.accept =
-          "image/png, image/jpeg, image/webp, image/heic, image/heif";
+          //Firefox doesn't support image/heic, image/heif
+          // "image/png, image/jpeg, image/webp, image/heic, image/heif";
+          ".png,.jpg,.jpeg,.webp,.heic";
         fileInput.multiple = true;
         fileInput.onchange = (event: any) => {
           setUploading(true);

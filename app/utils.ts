@@ -220,7 +220,7 @@ export function getCSSVar(varName: string) {
  */
 export function isMacOS(): boolean {
   if (typeof window !== "undefined") {
-    let userAgent = window.navigator.userAgent.toLocaleLowerCase();
+    let userAgent = window.navigator.userAgent.toLowerCase();
     const macintosh = /iphone|ipad|ipod|macintosh/.test(userAgent);
     return !!macintosh;
   }

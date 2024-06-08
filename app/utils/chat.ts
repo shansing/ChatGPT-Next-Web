@@ -3,9 +3,11 @@ import heic2any from "heic2any";
 export function compressImage(file: File, maxSize: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+
     reader.onload = (readerEvent: any) => {
       const image = new Image();
       image.onload = () => {
+        // console.log("image.onload")
         let canvas = document.createElement("canvas");
         let ctx = canvas.getContext("2d");
         let width = image.width;
@@ -35,11 +37,18 @@ export function compressImage(file: File, maxSize: number): Promise<string> {
         resolve(dataUrl);
       };
       image.onerror = reject;
+      // console.log("readerEvent.target",readerEvent.target,readerEvent.target.result)
       image.src = readerEvent.target.result;
     };
     reader.onerror = reject;
 
-    if (file.type.includes("heic")) {
+    // console.log("file.type", file.type)
+    if (
+      file.name.toLowerCase().endsWith(".heic") ||
+      file.name.toLowerCase().endsWith(".heif") ||
+      file.type.includes("heic")
+    ) {
+      // console.log("heic")
       heic2any({ blob: file, toType: "image/jpeg" })
         .then((blob) => {
           reader.readAsDataURL(blob as Blob);
@@ -47,8 +56,8 @@ export function compressImage(file: File, maxSize: number): Promise<string> {
         .catch((e) => {
           reject(e);
         });
+    } else {
+      reader.readAsDataURL(file);
     }
-
-    reader.readAsDataURL(file);
   });
 }
