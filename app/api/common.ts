@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import { OPENAI_BASE_URL } from "../constant";
 import { makeAzurePath } from "../azure";
-import { config } from "webpack";
 
 const serverConfig = getServerSideConfig();
 
-export async function requestOpenai(req: NextRequest) {
+export async function requestOpenai(
+  req: NextRequest,
+  requestJson: any,
+  usernameHash: string,
+) {
   const controller = new AbortController();
 
   var authValue,
@@ -51,6 +54,8 @@ export async function requestOpenai(req: NextRequest) {
   console.log("[Base Url]", baseUrl);
   console.log("[apiBaseUrl]", apiBaseUrl);
 
+  requestJson.user = usernameHash;
+
   const timeoutId = setTimeout(
     () => {
       controller.abort();
@@ -82,7 +87,7 @@ export async function requestOpenai(req: NextRequest) {
       }),
     },
     method: req.method,
-    body: req.body,
+    body: JSON.stringify(requestJson),
     // to fix #2485: https://stackoverflow.com/questions/55920957/cloudflare-worker-typeerror-one-time-use-body
     redirect: "manual",
     // @ts-ignore
@@ -163,6 +168,8 @@ export async function requestOpenai(req: NextRequest) {
 
 export async function requestCompatibleOpenai(
   req: NextRequest,
+  requestJson: any,
+  usernameHash: string,
   baseUrl: string,
   socks?: string,
 ) {
@@ -193,6 +200,9 @@ export async function requestCompatibleOpenai(
   console.log("[apiBaseUrl]", apiBaseUrl);
   console.log("[Base Url]", baseUrl);
 
+  requestJson.user = usernameHash;
+  // console.log("requestBody", requestBody)
+
   const timeoutId = setTimeout(
     () => {
       controller.abort();
@@ -212,7 +222,7 @@ export async function requestCompatibleOpenai(
       }),
     },
     method: req.method,
-    body: req.body,
+    body: JSON.stringify(requestJson),
     // to fix #2485: https://stackoverflow.com/questions/55920957/cloudflare-worker-typeerror-one-time-use-body
     redirect: "manual",
     // @ts-ignore

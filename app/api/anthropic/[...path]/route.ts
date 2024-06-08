@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
 import {
   getUsernameFromHttpBasicAuth,
+  hashUsername,
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
@@ -66,6 +67,7 @@ async function handle(
       },
     );
   }
+  const usernameHash = hashUsername(username);
 
   const authResult = auth(req, ModelProvider.Claude);
   if (authResult.error) {
@@ -74,7 +76,7 @@ async function handle(
     });
   }
 
-  const requestJson = await req.clone().json();
+  const requestJson = await req.json();
   const modelChoice = serverConfig.shansingModelChoices.find(
     (choice) => choice.model === requestJson.model,
   );
@@ -91,7 +93,7 @@ async function handle(
   }
 
   try {
-    const response = await request(req);
+    const response = await request(req, requestJson, usernameHash);
 
     const firstPromptTokenNumber = parseInt(
         response?.headers.get("X-Shansing-First-Prompt-Token-Number") ?? "0",
@@ -212,7 +214,11 @@ export const preferredRegion = [
 
 const serverConfig = getServerSideConfig();
 
-async function request(req: NextRequest) {
+async function request(
+  req: NextRequest,
+  requestJson: any,
+  usernameHash: string,
+) {
   const controller = new AbortController();
 
   let authHeaderName = "x-api-key";
@@ -253,6 +259,12 @@ async function request(req: NextRequest) {
   console.log("[Base Url]", baseUrl);
   console.log("[apiBaseUrl]", apiBaseUrl);
 
+  const metadata = requestJson.metadata ?? {};
+  requestJson.metadata = {
+    ...metadata,
+    user_id: usernameHash,
+  };
+
   const fetchUrl = `${baseUrl}${path}`;
 
   const fetchOptions: RequestInit = {
@@ -269,7 +281,7 @@ async function request(req: NextRequest) {
       }),
     },
     method: req.method,
-    body: req.body,
+    body: JSON.stringify(requestJson),
     redirect: "manual",
     // @ts-ignore
     duplex: "half",

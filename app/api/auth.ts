@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { getServerSideConfig } from "../config/server";
-import md5 from "spark-md5";
 import { ACCESS_CODE_PREFIX, ModelProvider } from "../constant";
 
 function getIP(req: NextRequest) {

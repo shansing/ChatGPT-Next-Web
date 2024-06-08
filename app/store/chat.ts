@@ -26,8 +26,6 @@ import { createPersistStore } from "../utils/store";
 import { identifyDefaultClaudeModel } from "../utils/checkers";
 import { collectModelsWithDefaultModel } from "../utils/model";
 import { useAccessStore } from "./access";
-import { file } from "@babel/types";
-import { config } from "webpack";
 
 export type ChatMessage = RequestMessage & {
   date: string;

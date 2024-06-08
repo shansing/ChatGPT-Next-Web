@@ -182,5 +182,6 @@ export const getServerSideConfig = () => {
       process.env.SHANSING_UPLOAD_FILE_PRICE ?? 0,
     ),
     shansingOnlineSearchUrl: process.env.SHANSING_ONLINE_SEARCH_URL ?? "",
+    shansingUsernameHashKey: process.env.SHANSING_USERNAME_HASH_KEY,
   };
 };

@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
 import {
   getUsernameFromHttpBasicAuth,
+  hashUsername,
   pay,
   payFixed,
   readUserQuota,
@@ -19,7 +20,6 @@ import {
   requestCompatibleOpenai,
   requestCompatibleOpenaiUploadFile,
 } from "@/app/api/common";
-import type { OpenAIListModelResponse } from "@/app/client/platforms/openai";
 
 const ALLOWD_PATH = new Set(Object.values(AlibabaPath));
 const config = getServerSideConfig();
@@ -72,6 +72,8 @@ async function handle(
       },
     );
   }
+  const usernameHash = hashUsername(username);
+  // console.log("usernameHash", usernameHash)
 
   const authResult = auth(req, ModelProvider.Alibaba);
   if (authResult.error) {
@@ -94,7 +96,7 @@ async function handle(
     });
   }
 
-  const requestJson = await req.clone().json();
+  const requestJson = await req.json();
   const modelChoice = config.shansingModelChoices.find(
     (choice) => choice.model === requestJson.model,
   );
@@ -126,7 +128,12 @@ async function handle(
   }
 
   try {
-    const response = await requestCompatibleOpenai(req, ALIBABA_BASE_URL);
+    const response = await requestCompatibleOpenai(
+      req,
+      requestJson,
+      usernameHash,
+      ALIBABA_BASE_URL,
+    );
 
     const firstPromptTokenNumber = parseInt(
         response?.headers.get("X-Shansing-First-Prompt-Token-Number") ?? "0",

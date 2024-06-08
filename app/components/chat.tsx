@@ -104,7 +104,6 @@ import { ExportMessageModal } from "./exporter";
 import { getClientConfig } from "../config/client";
 import { useAllModels } from "../utils/hooks";
 import { MultimodalContent } from "../client/api";
-import { images } from "next/dist/build/webpack/config/blocks/images";
 import { Emoji } from "emoji-picker-react";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {

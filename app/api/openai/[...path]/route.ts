@@ -7,6 +7,7 @@ import { auth } from "../../auth";
 import { parseUsageObj, requestOpenai } from "../../common";
 import {
   getUsernameFromHttpBasicAuth,
+  hashUsername,
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
@@ -72,7 +73,9 @@ async function handle(
       },
     );
   }
-  const requestJson = await req.clone().json();
+  const usernameHash = hashUsername(username);
+
+  const requestJson = await req.json();
   const modelChoice = config.shansingModelChoices.find(
     (choice) => choice.model === requestJson.model,
   );
@@ -111,7 +114,7 @@ async function handle(
   }
 
   try {
-    const response = await requestOpenai(req);
+    const response = await requestOpenai(req, requestJson, usernameHash);
 
     // list models
     if (subpath === OpenaiPath.ListModelPath && response.status === 200) {

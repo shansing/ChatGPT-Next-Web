@@ -9,7 +9,6 @@ import {
 import { ChatOptions, getHeaders, LLMApi, MultimodalContent } from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
-import { RequestMessage } from "@/app/typing";
 import {
   EventStreamContentType,
   fetchEventSource,

@@ -1,5 +1,6 @@
 import Decimal from "decimal.js";
 import { getServerSideConfig } from "@/app/config/server";
+import { sha256 } from "hash.js";
 
 const kilo = new Decimal("1000");
 const serverConfig = getServerSideConfig();
@@ -16,6 +17,13 @@ export interface ShansingModelChoice {
   // knowledgeDate: string
   // api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   // maxPrice: string
+}
+
+export function hashUsername(username: string): string {
+  return sha256()
+    .update(username + "|" + serverConfig.shansingUsernameHashKey)
+    .digest("hex")
+    .substring(0, 16);
 }
 
 export async function pay(

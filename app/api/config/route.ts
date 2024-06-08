@@ -6,7 +6,6 @@ import {
   readUserQuota,
   ShansingModelChoice,
 } from "@/app/api/shansing";
-import Decimal from "decimal.js";
 
 const serverConfig = getServerSideConfig();
 

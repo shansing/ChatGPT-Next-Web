@@ -48,7 +48,6 @@ import { Updater } from "../typing";
 import { ModelConfigList } from "./model-config";
 import { FileName, Path } from "../constant";
 import { BUILTIN_MASK_STORE } from "../masks";
-import { nanoid } from "nanoid";
 import {
   DragDropContext,
   Droppable,

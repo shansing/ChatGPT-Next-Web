@@ -31,8 +31,6 @@ import {
   getMessageImages,
   isVisionModel,
 } from "@/app/utils";
-import { showToast } from "@/app/components/ui-lib";
-import { finish } from "@hello-pangea/dnd/src/debug/timings";
 
 export interface OpenAIListModelResponse {
   object: string;
