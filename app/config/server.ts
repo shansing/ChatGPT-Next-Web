@@ -159,12 +159,8 @@ export const getServerSideConfig = () => {
     defaultModel,
     allowedWebDevEndpoints,
 
-    shansingAboutHtml: process.env.SHANSING_ABOUT_HTML
-      ? process.env.SHANSING_ABOUT_HTML
-      : "",
-    shansingQuotaAgentUrl: process.env.SHANSING_QUOTA_AGENT_URL
-      ? process.env.SHANSING_QUOTA_AGENT_URL
-      : "",
+    shansingAboutHtml: process.env.SHANSING_ABOUT_HTML ?? "",
+    shansingQuotaPath: process.env.SHANSING_QUOTA_PATH ?? "",
     shansingModelChoices: shansingModelChoices,
     shansingEmojiCdn: process.env.SHANSING_EMOJI_CDN
       ? process.env.SHANSING_EMOJI_CDN

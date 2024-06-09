@@ -1,11 +1,10 @@
 import Decimal from "decimal.js";
 import { getServerSideConfig } from "@/app/config/server";
 import { sha256 } from "hash.js";
+import fs from "fs/promises";
 
 const kilo = new Decimal("1000");
 const serverConfig = getServerSideConfig();
-
-const FACTORY_MODE = false;
 
 export interface ShansingModelChoice {
   name: string;
@@ -51,16 +50,6 @@ export async function pay(
         .mul(completionTokenNumber),
     )
     .plus(extraFee);
-  if (FACTORY_MODE) {
-    console.log(
-      "FAKE [pay]",
-      "username",
-      username,
-      "thisBilling",
-      thisBilling.toFixed(),
-    );
-    return true;
-  }
   console.log(
     "[pay]",
     "username",
@@ -75,33 +64,13 @@ export async function payFixed(username: string, fee: Decimal) {
   if (!username) {
     throw Error("Username not found");
   }
-  if (FACTORY_MODE) {
-    console.log("FAKE [payFixed]", "username", username, "fee", fee.toFixed());
-    return true;
-  }
   console.log("[payFixed]", "username", username, "fee", fee.toFixed());
   return decreaseUserQuota(username, fee, true);
 }
 
 export async function readUserQuota(username: string): Promise<Decimal> {
-  if (FACTORY_MODE) {
-    return new Decimal(600);
-  }
-  return fetch(
-    serverConfig.shansingQuotaAgentUrl +
-      "?userName=" +
-      encodeURIComponent(username),
-    { method: "get" },
-  )
-    .then((res) => res.json())
-    .then((res) => {
-      if (res.error) {
-        throw Error(
-          "failed to read quota, username=" + username + ", error=" + res.error,
-        );
-      }
-      return res.balance;
-    })
+  return fs
+    .readFile(serverConfig.shansingQuotaPath + "/" + username, "utf8")
     .then((text) => {
       try {
         return new Decimal(text.trim());
@@ -133,26 +102,11 @@ async function increaseUserQuota(
   if (!allowToNegative && newQuota.lt(0)) {
     return false;
   }
-  await fetch(serverConfig.shansingQuotaAgentUrl, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body:
-      "userName=" +
-      encodeURIComponent(username) +
-      "&newQuota=" +
-      encodeURIComponent(newQuota.toFixed()),
-  })
-    .then((res) => res.json())
-    .then((res) => {
-      if (res.error) {
-        throw Error(
-          "failed to write quota, username=" + ", error=" + res.error,
-        );
-      }
-      return res.balance;
-    });
+  await fs.writeFile(
+    serverConfig.shansingQuotaPath + "/" + username,
+    newQuota.toFixed(),
+    "utf8",
+  );
   return true;
 }
 async function decreaseUserQuota(
@@ -160,5 +114,9 @@ async function decreaseUserQuota(
   delta: Decimal,
   allowToNonPositive: boolean,
 ) {
-  return increaseUserQuota(username, new Decimal(-1).mul(delta), true);
+  return increaseUserQuota(
+    username,
+    new Decimal(-1).mul(delta),
+    allowToNonPositive,
+  );
 }
