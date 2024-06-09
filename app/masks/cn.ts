@@ -1,5 +1,5 @@
 import { BuiltinMask } from "./typing";
-import { CLAUDE_3_HAIKU, GPT_35_MODEL, GPT_4_MODEL } from "@/app/constant";
+import { CLAUDE_3_SONNET, GPT_4_MODEL } from "@/app/constant";
 
 export const CN_MASKS: BuiltinMask[] = [
   {
@@ -15,7 +15,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -41,7 +41,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -67,7 +67,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -93,7 +93,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -119,7 +119,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -145,7 +145,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -171,7 +171,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -197,7 +197,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -223,7 +223,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -249,7 +249,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -275,7 +275,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_3_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -320,7 +320,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -346,7 +346,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -372,7 +372,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -398,7 +398,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -424,7 +424,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -450,7 +450,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -476,7 +476,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -508,7 +508,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 0.5,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -534,7 +534,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -567,7 +567,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -600,7 +600,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -658,7 +658,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,

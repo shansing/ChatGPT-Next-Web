@@ -499,7 +499,7 @@ const en: LocaleType = {
     imageSelectorFailure: "Image too big or format unsupported",
     animationFailure: "Animation failed to render",
     modelPrice: "Model & Price",
-    modelPriceDescription: "Unit:Yuan / 1000 tokens",
+    modelPriceDescription: "Unit: Yuan / 1000 tokens",
     modelAlias: "Alias",
     modelName: "Model Name",
     modelPromptUnitPrice: "Prompt",

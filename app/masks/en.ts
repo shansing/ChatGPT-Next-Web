@@ -1,5 +1,5 @@
 import { BuiltinMask } from "./typing";
-import { GPT_35_MODEL, GPT_4_MODEL } from "@/app/constant";
+import { GPT_4_MODEL } from "@/app/constant";
 
 export const EN_MASKS: BuiltinMask[] = [
   {
@@ -87,7 +87,7 @@ export const EN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_35_MODEL,
+      model: GPT_4_MODEL,
       temperature: 0.5,
       max_tokens: 2000,
       presence_penalty: 0,
