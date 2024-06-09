@@ -526,6 +526,7 @@ const cn = {
     },
     UploadImageFullTip: "单会话图片数达到上限",
     UploadImageIncompatibleTip: "图片压缩不可用。浏览器处于锁定模式吗？",
+    MessageParseFailure: "消息解析失败，可能触发限制",
   },
 };
 

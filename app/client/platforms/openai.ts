@@ -31,6 +31,7 @@ import {
   getMessageImages,
   isVisionModel,
 } from "@/app/utils";
+import { showToast } from "@/app/components/ui-lib";
 
 export interface OpenAIListModelResponse {
   object: string;
@@ -275,6 +276,12 @@ export class ChatGPTApi implements LLMApi {
             const text = msg.data;
             try {
               const json = JSON.parse(text);
+              if (!json.choices && !json.usage) {
+                const responseTexts = [responseText];
+                responseTexts.push(text);
+                responseText = responseTexts.join("\n\n");
+                return finish();
+              }
               const choices = json.choices as Array<{
                 delta: { content: string };
               }>;
@@ -299,6 +306,7 @@ export class ChatGPTApi implements LLMApi {
                 );
               }
             } catch (e) {
+              showToast(Locale.Shansing.MessageParseFailure);
               console.error("[Request] parse error", text, msg);
             }
           },

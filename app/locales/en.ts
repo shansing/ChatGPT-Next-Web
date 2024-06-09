@@ -535,6 +535,7 @@ const en: LocaleType = {
     UploadImageFullTip: "Maximum number of session images reached",
     UploadImageIncompatibleTip:
       "Image compression unavailable; is Lockdown Mode enabled?",
+    MessageParseFailure: "Message parsing failed, may trigger restrictions",
   },
 };
 

@@ -17,6 +17,7 @@ import {
 import Locale from "../../locales";
 import { prettyObject } from "@/app/utils/format";
 import { getMessageTextContent, isVisionModel } from "@/app/utils";
+import { showToast } from "@/app/components/ui-lib";
 
 export type MultiBlockContent = {
   type: "image" | "text";
@@ -326,7 +327,7 @@ export class ClaudeApi implements LLMApi {
             let chunkJson:
               | undefined
               | {
-                  type: "content_block_delta" | "content_block_stop";
+                  type: string; //"content_block_delta" | "content_block_stop";
                   delta?: {
                     type: "text_delta";
                     text: string;
@@ -335,18 +336,35 @@ export class ClaudeApi implements LLMApi {
                 };
             try {
               chunkJson = JSON.parse(msg.data);
+
+              if (!chunkJson || chunkJson.type === "content_block_stop") {
+                return finish();
+              }
+
+              if (
+                chunkJson.type === "message_start" ||
+                chunkJson.type === "content_block_start" ||
+                chunkJson.type === "ping" ||
+                chunkJson.type === "message_delta" ||
+                chunkJson.type === "message_stop"
+              ) {
+                return;
+              }
+
+              if (!chunkJson.delta) {
+                const responseTexts = [responseText];
+                responseTexts.push(JSON.stringify(chunkJson));
+                responseText = responseTexts.join("\n\n");
+                return finish();
+              }
+              const { delta } = chunkJson;
+              if (delta?.text) {
+                remainText += delta.text;
+                options.onUpdate?.(responseText, delta.text);
+              }
             } catch (e) {
+              showToast(Locale.Shansing.MessageParseFailure);
               console.error("[Response] parse error", msg.data);
-            }
-
-            if (!chunkJson || chunkJson.type === "content_block_stop") {
-              return finish();
-            }
-
-            const { delta } = chunkJson;
-            if (delta?.text) {
-              remainText += delta.text;
-              options.onUpdate?.(responseText, delta.text);
             }
           },
           onclose() {

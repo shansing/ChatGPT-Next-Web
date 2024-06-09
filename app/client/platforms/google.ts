@@ -12,6 +12,8 @@ import {
   getMessageImages,
   isVisionModel,
 } from "@/app/utils";
+import { showToast } from "@/app/components/ui-lib";
+import Locale from "@/app/locales";
 
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
@@ -270,6 +272,7 @@ export class GeminiProApi implements LLMApi {
               } catch (error) {
                 // console.log("[Response Animation] error: ", error,partialData);
                 // skip error message when parsing json
+                showToast(Locale.Shansing.MessageParseFailure);
               }
 
               return reader.read().then(processText);
