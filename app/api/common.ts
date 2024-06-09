@@ -342,7 +342,11 @@ export function parseUsageObj(
     const closeBracket = responseBody.indexOf("}", openBracket);
     if (openBracket !== -1 && closeBracket !== -1) {
       const jsonString = responseBody.substring(openBracket, closeBracket + 1);
-      return JSON.parse(jsonString);
+      try {
+        return JSON.parse(jsonString);
+      } catch (e) {
+        return null;
+      }
     }
   }
   return null;
