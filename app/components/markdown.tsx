@@ -60,8 +60,7 @@ export function Mermaid(props: { code: string }) {
   );
 }
 
-// @ts-ignore
-export function PreCode(props) {
+export function PreCode(props: any) {
   const ref = useRef<HTMLPreElement>(null);
   const refText = ref.current?.innerText;
   const [mermaidCode, setMermaidCode] = useState("");

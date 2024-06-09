@@ -178,13 +178,28 @@ export class ChatGPTApi implements LLMApi {
         let remainText = "";
         let finished = false;
 
+        const error = (inError: Error | string) => {
+          const error =
+            typeof inError === "string" ? new Error(inError) : inError;
+          if (!finished) {
+            finished = true;
+            responseText +=
+              "\n\n" +
+              prettyObject({
+                error: true,
+                message: error.message,
+              });
+            options.onError?.(error);
+          }
+        };
+
         // animate response to make it looks smooth
         function animateResponseText() {
           if (finished || controller.signal.aborted) {
             responseText += remainText;
             console.log("[Response Animation] finished");
             if (responseText?.length === 0) {
-              options.onError?.(new Error("empty response from server"));
+              return error("empty response from server");
             }
             return;
           }
@@ -236,24 +251,11 @@ export class ChatGPTApi implements LLMApi {
                 ?.startsWith(EventStreamContentType) ||
               res.status !== 200
             ) {
-              const responseTexts = [responseText];
-              let extraInfo = await res.clone().text();
-              try {
-                const resJson = await res.clone().json();
-                extraInfo = prettyObject(resJson);
-              } catch {}
-
+              let responseBody = await res.clone().text();
               if (res.status === 401) {
-                responseTexts.push(Locale.Error.Unauthorized);
+                return error(Locale.Error.Unauthorized);
               }
-
-              if (extraInfo) {
-                responseTexts.push(extraInfo);
-              }
-
-              responseText = responseTexts.join("\n\n");
-
-              return finish();
+              return error("responseBody: " + responseBody);
             }
 
             const searchCount = parseInt(
@@ -277,10 +279,7 @@ export class ChatGPTApi implements LLMApi {
             try {
               const json = JSON.parse(text);
               if (!json.choices && !json.usage) {
-                const responseTexts = [responseText];
-                responseTexts.push(text);
-                responseText = responseTexts.join("\n\n");
-                return finish();
+                return error("No choices: " + text);
               }
               const choices = json.choices as Array<{
                 delta: { content: string };
@@ -314,6 +313,7 @@ export class ChatGPTApi implements LLMApi {
             finish();
           },
           onerror(e) {
+            showToast(Locale.Shansing.MessageSendFailure);
             options.onError?.(e);
             throw e;
           },

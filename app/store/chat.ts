@@ -437,15 +437,9 @@ export const useChatStore = createPersistStore(
             if (message) {
               botMessage.content = message;
             }
-            // try {
             get().updateCurrentSession((session) => {
               session.messages = session.messages.concat();
             });
-            // } catch (error) {
-            //   //workaround: Minified React error #185
-            //   // showToast(Locale.Shansing.animationFailure);
-            //   console.warn("[animateResponseText]", error);
-            // }
           },
           onFinish(message) {
             botMessage.streaming = false;

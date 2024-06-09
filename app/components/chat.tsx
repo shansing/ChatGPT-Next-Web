@@ -1505,6 +1505,7 @@ function _Chat() {
           const isUser = message.role === "user";
           const isContext = i < context.length;
           const isOnlineSearch = message.isOnlineSearch;
+          const isError = message.isError;
           const showActions =
             i > 0 &&
             !(message.preview || message.content.length === 0) &&
@@ -1677,6 +1678,13 @@ function _Chat() {
                   <div
                     className={`${styles["chat-message-action-date"]} emoji-text`}
                   >
+                    {!isContext && isError && (
+                      <Emoji
+                        unified="1f534"
+                        size={12}
+                        getEmojiUrl={getEmojiUrl}
+                      />
+                    )}
                     {!isContext && isOnlineSearch && (
                       <Emoji
                         unified="1f30e"

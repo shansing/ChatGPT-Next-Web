@@ -272,6 +272,7 @@ export class GeminiProApi implements LLMApi {
               } catch (error) {
                 // console.log("[Response Animation] error: ", error,partialData);
                 // skip error message when parsing json
+                // to do 更严谨的错误检测和处理
                 showToast(Locale.Shansing.MessageParseFailure);
               }
 
@@ -279,6 +280,7 @@ export class GeminiProApi implements LLMApi {
             });
           })
           .catch((error) => {
+            showToast(Locale.Shansing.MessageSendFailure);
             console.error("Error:", error);
           });
       } else {
