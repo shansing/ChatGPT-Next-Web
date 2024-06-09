@@ -2,9 +2,11 @@ import Decimal from "decimal.js";
 import { getServerSideConfig } from "@/app/config/server";
 import { sha256 } from "hash.js";
 import fs from "fs/promises";
+import AsyncLock from "async-lock";
 
 const kilo = new Decimal("1000");
 const serverConfig = getServerSideConfig();
+const lock = new AsyncLock();
 
 export interface ShansingModelChoice {
   name: string;
@@ -57,7 +59,7 @@ export async function pay(
     "thisBilling",
     thisBilling.toFixed(),
   );
-  return decreaseUserQuota(username, thisBilling, true);
+  return decreaseUserQuota(username, thisBilling);
 }
 
 export async function payFixed(username: string, fee: Decimal) {
@@ -65,7 +67,7 @@ export async function payFixed(username: string, fee: Decimal) {
     throw Error("Username not found");
   }
   console.log("[payFixed]", "username", username, "fee", fee.toFixed());
-  return decreaseUserQuota(username, fee, true);
+  return decreaseUserQuota(username, fee);
 }
 
 export async function readUserQuota(username: string): Promise<Decimal> {
@@ -90,33 +92,21 @@ export function getUsernameFromHttpBasicAuth(req: Request) {
   return auth.split(":")[0];
 }
 
-async function increaseUserQuota(
-  username: string,
-  delta: Decimal,
-  allowToNegative: boolean,
-) {
-  let quota = await readUserQuota(username);
-  // console.log(username + '\'s old quota: ' + quota.toFixed())
-  let newQuota = quota.plus(delta);
-  // console.log(username + '\'s new quota: ' + newQuota.toFixed())
-  if (!allowToNegative && newQuota.lt(0)) {
-    return false;
-  }
-  await fs.writeFile(
-    serverConfig.shansingQuotaPath + "/" + username,
-    newQuota.toFixed(),
-    "utf8",
-  );
-  return true;
+async function increaseUserQuota(username: string, delta: Decimal) {
+  return lock
+    .acquire("QUOTA_" + username, async function () {
+      const quota = await readUserQuota(username);
+      // console.log(username + '\'s old quota: ' + quota.toFixed())
+      const newQuota = quota.plus(delta);
+      // console.log(username + '\'s new quota: ' + newQuota.toFixed())
+      return fs.writeFile(
+        serverConfig.shansingQuotaPath + "/" + username,
+        newQuota.toFixed(),
+        "utf8",
+      );
+    })
+    .then(() => true);
 }
-async function decreaseUserQuota(
-  username: string,
-  delta: Decimal,
-  allowToNonPositive: boolean,
-) {
-  return increaseUserQuota(
-    username,
-    new Decimal(-1).mul(delta),
-    allowToNonPositive,
-  );
+async function decreaseUserQuota(username: string, delta: Decimal) {
+  return increaseUserQuota(username, new Decimal(-1).mul(delta));
 }
