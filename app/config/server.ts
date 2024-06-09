@@ -1,4 +1,3 @@
-import md5 from "spark-md5";
 import { DEFAULT_MODELS } from "../constant";
 import { ShansingModelChoice } from "../api/shansing";
 import Decimal from "decimal.js";
@@ -46,14 +45,15 @@ declare global {
 const ACCESS_CODES = (function getAccessCodes(): Set<string> {
   const code = process.env.CODE;
 
-  try {
-    const codes = (code?.split(",") ?? [])
-      .filter((v) => !!v)
-      .map((v) => md5.hash(v.trim()));
-    return new Set(codes);
-  } catch (e) {
-    return new Set();
-  }
+  // try {
+  //   const codes = (code?.split(",") ?? [])
+  //     .filter((v) => !!v)
+  //     .map((v) => md5.hash(v.trim()));
+  //   return new Set(codes);
+  // } catch (e) {
+  //   return new Set();
+  // }
+  return new Set();
 })();
 
 function getApiKey(keys?: string) {
