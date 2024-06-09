@@ -14,6 +14,7 @@ import {
 } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
 import Locale from "@/app/locales";
+import { prettyObject } from "@/app/utils/format";
 
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
@@ -166,38 +167,28 @@ export class GeminiProApi implements LLMApi {
 
       if (shouldStream) {
         let responseText = "";
-        let remainText = "";
         let finished = false;
+
+        const error = (inError: Error | string) => {
+          const error =
+            typeof inError === "string" ? new Error(inError) : inError;
+          if (!finished) {
+            finished = true;
+            responseText +=
+              "\n\n" +
+              prettyObject({
+                error: true,
+                message: error.message,
+              });
+            requestAnimationFrame(() => options.onError?.(error));
+          }
+        };
 
         let existingTexts: string[] = [];
         const finish = () => {
           finished = true;
-          options.onFinish(existingTexts.join(""));
+          requestAnimationFrame(() => options.onFinish(existingTexts.join("")));
         };
-
-        // animate response to make it looks smooth
-        function animateResponseText() {
-          if (finished || controller.signal.aborted) {
-            responseText += remainText;
-            finish();
-            return;
-          }
-
-          if (remainText.length > 0) {
-            // const fetchCount = Math.max(1, Math.round(remainText.length / 60));
-            // const fetchText = remainText.slice(0, fetchCount);
-            const fetchText = remainText;
-            responseText += fetchText;
-            // remainText = remainText.slice(fetchCount);
-            remainText = "";
-            // options.onUpdate?.(responseText, fetchText);
-          }
-
-          requestAnimationFrame(animateResponseText);
-        }
-
-        // start animaion
-        animateResponseText();
 
         fetch(
           baseUrl.replace("generateContent", "streamGenerateContent"),
@@ -240,7 +231,7 @@ export class GeminiProApi implements LLMApi {
                 }
 
                 console.log("Stream complete");
-                // options.onFinish(responseText + remainText);
+                requestAnimationFrame(() => options.onFinish(responseText));
                 finished = true;
                 return Promise.resolve();
               }
@@ -266,8 +257,8 @@ export class GeminiProApi implements LLMApi {
                   const deltaArray = textArray.slice(existingTexts.length);
                   existingTexts = textArray;
                   const delta = deltaArray.join("");
-                  remainText += delta;
-                  options.onUpdate?.(responseText, delta);
+                  responseText += delta;
+                  requestAnimationFrame(() => options.onUpdate?.(responseText));
                 }
               } catch (error) {
                 // console.log("[Response Animation] error: ", error,partialData);

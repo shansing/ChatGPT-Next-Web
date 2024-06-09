@@ -233,7 +233,6 @@ export class ClaudeApi implements LLMApi {
 
       if (shouldStream) {
         let responseText = "";
-        let remainText = "";
         let finished = false;
 
         const error = (inError: Error | string) => {
@@ -247,41 +246,14 @@ export class ClaudeApi implements LLMApi {
                 error: true,
                 message: error.message,
               });
-            options.onError?.(error);
+            requestAnimationFrame(() => options.onError?.(error));
           }
         };
-
-        // animate response to make it looks smooth
-        function animateResponseText() {
-          if (finished || controller.signal.aborted) {
-            responseText += remainText;
-            console.log("[Response Animation] finished");
-            if (responseText?.length === 0) {
-              return error("empty response from server");
-            }
-            return;
-          }
-
-          if (remainText.length > 0) {
-            // const fetchCount = Math.max(1, Math.round(remainText.length / 60));
-            // const fetchText = remainText.slice(0, fetchCount);
-            const fetchText = remainText;
-            responseText += fetchText;
-            // remainText = remainText.slice(fetchCount);
-            remainText = "";
-            // options.onUpdate?.(responseText, fetchText);
-          }
-
-          requestAnimationFrame(animateResponseText);
-        }
-
-        // start animaion
-        animateResponseText();
 
         const finish = () => {
           if (!finished) {
             finished = true;
-            options.onFinish(responseText + remainText);
+            requestAnimationFrame(() => options.onFinish(responseText));
           }
         };
 
@@ -358,8 +330,8 @@ export class ClaudeApi implements LLMApi {
               }
               const { delta } = chunkJson;
               if (delta?.text) {
-                remainText += delta.text;
-                options.onUpdate?.(responseText, delta.text);
+                responseText += delta.text;
+                requestAnimationFrame(() => options.onUpdate?.(responseText));
               }
             } catch (e) {
               showToast(Locale.Shansing.MessageParseFailure);
