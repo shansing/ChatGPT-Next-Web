@@ -741,7 +741,7 @@ export function Settings() {
               <div />
             ) : (
               <div className="emoji-text">
-                <Emoji unified="1fa99" size={15} getEmojiUrl={getEmojiUrl} />
+                {/*<Emoji unified="1fa99" size={15} getEmojiUrl={getEmojiUrl} />*/}
                 {userAndQuota.userQuota}
               </div>
             )}
@@ -773,19 +773,19 @@ export function Settings() {
                       <td>{choice.name}</td>
                       <td>{choice.model}</td>
                       <td className="emoji-text">
-                        <Emoji
-                          unified="1fa99"
-                          size={14}
-                          getEmojiUrl={getEmojiUrl}
-                        />
+                        {/*<Emoji*/}
+                        {/*  unified="1fa99"*/}
+                        {/*  size={14}*/}
+                        {/*  getEmojiUrl={getEmojiUrl}*/}
+                        {/*/>*/}
                         {choice.promptTokenPrice1k}
                       </td>
                       <td className="emoji-text">
-                        <Emoji
-                          unified="1fa99"
-                          size={14}
-                          getEmojiUrl={getEmojiUrl}
-                        />
+                        {/*<Emoji*/}
+                        {/*  unified="1fa99"*/}
+                        {/*  size={14}*/}
+                        {/*  getEmojiUrl={getEmojiUrl}*/}
+                        {/*/>*/}
                         {choice.completionTokenPrice1k}
                       </td>
                       <td className="emoji-text">
@@ -840,11 +840,11 @@ export function Settings() {
                       {Locale.Shansing.otherPrice.onlineSearchSearchPrice}
                     </td>
                     <td className="emoji-text">
-                      <Emoji
-                        unified="1fa99"
-                        size={14}
-                        getEmojiUrl={getEmojiUrl}
-                      />
+                      {/*<Emoji*/}
+                      {/*  unified="1fa99"*/}
+                      {/*  size={14}*/}
+                      {/*  getEmojiUrl={getEmojiUrl}*/}
+                      {/*/>*/}
                       {userAndQuota.shansingOnlineSearchSearchPrice}
                     </td>
                   </tr>
@@ -858,11 +858,11 @@ export function Settings() {
                       {Locale.Shansing.otherPrice.onlineSearchCrawlerPrice}
                     </td>
                     <td className="emoji-text">
-                      <Emoji
-                        unified="1fa99"
-                        size={14}
-                        getEmojiUrl={getEmojiUrl}
-                      />
+                      {/*<Emoji*/}
+                      {/*  unified="1fa99"*/}
+                      {/*  size={14}*/}
+                      {/*  getEmojiUrl={getEmojiUrl}*/}
+                      {/*/>*/}
                       {userAndQuota.shansingOnlineSearchCrawlerPrice}
                     </td>
                   </tr>
@@ -876,11 +876,11 @@ export function Settings() {
                       {Locale.Shansing.otherPrice.uploadFilePrice}
                     </td>
                     <td className="emoji-text">
-                      <Emoji
-                        unified="1fa99"
-                        size={14}
-                        getEmojiUrl={getEmojiUrl}
-                      />
+                      {/*<Emoji*/}
+                      {/*  unified="1fa99"*/}
+                      {/*  size={14}*/}
+                      {/*  getEmojiUrl={getEmojiUrl}*/}
+                      {/*/>*/}
                       {userAndQuota.shansingUploadFilePrice}
                     </td>
                   </tr>
