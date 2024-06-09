@@ -480,11 +480,20 @@ export function ChatActions(props: {
         : Locale.Shansing.OnlineSearch.OffTip,
     );
   }
-  function turnOnlineSearchWithoutTip(newStatus: boolean) {
-    chatStore.updateCurrentSession(
-      (session) => (session.mask.modelConfig.shansingOnlineSearch = newStatus),
-    );
-  }
+  // function turnOnlineSearchWithoutTip(newStatus: boolean) {
+  //   chatStore.updateCurrentSession(
+  //     (session) => (session.mask.modelConfig.shansingOnlineSearch = newStatus),
+  //   );
+  // }
+  const turnOnlineSearchWithoutTip = useCallback(
+    (newStatus: boolean) => {
+      chatStore.updateCurrentSession(
+        (session) =>
+          (session.mask.modelConfig.shansingOnlineSearch = newStatus),
+      );
+    },
+    [chatStore],
+  );
 
   // stop all responses
   const couldStop = ChatControllerPool.hasPending();
@@ -513,6 +522,9 @@ export function ChatActions(props: {
   const [showUploadImage, setShowUploadImage] = useState(false);
   const [showUploadFile, setShowUploadFile] = useState(false);
   const [showOnlineSearch, setShowOnlineSearch] = useState(false);
+
+  const { setAttachImages, setUploading, uploadedFileIds, setUploadedFileIds } =
+    props;
 
   useEffect(() => {
     const show = isVisionModel(currentModel);
@@ -552,7 +564,14 @@ export function ChatActions(props: {
       );
       showToast(nextModel);
     }
-  }, [chatStore, currentModel, models]);
+  }, [
+    chatStore,
+    currentModel,
+    models,
+    onlineSearch,
+    turnOnlineSearchWithoutTip,
+    props,
+  ]);
 
   return (
     <div className={styles["chat-input-actions"]}>
@@ -1275,7 +1294,7 @@ function _Chat() {
         }
       }
     },
-    [attachImages, chatStore],
+    [attachImages, chatStore, UPLOAD_IMAGE_MAX_SIZE],
   );
 
   async function uploadImage() {
@@ -1631,6 +1650,7 @@ function _Chat() {
                       defaultShow={i >= messages.length - 6}
                     />
                     {getMessageImages(message).length == 1 && (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         className={styles["chat-message-item-image"]}
                         src={getMessageImages(message)[0]}
@@ -1648,6 +1668,7 @@ function _Chat() {
                       >
                         {getMessageImages(message).map((image, index) => {
                           return (
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                               className={
                                 styles["chat-message-item-image-multi"]
