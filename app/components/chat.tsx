@@ -523,9 +523,6 @@ export function ChatActions(props: {
   const [showUploadFile, setShowUploadFile] = useState(false);
   const [showOnlineSearch, setShowOnlineSearch] = useState(false);
 
-  const { setAttachImages, setUploading, uploadedFileIds, setUploadedFileIds } =
-    props;
-
   useEffect(() => {
     const show = isVisionModel(currentModel);
     setShowUploadImage(show);
@@ -564,14 +561,8 @@ export function ChatActions(props: {
       );
       showToast(nextModel);
     }
-  }, [
-    chatStore,
-    currentModel,
-    models,
-    onlineSearch,
-    turnOnlineSearchWithoutTip,
-    props,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatStore, currentModel, models]);
 
   return (
     <div className={styles["chat-input-actions"]}>
