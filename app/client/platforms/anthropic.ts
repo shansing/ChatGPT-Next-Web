@@ -104,7 +104,7 @@ export class ClaudeApi implements LLMApi {
       },
     };
 
-    let messages = [...options.messages];
+    // const messages = [...options.messages];
 
     // const keys = ["system", "user"];
     //
@@ -125,6 +125,10 @@ export class ClaudeApi implements LLMApi {
     // }
 
     // roles must alternate between "user" and "assistant" in claude, so combine two or more user messages
+    let messages = JSON.parse(
+      JSON.stringify(options.messages),
+    ) as RequestMessage[];
+    // console.log("messages1", messages)
     messages = messages.reduce(
       (accumulator: RequestMessage[], current: RequestMessage) => {
         if (
@@ -135,20 +139,40 @@ export class ClaudeApi implements LLMApi {
         ) {
           accumulator.push(current);
         } else {
-          accumulator[accumulator.length - 1].content +=
-            `\n\n${current.content}`;
+          let lastContent = accumulator[accumulator.length - 1].content;
+          if (typeof lastContent === "string") {
+            lastContent = [
+              {
+                text: lastContent,
+                type: "text",
+              },
+            ];
+          }
+          let thisContent = current.content;
+          if (typeof thisContent === "string") {
+            thisContent = [
+              {
+                text: thisContent,
+                type: "text",
+              },
+            ];
+          }
+          accumulator[accumulator.length - 1].content = [
+            ...lastContent,
+            ...thisContent,
+          ];
         }
         return accumulator;
       },
       [],
     );
+    // console.log("messages2", messages)
 
-    const prompt = messages
+    let prompt = messages
       .flat()
       .filter((v) => {
         if (!v.content) return false;
-        if (typeof v.content === "string" && !v.content.trim()) return false;
-        return true;
+        return !(typeof v.content === "string" && !v.content.trim());
       })
       .map((v) => {
         const { role, content } = v;
@@ -191,6 +215,7 @@ export class ClaudeApi implements LLMApi {
             }),
         };
       });
+    // console.log("prompt3", prompt)
 
     if (prompt[0]?.role === "assistant") {
       prompt.unshift({
@@ -198,6 +223,7 @@ export class ClaudeApi implements LLMApi {
         content: ".",
       });
     }
+    // console.log("prompt4", prompt)
 
     let max_tokens: number =
       (modelMaxTotalTokenNumber?.find((obj) =>
