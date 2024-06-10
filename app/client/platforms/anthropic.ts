@@ -125,9 +125,7 @@ export class ClaudeApi implements LLMApi {
     // }
 
     // roles must alternate between "user" and "assistant" in claude, so combine two or more user messages
-    let messages = JSON.parse(
-      JSON.stringify(options.messages),
-    ) as RequestMessage[];
+    let messages = [...options.messages];
     // console.log("messages1", messages)
     messages = messages.reduce(
       (accumulator: RequestMessage[], current: RequestMessage) => {
@@ -157,10 +155,10 @@ export class ClaudeApi implements LLMApi {
               },
             ];
           }
-          accumulator[accumulator.length - 1].content = [
-            ...lastContent,
-            ...thisContent,
-          ];
+          accumulator[accumulator.length - 1] = {
+            ...accumulator[accumulator.length - 1],
+            content: [...lastContent, ...thisContent],
+          };
         }
         return accumulator;
       },
@@ -218,10 +216,16 @@ export class ClaudeApi implements LLMApi {
     // console.log("prompt3", prompt)
 
     if (prompt[0]?.role === "assistant") {
-      prompt.unshift({
-        role: "user",
-        content: ".",
-      });
+      // prompt.unshift({
+      //   role: "user",
+      //   content: ".",
+      // });
+      prompt.shift();
+      if (prompt.length === 0) {
+        throw Error(
+          "Too few messages, please use bigger Attached Messages Count.",
+        );
+      }
     }
     // console.log("prompt4", prompt)
 
