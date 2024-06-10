@@ -6,7 +6,13 @@ import {
   modelMaxTotalTokenNumber,
   REQUEST_TIMEOUT_MS,
 } from "@/app/constant";
-import { ChatOptions, getHeaders, LLMApi, MultimodalContent } from "../api";
+import {
+  ChatOptions,
+  getHeaders,
+  LLMApi,
+  MultimodalContent,
+  RequestMessage,
+} from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
 import {
@@ -98,25 +104,44 @@ export class ClaudeApi implements LLMApi {
       },
     };
 
-    const messages = [...options.messages];
+    let messages = [...options.messages];
 
-    const keys = ["system", "user"];
+    // const keys = ["system", "user"];
+    //
+    // // roles must alternate between "user" and "assistant" in claude, so add a fake assistant message between two user messages
+    // for (let i = 0; i < messages.length - 1; i++) {
+    //   const message = messages[i];
+    //   const nextMessage = messages[i + 1];
+    //
+    //   if (keys.includes(message.role) && keys.includes(nextMessage.role)) {
+    //     messages[i] = [
+    //       message,
+    //       {
+    //         role: "assistant",
+    //         content: ";",
+    //       },
+    //     ] as any;
+    //   }
+    // }
 
-    // roles must alternate between "user" and "assistant" in claude, so add a fake assistant message between two user messages
-    for (let i = 0; i < messages.length - 1; i++) {
-      const message = messages[i];
-      const nextMessage = messages[i + 1];
-
-      if (keys.includes(message.role) && keys.includes(nextMessage.role)) {
-        messages[i] = [
-          message,
-          {
-            role: "assistant",
-            content: ";",
-          },
-        ] as any;
-      }
-    }
+    // roles must alternate between "user" and "assistant" in claude, so combine two or more user messages
+    messages = messages.reduce(
+      (accumulator: RequestMessage[], current: RequestMessage) => {
+        if (
+          !accumulator.length ||
+          current.role !== accumulator[accumulator.length - 1].role ||
+          current.content == null ||
+          accumulator[accumulator.length - 1].content == null
+        ) {
+          accumulator.push(current);
+        } else {
+          accumulator[accumulator.length - 1].content +=
+            `\n\n${current.content}`;
+        }
+        return accumulator;
+      },
+      [],
+    );
 
     const prompt = messages
       .flat()
@@ -170,7 +195,7 @@ export class ClaudeApi implements LLMApi {
     if (prompt[0]?.role === "assistant") {
       prompt.unshift({
         role: "user",
-        content: ";",
+        content: ".",
       });
     }
 
