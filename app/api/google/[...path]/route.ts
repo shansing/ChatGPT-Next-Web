@@ -229,6 +229,10 @@ async function handle(
     // to disable nginx buffering
     newHeaders.set("X-Accel-Buffering", "no");
 
+    newHeaders.delete("set-cookie");
+    newHeaders.delete("alt-svc");
+    newHeaders.delete("strict-transport-security");
+
     return new Response(response.body, {
       status: response.status,
       statusText: response.statusText,

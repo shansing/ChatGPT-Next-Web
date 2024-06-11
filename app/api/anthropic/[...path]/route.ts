@@ -181,15 +181,7 @@ async function handle(
         }
       });
 
-    // return response;
-    const newHeaders = new Headers(response.headers);
-    // claude non-stream seems to return "gzip" with non-gzip content
-    newHeaders.delete("content-encoding");
-    return new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: newHeaders,
-    });
+    return response;
   } catch (e) {
     console.error("[Anthropic] ", e);
     return NextResponse.json(prettyObject(e));
@@ -337,6 +329,13 @@ async function request(
     newHeaders.delete("www-authenticate");
     // to disable nginx buffering
     newHeaders.set("X-Accel-Buffering", "no");
+
+    newHeaders.delete("set-cookie");
+    newHeaders.delete("alt-svc");
+    newHeaders.delete("strict-transport-security");
+
+    // claude non-stream seems to return "gzip" with non-gzip content
+    newHeaders.delete("content-encoding");
 
     return new Response(res.body, {
       status: res.status,
