@@ -181,7 +181,16 @@ async function handle(
         }
       });
 
-    return response;
+    // return response;
+    const newHeaders = new Headers(response.headers);
+    // claude non-stream seems to return "gzip" with non-gzip content
+    newHeaders.delete("content-encoding");
+    newHeaders.append("x-test", "hello");
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: newHeaders,
+    });
   } catch (e) {
     console.error("[Anthropic] ", e);
     return NextResponse.json(prettyObject(e));
