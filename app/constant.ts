@@ -119,11 +119,12 @@ export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lan
 // Latex inline: $x^2$
 // Latex block: $$e=mc^2$$
 // `;
-export const DEFAULT_SYSTEM_TEMPLATE = `You are ChatGPT, a large language model trained by {{ServiceProvider}}, based on the {{model}} architecture.
+export const DEFAULT_SYSTEM_TEMPLATE = `You are {{ShansingHelperProductName}}, a large language model trained by {{ServiceProvider}}, based on the {{model}} architecture.
 Knowledge cutoff: {{cutoff}}
 Current date: {{ShansingHelperUserDate}}
 Latex inline: \\(x^2\\) 
-Latex block: $$e=mc^2$$`;
+Latex block: $$e=mc^2$$
+{{ShansingHelperVisionFlag}}{{ShansingHelperOnlineSearchFlag}}`;
 
 export const GPT_4_MODEL = "gpt-4o-2024-05-13";
 export const GPT_35_MODEL = "gpt-3.5-turbo-0125";

@@ -128,7 +128,7 @@ export class ClaudeApi implements LLMApi {
     // roles must alternate between "user" and "assistant" in claude, so combine two or more user messages
     let messages = [...options.messages];
     // console.log("messages1", messages)
-    let systemMessage = messages
+    let systemMessage: string | undefined = messages
       .filter((v) => v.role === "system" && v.content)
       .map((v) => {
         if (typeof v.content === "string") {
@@ -138,6 +138,9 @@ export class ClaudeApi implements LLMApi {
       })
       .filter((text) => !!text)
       .join("\n\n");
+    if (systemMessage && !systemMessage.trim()) {
+      systemMessage = undefined;
+    }
 
     messages = messages.reduce(
       (accumulator: RequestMessage[], current: RequestMessage) => {

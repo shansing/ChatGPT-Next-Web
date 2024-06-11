@@ -1,4 +1,9 @@
-import { trimTopic, getMessageTextContent } from "../utils";
+import {
+  trimTopic,
+  getMessageTextContent,
+  isVisionModel,
+  isOnlineSearchModel,
+} from "../utils";
 
 import Locale, { getLang } from "../locales";
 import { showToast } from "../components/ui-lib";
@@ -16,6 +21,7 @@ import {
   ALIBABA_SUMMARIZE_MODEL,
   uploadFileModels,
   CLAUDE_SUMMARIZE_MODEL,
+  ServiceProvider,
 } from "../constant";
 import { ClientApi, RequestMessage, MultimodalContent } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
@@ -138,6 +144,17 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     serviceProvider = modelInfo.provider.providerName;
   }
 
+  let productName = "Shansing He2per";
+  if (serviceProvider === ServiceProvider.OpenAI) {
+    productName = "ChatGPT";
+  } else if (serviceProvider === ServiceProvider.Google) {
+    productName = "Gemini";
+  } else if (serviceProvider === ServiceProvider.Anthropic) {
+    productName = "Claude";
+  } else if (serviceProvider === ServiceProvider.Alibaba) {
+    productName = "通义千问";
+  }
+
   const vars = {
     ServiceProvider: serviceProvider,
     cutoff,
@@ -145,6 +162,7 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     time: new Date().toString(),
     lang: getLang(),
     input: input,
+    ShansingHelperProductName: productName,
     ShansingHelperUserDate: new Date()
       .toLocaleDateString("ISO", {
         year: "numeric",
@@ -154,6 +172,13 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
       .replace(/\//g, "-"),
     ShansingHelperUserTime: new Date().toLocaleTimeString("UTC"),
     ShansingHelperUserLanguage: navigator.language,
+    ShansingHelperVisionFlag: isVisionModel(modelConfig.model)
+      ? "Vision (image prompt support): on\n"
+      : "",
+    ShansingHelperOnlineSearchFlag:
+      isOnlineSearchModel(modelConfig.model) && modelConfig.shansingOnlineSearch
+        ? "Online Search (search and visit webpages): on\n"
+        : "",
   };
 
   let output = modelConfig.template ?? DEFAULT_INPUT_TEMPLATE;
@@ -504,9 +529,8 @@ export const useChatStore = createPersistStore(
         const contextPrompts = session.mask.context.slice();
 
         // system prompts, to get close to OpenAI Web ChatGPT
-        const shouldInjectSystemPrompts =
-          modelConfig.enableInjectSystemPrompts &&
-          session.mask.modelConfig.model.startsWith("gpt-");
+        const shouldInjectSystemPrompts = modelConfig.enableInjectSystemPrompts;
+        // &&session.mask.modelConfig.model.startsWith("gpt-");
 
         var systemPrompts: ChatMessage[] = [];
         systemPrompts = shouldInjectSystemPrompts
