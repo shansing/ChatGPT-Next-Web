@@ -185,7 +185,6 @@ async function handle(
     const newHeaders = new Headers(response.headers);
     // claude non-stream seems to return "gzip" with non-gzip content
     newHeaders.delete("content-encoding");
-    newHeaders.append("x-test", "hello");
     return new Response(response.body, {
       status: response.status,
       statusText: response.statusText,

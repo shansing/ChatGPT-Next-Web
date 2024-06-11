@@ -130,6 +130,7 @@ export const GPT_4_MODEL = "gpt-4o-2024-05-13";
 export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
 export const CLAUDE_3_HAIKU = "claude-3-haiku-20240307";
 export const CLAUDE_3_SONNET = "claude-3-sonnet-20240229";
+export const QWEN_MAX = "qwen-max";
 
 export const SUMMARIZE_MODEL = GPT_35_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-latest";

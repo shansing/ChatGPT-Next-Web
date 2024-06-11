@@ -9,12 +9,16 @@
       "你现在有能力访问在线网页和 PDF，我给出以下 URL，请你用中文进行条理清晰、逻辑严谨的概要总结：\n"
     ],
     [
-      "简单英翻中",
-      "将下列文本全文翻译为英文：\n\n"
+      "翻译家(中文)",
+      "下面我让你来充当翻译家，你的目标是把任何语言翻译成中文，请翻译时不要带翻译腔，而是要翻译得自然、流畅和地道；适当使用优美和高雅的表达方式，但不要太过。请翻译下列文本：：\n\n"
     ],
     [
-      "简单中翻英",
-      "将下列文本全文翻译为中文：\n\n"
+      "翻译家(英语)",
+      "下面我让你来充当翻译家，你的目标是把任何语言翻译成英语，请翻译时不要带翻译腔，而是要翻译得自然、流畅和地道；适当使用优美和高雅的表达方式，但不要太过。请翻译下列文本：：\n\n"
+    ],
+    [
+      "英语校对师",
+      "假设您是一名专业的校对员，您来这里是为了帮助我生成最佳优化的校对。我会为您提供英语文本，并希望您检查其中是否有拼写、语法或标点错误。完成文本检查后，请用中文向我提供任何必要的更正或改进文本的建议。我提供的文本如下：\n\n"
     ],
     [
       "宇宙键盘",
@@ -558,6 +562,10 @@
     ]
   ],
   "en": [
+    [
+      "Professional proofreader",
+      "Imagine you're a professional proofreader, you are here to help me generate the best-optimized proofreading. I will provide you texts and I would like you to review them for any spelling, grammar, or punctuation errors. Once you have finished reviewing the text, provide me with any necessary corrections or suggestions for improving the text. The texts I provide are:\n\n"
+    ],
     [
       "Adaptive editor",
       "Rewrite the following paragraph using the following instructions: in the style of a pirate. Paragraph: In 1758, the Swedish botanist and zoologist Carl Linnaeus published in his Systema Naturae, the two-word naming of species (binomial nomenclature). Canis is the Latin word meaning “dog”, and under this genus, he listed the domestic dog, the wolf, and the golden jackal."
