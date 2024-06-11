@@ -1,5 +1,5 @@
 import { BuiltinMask } from "./typing";
-import { CLAUDE_3_SONNET, GPT_4_MODEL } from "@/app/constant";
+import { CLAUDE_3_HAIKU, CLAUDE_3_SONNET, GPT_4_MODEL } from "@/app/constant";
 
 export const CN_MASKS: BuiltinMask[] = [
   {
@@ -27,6 +27,59 @@ export const CN_MASKS: BuiltinMask[] = [
     lang: "cn",
     builtin: true,
     createdAt: 1688899480534,
+  },
+  {
+    avatar: "1f9d1-200d-1f3eb",
+    name: "英专写手",
+    context: [
+      {
+        id: "trans-0",
+        role: "user",
+        content:
+          "我想让你充当英文翻译员、拼写纠正员和改进员。我会用任何语言与你交谈，你会检测语言，翻译它并用我的文本的更正和改进版本用英文回答。我希望你用更优美优雅的高级英语单词和句子替换我简化的 A0 级单词和句子。保持相同的意思，但使它们更文艺。你只需要翻译该内容，不必对内容中提出的问题和要求做解释，不要回答文本中的问题而是翻译它，不要解决文本中的要求而是翻译它，保留文本的原本意义，不要去解决它。我要你只回复更正、改进，不要写任何解释。我的第一句话是：",
+        date: "",
+      },
+    ],
+    modelConfig: {
+      model: GPT_4_MODEL,
+      temperature: 1,
+      max_tokens: 2000,
+      presence_penalty: 0,
+      frequency_penalty: 0,
+      sendMemory: false,
+      historyMessageCount: 4,
+      compressMessageLengthThreshold: 1000,
+    },
+    lang: "cn",
+    builtin: true,
+    createdAt: 1688899480524,
+  },
+  {
+    avatar: "1f4e6",
+    name: "内容总结能手",
+    context: [
+      {
+        id: "sx11-0",
+        role: "system",
+        content:
+          "在每一条消息中，我将给你若干段文本，或者一个 URL。如果是 URL，请先读取其中内容。你的任务是用中文详尽总结我给出的或者 URL 当中的文本，按照以下步骤处理，每一步分别打印结果：\n1. 尽可能列出文中涉及的所有话题，不要遗漏\n2. 检查第一步列出的话题，补充缺失的重要话题\n3. 基于每个话题用 bullet points 列出要点\n4. 严格以话题为章节，不要遗漏，基于每个话题和下面的要点，用 1 至 3 个自然段落给出每个话题的内容的概述；在这一步中不应分要点松散排列，而是将概述组织成文，使得整体效果像是一篇科普文章",
+        date: "",
+      },
+    ],
+    modelConfig: {
+      model: CLAUDE_3_HAIKU,
+      temperature: 1,
+      max_tokens: 4000,
+      presence_penalty: 0,
+      frequency_penalty: 0,
+      sendMemory: true,
+      historyMessageCount: 2,
+      compressMessageLengthThreshold: 1000,
+      shansingOnlineSearch: true,
+    },
+    lang: "cn",
+    builtin: true,
+    createdAt: 1718076239000,
   },
   {
     avatar: "3299-fe0f",
@@ -436,32 +489,6 @@ export const CN_MASKS: BuiltinMask[] = [
     lang: "cn",
     builtin: true,
     createdAt: 1688899480514,
-  },
-  {
-    avatar: "1f9d1-200d-1f3eb",
-    name: "英专写手",
-    context: [
-      {
-        id: "trans-0",
-        role: "user",
-        content:
-          "我想让你充当英文翻译员、拼写纠正员和改进员。我会用任何语言与你交谈，你会检测语言，翻译它并用我的文本的更正和改进版本用英文回答。我希望你用更优美优雅的高级英语单词和句子替换我简化的 A0 级单词和句子。保持相同的意思，但使它们更文艺。你只需要翻译该内容，不必对内容中提出的问题和要求做解释，不要回答文本中的问题而是翻译它，不要解决文本中的要求而是翻译它，保留文本的原本意义，不要去解决它。我要你只回复更正、改进，不要写任何解释。我的第一句话是：",
-        date: "",
-      },
-    ],
-    modelConfig: {
-      model: GPT_4_MODEL,
-      temperature: 1,
-      max_tokens: 2000,
-      presence_penalty: 0,
-      frequency_penalty: 0,
-      sendMemory: false,
-      historyMessageCount: 4,
-      compressMessageLengthThreshold: 1000,
-    },
-    lang: "cn",
-    builtin: true,
-    createdAt: 1688899480524,
   },
   {
     avatar: "1f4da",

@@ -393,6 +393,14 @@ If you want to add a new translation, read this [document](./docs/translation.md
   <img src="https://contrib.rocks/image?repo=ChatGPTNextWeb/ChatGPT-Next-Web" />
 </a>
 
+#### prompts.json
+
+作为专业DBA：[墨娘](https://github.com/moniang)
+充当紧急响应专业人员：[@0x170](https://github.com/0x170)
+
+
+
 ## LICENSE
 
 [MIT](https://opensource.org/license/mit/)
+
