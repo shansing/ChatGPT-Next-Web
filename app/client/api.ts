@@ -123,7 +123,7 @@ export class ClientApi {
   async share(messages: ChatMessage[], avatarUrl: string | null = null) {
     const msgs = messages
       .map((m) => ({
-        from: m.role === "user" ? "human" : "gpt",
+        from: m.role === "user" || m.role === "system" ? "human" : "gpt",
         value: m.content,
       }))
       .concat([

@@ -324,7 +324,7 @@
   }
 }
 
-.chat-message-user {
+.chat-message-user, .chat-message-system {
   display: flex;
   flex-direction: row-reverse;
 
@@ -376,7 +376,7 @@
   }
 }
 
-.chat-message-user>.chat-message-container {
+.chat-message-user>.chat-message-container, .chat-message-system>.chat-message-container {
   align-items: flex-end;
 }
 
@@ -503,7 +503,7 @@
   z-index: 1;
 }
 
-.chat-message-user>.chat-message-container>.chat-message-item {
+.chat-message-user>.chat-message-container>.chat-message-item, .chat-message-system>.chat-message-container>.chat-message-item {
   background-color: var(--second);
 
   &:hover {

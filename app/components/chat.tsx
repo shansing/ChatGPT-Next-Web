@@ -1503,6 +1503,7 @@ function _Chat() {
       >
         {messages.map((message, i) => {
           const isUser = message.role === "user";
+          const isSystem = message.role === "system";
           const isContext = i < context.length;
           const isOnlineSearch = message.isOnlineSearch;
           const isError = message.isError;
@@ -1518,7 +1519,11 @@ function _Chat() {
             <Fragment key={message.id}>
               <div
                 className={
-                  isUser ? styles["chat-message-user"] : styles["chat-message"]
+                  isUser
+                    ? styles["chat-message-user"]
+                    : isSystem
+                      ? styles["chat-message-system"]
+                      : styles["chat-message"]
                 }
               >
                 <div className={styles["chat-message-container"]}>

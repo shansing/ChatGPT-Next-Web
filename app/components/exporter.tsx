@@ -278,7 +278,10 @@ export function RenderExport(props: {
       return {
         id: i.toString(),
         role: role as any,
-        content: role === "user" ? v.textContent ?? "" : v.innerHTML,
+        content:
+          role === "user" || role === "system"
+            ? v.textContent ?? ""
+            : v.innerHTML,
         date: "",
       };
     });
@@ -588,7 +591,13 @@ export function ImagePreviewer(props: {
             >
               <div className={styles["avatar"]}>
                 <ExportAvatar
-                  avatar={m.role === "user" ? config.avatar : mask.avatar}
+                  avatar={
+                    m.role === "user"
+                      ? config.avatar
+                      : m.role === "system"
+                        ? "2699-fe0f"
+                        : mask.avatar
+                  }
                 />
               </div>
 
@@ -644,9 +653,11 @@ export function MarkdownPreviewer(props: {
       .map((m) => {
         return m.role === "user"
           ? `## ${Locale.Export.MessageFromYou}:\n${getMessageTextContent(m)}`
-          : `## ${Locale.Export.MessageFromChatGPT}:\n${getMessageTextContent(
-              m,
-            ).trim()}`;
+          : m.role === "system"
+            ? `## ${Locale.Export.MessageFromSystem}:\n${getMessageTextContent(m)}`
+            : `## ${Locale.Export.MessageFromChatGPT}:\n${getMessageTextContent(
+                m,
+              ).trim()}`;
       })
       .join("\n\n");
 
