@@ -50,6 +50,7 @@ export interface AnthropicChatRequest {
   top_k?: number; // Only sample from the top K options for each subsequent token.
   metadata?: object; // An object describing metadata about the request.
   stream?: boolean; // Whether to incrementally stream the response using server-sent events.
+  system?: string;
 }
 
 export interface ChatRequest {
@@ -78,7 +79,7 @@ export type ChatStreamResponse = ChatResponse & {
 const ClaudeMapper = {
   assistant: "assistant",
   user: "user",
-  system: "user",
+  system: "system",
 } as const;
 
 const keys = ["claude-2, claude-instant-1"];
@@ -127,6 +128,17 @@ export class ClaudeApi implements LLMApi {
     // roles must alternate between "user" and "assistant" in claude, so combine two or more user messages
     let messages = [...options.messages];
     // console.log("messages1", messages)
+    let systemMessage = messages
+      .filter((v) => v.role === "system" && v.content)
+      .map((v) => {
+        if (typeof v.content === "string") {
+          return v.content;
+        }
+        return v.content.find((content) => content.type === "text")?.text;
+      })
+      .filter((text) => !!text)
+      .join("\n\n");
+
     messages = messages.reduce(
       (accumulator: RequestMessage[], current: RequestMessage) => {
         if (
@@ -170,6 +182,7 @@ export class ClaudeApi implements LLMApi {
       .flat()
       .filter((v) => {
         if (!v.content) return false;
+        if (v.role === "system") return false;
         return !(typeof v.content === "string" && !v.content.trim());
       })
       .map((v) => {
@@ -253,6 +266,7 @@ export class ClaudeApi implements LLMApi {
         modelConfig.temperature > 1.0 ? 1.0 : modelConfig.temperature,
       top_p: modelConfig.top_p,
       // top_k: modelConfig.top_k,
+      system: systemMessage,
     };
 
     const path = this.path(Anthropic.ChatPath);
