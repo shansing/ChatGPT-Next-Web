@@ -179,6 +179,10 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
       isOnlineSearchModel(modelConfig.model) && modelConfig.shansingOnlineSearch
         ? "Online Search (search and visit webpages): on\n"
         : "",
+    ShansingHelperClaudeTip:
+      productName === "Claude"
+        ? '\nWhen you speak CJK, make sure you write punctuation symbols in FULLWIDTH forms (for example `，` `。` `！` `？` and `“quote”` instead of `"quote"`).\n'
+        : "",
   };
 
   let output = modelConfig.template ?? DEFAULT_INPUT_TEMPLATE;
@@ -785,7 +789,11 @@ export const useChatStore = createPersistStore(
         const sessions = get().sessions;
         const index = get().currentSessionIndex;
         updater(sessions[index]);
-        set(() => ({ sessions }));
+        try {
+          set(() => ({ sessions }));
+        } catch (err) {
+          console.error("updateCurrentSession", err);
+        }
       },
 
       clearAllData() {

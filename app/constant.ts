@@ -124,7 +124,7 @@ Knowledge cutoff: {{cutoff}}
 Current date: {{ShansingHelperUserDate}}
 Latex inline: \\(x^2\\) 
 Latex block: $$e=mc^2$$
-{{ShansingHelperVisionFlag}}{{ShansingHelperOnlineSearchFlag}}`;
+{{ShansingHelperVisionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}`;
 
 export const GPT_4_MODEL = "gpt-4o-2024-05-13";
 export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
