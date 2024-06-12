@@ -277,7 +277,7 @@ export class ChatGPTApi implements LLMApi {
                 );
               }
             } catch (e) {
-              showToast(Locale.Shansing.MessageParseFailure);
+              showToast(Locale.Shansing.messageParseFailure);
               console.error("[Request] parse error", text, msg);
             }
           },
@@ -285,7 +285,7 @@ export class ChatGPTApi implements LLMApi {
             finish();
           },
           onerror(e) {
-            showToast(Locale.Shansing.MessageSendFailure);
+            showToast(Locale.Shansing.messageSendFailure);
             options.onError?.(e);
             throw e;
           },

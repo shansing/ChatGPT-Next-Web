@@ -3,6 +3,7 @@ import { getServerSideConfig } from "@/app/config/server";
 import { sha256 } from "hash.js";
 import fs from "fs/promises";
 import AsyncLock from "async-lock";
+import htpasswd_mgr from "htpasswd-mgr";
 
 const kilo = new Decimal("1000");
 const serverConfig = getServerSideConfig();
@@ -109,4 +110,14 @@ async function increaseUserQuota(username: string, delta: Decimal) {
 }
 async function decreaseUserQuota(username: string, delta: Decimal) {
   return increaseUserQuota(username, new Decimal(-1).mul(delta));
+}
+
+const htpasswdManager = htpasswd_mgr(serverConfig.shansingPasswdFile);
+export function changePassword(username: string, newPassword: string) {
+  return lock.acquire("PASSWD", async function () {
+    return htpasswdManager.updateUser(username, newPassword, {
+      algorithm: "bcrypt",
+      export: true,
+    });
+  });
 }

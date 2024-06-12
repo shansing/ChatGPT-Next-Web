@@ -1250,7 +1250,7 @@ function _Chat() {
               attachImages &&
               attachImages.length >= UPLOAD_IMAGE_MAX_NUMBER
             ) {
-              showToast(Locale.Shansing.UploadImageFullTip);
+              showToast(Locale.Shansing.uploadImageFullTip);
               return;
             }
             const images: string[] = [];
@@ -1293,11 +1293,11 @@ function _Chat() {
       return;
     }
     if (attachImages && attachImages.length >= UPLOAD_IMAGE_MAX_NUMBER) {
-      showToast(Locale.Shansing.UploadImageFullTip);
+      showToast(Locale.Shansing.uploadImageFullTip);
       return;
     }
     if (typeof FileReader === "undefined") {
-      showToast(Locale.Shansing.UploadImageIncompatibleTip);
+      showToast(Locale.Shansing.uploadImageIncompatibleTip);
       return;
     }
     const images: string[] = [];

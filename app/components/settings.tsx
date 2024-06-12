@@ -705,6 +705,8 @@ export function Settings() {
   const clientConfig = useMemo(() => getClientConfig(), []);
   const showAccessCode = enabledAccessControl && !clientConfig?.isApp;
 
+  const goAuth = () => navigate(Path.Auth);
+
   return (
     <ErrorBoundary>
       <div className="window-header" data-tauri-drag-region>
@@ -730,8 +732,11 @@ export function Settings() {
       </div>
       <div className={styles["settings"]}>
         <List>
-          <ListItem title={Locale.Shansing.userName}>
-            {loadingQuota ? <div /> : <div>{userAndQuota.userName}</div>}
+          <ListItem
+            title={Locale.Shansing.userName}
+            subTitle={loadingQuota ? "..." : userAndQuota.userName}
+          >
+            <IconButton text={Locale.Shansing.userPassword} onClick={goAuth} />
           </ListItem>
           <ListItem
             title={Locale.Shansing.userQuota}

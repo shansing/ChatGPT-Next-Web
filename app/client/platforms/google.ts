@@ -264,14 +264,14 @@ export class GeminiProApi implements LLMApi {
                 // console.log("[Response Animation] error: ", error,partialData);
                 // skip error message when parsing json
                 // to do 更严谨的错误检测和处理
-                showToast(Locale.Shansing.MessageParseFailure);
+                showToast(Locale.Shansing.messageParseFailure);
               }
 
               return reader.read().then(processText);
             });
           })
           .catch((error) => {
-            showToast(Locale.Shansing.MessageSendFailure);
+            showToast(Locale.Shansing.messageSendFailure);
             console.error("Error:", error);
           });
       } else {

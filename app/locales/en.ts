@@ -496,6 +496,7 @@ const en: LocaleType = {
   Shansing: {
     userQuota: "User's Quota",
     userName: "Current User",
+    userPassword: "Change Password",
     userQuotaDescription: "Unit: Yuan",
     imageSelectorFailure: "Image too big or format unsupported",
     animationFailure: "Animation failed to render",
@@ -533,11 +534,23 @@ const en: LocaleType = {
       FullTip: "Maximum number of chat files reached",
       FailureTip: "Failed to upload files; please try again later",
     },
-    UploadImageFullTip: "Maximum number of session images reached",
-    UploadImageIncompatibleTip:
+    uploadImageFullTip: "Maximum number of session images reached",
+    uploadImageIncompatibleTip:
       "Image compression unavailable; is Lockdown Mode enabled?",
-    MessageSendFailure: "Message sending failed; please check network",
-    MessageParseFailure: "Message parsing failed, may trigger restrictions",
+    messageSendFailure: "Message sending failed; please check network",
+    messageParseFailure: "Message parsing failed, may trigger restrictions",
+    Auth: {
+      Title: "Change Password",
+      Tips: "Please set a password that is independent of other applications. A simple password may be vulnerable to hacking and theft. You will need to log in again after successful modification.",
+      Input: "Enter New Password",
+      InputTwice: "Re-enter New Password",
+      Confirm: "Confirm",
+      Later: "Cancel",
+      TipEmpty: "Password cannot be empty",
+      TipDifferent: "Passwords do not match",
+      TipSuccess: "Modified successfully, refreshing soon",
+    },
+    errorPrefix: "Error: ",
   },
 };
 

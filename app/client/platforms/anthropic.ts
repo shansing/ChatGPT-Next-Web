@@ -406,7 +406,7 @@ export class ClaudeApi implements LLMApi {
                 requestAnimationFrame(() => options.onUpdate?.(responseText));
               }
             } catch (e) {
-              showToast(Locale.Shansing.MessageParseFailure);
+              showToast(Locale.Shansing.messageParseFailure);
               console.error("[Response] parse error", msg.data);
             }
           },
@@ -414,7 +414,7 @@ export class ClaudeApi implements LLMApi {
             finish();
           },
           onerror(e) {
-            showToast(Locale.Shansing.MessageSendFailure);
+            showToast(Locale.Shansing.messageSendFailure);
             options.onError?.(e);
             throw e;
           },

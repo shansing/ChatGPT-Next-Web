@@ -7,90 +7,106 @@ import { useAccessStore } from "../store";
 import Locale from "../locales";
 
 import BotIcon from "../icons/bot.svg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getClientConfig } from "../config/client";
+import { EmojiAvatar } from "@/app/components/emoji";
+import { showToast } from "@/app/components/ui-lib";
+import { getHeaders } from "@/app/client/api";
 
 export function AuthPage() {
   const navigate = useNavigate();
-  const accessStore = useAccessStore();
 
   const goHome = () => navigate(Path.Home);
   const goChat = () => navigate(Path.Chat);
-  const resetAccessCode = () => {
-    accessStore.update((access) => {
-      access.openaiApiKey = "";
-      access.accessCode = "";
-    });
+  const goSettings = () => navigate(Path.Settings);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handlePasswordSubmit = (event: any) => {
+    if (event.key === "Enter") {
+      submitPassword();
+    }
+  };
+
+  const submitPassword = () => {
+    setShowConfirm(false);
+    // @ts-ignore
+    const password = document?.getElementById("shansingPassword")?.value;
+    // @ts-ignore
+    const passwordTwice = document?.getElementById(
+      "shansingPasswordTwice",
+    )?.value;
+    if (!password || !passwordTwice) {
+      showToast(Locale.Shansing.Auth.TipEmpty);
+      setShowConfirm(true);
+      return;
+    }
+    if (password !== passwordTwice) {
+      showToast(Locale.Shansing.Auth.TipDifferent);
+      setShowConfirm(true);
+      return;
+    }
+
+    fetch("/api/shansing/password", {
+      method: "post",
+      body: JSON.stringify({ newPassword: password }),
+      headers: {
+        ...getHeaders(),
+      },
+    })
+      .then((res) => res.json())
+      .then((res: any) => {
+        if (res.error) {
+          throw Error(res.error);
+        }
+        showToast(Locale.Shansing.Auth.TipSuccess);
+        location.href = "/";
+      })
+      .catch((e) => {
+        setShowConfirm(true);
+        showToast(Locale.Shansing.errorPrefix + e.message);
+        console.error("[Auth] failed to change password", e);
+      });
   }; // Reset access code to empty string
 
   useEffect(() => {
-    if (getClientConfig()?.isApp) {
-      navigate(Path.Settings);
-    }
+    setShowConfirm(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className={styles["auth-page"]}>
-      <div className={`no-dark ${styles["auth-logo"]}`}>
-        <BotIcon />
+      <div>
+        <EmojiAvatar avatar="1f511" size={36} />
       </div>
 
-      <div className={styles["auth-title"]}>{Locale.Auth.Title}</div>
-      <div className={styles["auth-tips"]}>{Locale.Auth.Tips}</div>
+      <div className={styles["auth-title"]}>{Locale.Shansing.Auth.Title}</div>
+      <div className={styles["auth-tips"]}>{Locale.Shansing.Auth.Tips}</div>
 
       <input
         className={styles["auth-input"]}
         type="password"
-        placeholder={Locale.Auth.Input}
-        value={accessStore.accessCode}
-        onChange={(e) => {
-          accessStore.update(
-            (access) => (access.accessCode = e.currentTarget.value),
-          );
-        }}
+        placeholder={Locale.Shansing.Auth.Input}
+        id="shansingPassword"
+        onKeyPress={handlePasswordSubmit}
       />
-      {!accessStore.hideUserApiKey ? (
-        <>
-          <div className={styles["auth-tips"]}>{Locale.Auth.SubTips}</div>
-          <input
-            className={styles["auth-input"]}
-            type="password"
-            placeholder={Locale.Settings.Access.OpenAI.ApiKey.Placeholder}
-            value={accessStore.openaiApiKey}
-            onChange={(e) => {
-              accessStore.update(
-                (access) => (access.openaiApiKey = e.currentTarget.value),
-              );
-            }}
-          />
-          <input
-            className={styles["auth-input"]}
-            type="password"
-            placeholder={Locale.Settings.Access.Google.ApiKey.Placeholder}
-            value={accessStore.googleApiKey}
-            onChange={(e) => {
-              accessStore.update(
-                (access) => (access.googleApiKey = e.currentTarget.value),
-              );
-            }}
-          />
-        </>
-      ) : null}
+
+      <input
+        className={styles["auth-input"]}
+        type="password"
+        placeholder={Locale.Shansing.Auth.InputTwice}
+        id="shansingPasswordTwice"
+        onKeyPress={handlePasswordSubmit}
+      />
 
       <div className={styles["auth-actions"]}>
         <IconButton
-          text={Locale.Auth.Confirm}
+          text={Locale.Shansing.Auth.Confirm}
           type="primary"
-          onClick={goChat}
+          onClick={submitPassword}
+          disabled={!showConfirm}
         />
-        <IconButton
-          text={Locale.Auth.Later}
-          onClick={() => {
-            resetAccessCode();
-            goHome();
-          }}
-        />
+        <IconButton text={Locale.Shansing.Auth.Later} onClick={goSettings} />
       </div>
     </div>
   );
