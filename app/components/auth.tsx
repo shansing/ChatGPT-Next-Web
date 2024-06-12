@@ -32,9 +32,9 @@ export function AuthPage() {
     setShowConfirm(false);
     // @ts-ignore
     const password = document?.getElementById("shansingPassword")?.value;
-    // @ts-ignore
     const passwordTwice = document?.getElementById(
       "shansingPasswordTwice",
+      // @ts-ignore
     )?.value;
     if (!password || !passwordTwice) {
       showToast(Locale.Shansing.Auth.TipEmpty);
