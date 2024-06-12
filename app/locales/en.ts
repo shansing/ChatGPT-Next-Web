@@ -551,6 +551,11 @@ const en: LocaleType = {
       TipSuccess: "Modified successfully, refreshing soon",
     },
     errorPrefix: "Error: ",
+    Theme: {
+      auto: "Auto",
+      light: "Light",
+      dark: "Dark",
+    },
   },
 };
 

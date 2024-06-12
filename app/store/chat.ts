@@ -152,7 +152,7 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
   } else if (serviceProvider === ServiceProvider.Anthropic) {
     productName = "Claude";
   } else if (serviceProvider === ServiceProvider.Alibaba) {
-    productName = "通义千问";
+    productName = "Tongyi Qianwen";
   }
 
   const vars = {

@@ -13,10 +13,13 @@ import DeleteIcon from "../icons/delete.svg";
 import MaskIcon from "../icons/mask.svg";
 import PluginIcon from "../icons/plugin.svg";
 import DragIcon from "../icons/drag.svg";
+import LightIcon from "../icons/light.svg";
+import DarkIcon from "../icons/dark.svg";
+import AutoIcon from "../icons/auto.svg";
 
 import Locale from "../locales";
 
-import { useAppConfig, useChatStore } from "../store";
+import { Theme, useAppConfig, useChatStore } from "../store";
 
 import {
   DEFAULT_SIDEBAR_WIDTH,
@@ -142,6 +145,16 @@ export function SideBar(props: { className?: string }) {
     [isMobileScreen],
   );
 
+  // switch themes
+  const theme = config.theme;
+  function nextTheme() {
+    const themes = [Theme.Auto, Theme.Light, Theme.Dark];
+    const themeIndex = themes.indexOf(theme);
+    const nextIndex = (themeIndex + 1) % themes.length;
+    const nextTheme = themes[nextIndex];
+    config.update((config) => (config.theme = nextTheme));
+  }
+
   useHotKey();
 
   return (
@@ -186,6 +199,24 @@ export function SideBar(props: { className?: string }) {
       </div>
 
       <div className={styles["sidebar-header-bar"]}>
+        <IconButton
+          icon={
+            <>
+              {theme === Theme.Auto ? (
+                <AutoIcon />
+              ) : theme === Theme.Light ? (
+                <LightIcon />
+              ) : theme === Theme.Dark ? (
+                <DarkIcon />
+              ) : null}
+            </>
+          }
+          text={shouldNarrow ? undefined : Locale.Shansing.Theme[theme]}
+          className={styles["sidebar-bar-button"]}
+          onClick={nextTheme}
+          shadow
+        />
+
         <IconButton
           icon={<MaskIcon />}
           text={shouldNarrow ? undefined : Locale.Mask.Name}

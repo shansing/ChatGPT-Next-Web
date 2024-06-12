@@ -542,6 +542,11 @@ const cn = {
       TipSuccess: "修改成功，即将刷新",
     },
     errorPrefix: "错误：",
+    Theme: {
+      auto: "自动",
+      light: "开灯",
+      dark: "关灯",
+    },
   },
 };
 
