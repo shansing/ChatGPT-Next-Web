@@ -6,29 +6,24 @@ import {
 
 async function handle(req: NextRequest) {
   const username = getUsernameFromHttpBasicAuth(req);
-  if (!username) {
+  try {
+    if (!username) {
+      throw Error("http basic auth is needed");
+    }
+    const requestJson = await req.json();
+    await changePassword(username, requestJson.newPassword);
     return NextResponse.json({
-      error: "http basic auth is needed",
+      success: true,
+      username,
+    });
+  } catch (e) {
+    return NextResponse.json({
+      // @ts-ignore
+      error: e?.message,
       username,
     });
   }
-  const requestJson = await req.json();
-  return changePassword(username, requestJson.newPassword)
-    .then(() =>
-      NextResponse.json({
-        success: true,
-        username,
-      }),
-    )
-    .catch((e) => {
-      NextResponse.json({
-        error: e.message,
-        username,
-      });
-    });
 }
 
 // export const GET = handle;
 export const POST = handle;
-
-// export const runtime = "edge";
