@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import styles from "./settings.module.scss";
 
 import ResetIcon from "../icons/reload.svg";
+import RenameIcon from "../icons/rename.svg";
 import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
 import CopyIcon from "../icons/copy.svg";
@@ -241,6 +242,21 @@ function DangerItems() {
 
   return (
     <List>
+      <ListItem
+        title={Locale.Shansing.Refresh.Title}
+        subTitle={Locale.Shansing.Refresh.SubTitle}
+      >
+        <IconButton
+          text={Locale.Shansing.Refresh.Action}
+          icon={<ResetIcon />}
+          onClick={async () => {
+            if (await showConfirm(Locale.Shansing.Refresh.Confirm)) {
+              // @ts-ignore
+              location.reload(true);
+            }
+          }}
+        />
+      </ListItem>
       <ListItem
         title={Locale.Settings.Danger.Reset.Title}
         subTitle={Locale.Settings.Danger.Reset.SubTitle}
@@ -732,11 +748,8 @@ export function Settings() {
       </div>
       <div className={styles["settings"]}>
         <List>
-          <ListItem
-            title={Locale.Shansing.userName}
-            subTitle={loadingQuota ? "..." : userAndQuota.userName}
-          >
-            <IconButton text={Locale.Shansing.userPassword} onClick={goAuth} />
+          <ListItem title={Locale.Shansing.userName}>
+            {loadingQuota ? <div /> : <div>{userAndQuota.userName}</div>}
           </ListItem>
           <ListItem
             title={Locale.Shansing.userQuota}
@@ -893,19 +906,11 @@ export function Settings() {
               </table>
             </div>
           </ListItem>
-          <ListItem
-            title={Locale.Shansing.Refresh.Title}
-            subTitle={Locale.Shansing.Refresh.SubTitle}
-          >
+          <ListItem title={Locale.Shansing.userPassword}>
             <IconButton
-              text={Locale.Shansing.Refresh.Action}
-              icon={<ResetIcon />}
-              onClick={async () => {
-                if (await showConfirm(Locale.Shansing.Refresh.Confirm)) {
-                  // @ts-ignore
-                  location.reload(true);
-                }
-              }}
+              text={Locale.Shansing.userPassword}
+              icon={<RenameIcon />}
+              onClick={goAuth}
             />
           </ListItem>
         </List>
