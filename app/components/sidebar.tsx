@@ -177,8 +177,8 @@ export function SideBar(props: { className?: string }) {
             OpenAI
           </a>
           ,{" "}
-          <a href="https://ai.google.dev" target="_blank" className="link">
-            Google
+          <a href="https://www.anthropic.com" target="_blank" className="link">
+            Anthropic
           </a>
           ,{" "}
           <a href="https://tongyi.aliyun.com" target="_blank" className="link">
