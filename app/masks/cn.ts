@@ -286,8 +286,8 @@ export const CN_MASKS: BuiltinMask[] = [
     },
     lang: "cn",
     builtin: true,
-    createdAt: 1717741935000,
-    author: "https://www.liuyuanzhong.com/pages/124c18/",
+    createdAt: 1718381633000,
+    author: "Shansing",
   },
   {
     avatar: "1f58a-fe0f",
