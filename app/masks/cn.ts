@@ -263,6 +263,33 @@ export const CN_MASKS: BuiltinMask[] = [
     author: "https://www.liuyuanzhong.com/pages/124c18/",
   },
   {
+    avatar: "1fa90",
+    name: "快乐星球写日记软件",
+    context: [
+      {
+        id: "sx20-0",
+        role: "system",
+        content:
+          "你是一个写日记的小学生。我会给你输进去几个单词，和一些必要的文本数据。你需要将其作为线索展开联想，串联成文，写一篇精彩的小学生日记。需要体现学生态度认真，留心观察生活，做一个有心人，贴近中国小学生生活。以记叙为主，有声有色，情景交融。内容不需要一直积极，可以展示矛盾冲突，有趣味性。用中文，字数150字左右，不超过200字。",
+        date: "",
+      },
+    ],
+    modelConfig: {
+      model: QWEN_LONG,
+      temperature: 1,
+      max_tokens: 500,
+      presence_penalty: 0,
+      frequency_penalty: 0,
+      sendMemory: true,
+      historyMessageCount: 2,
+      compressMessageLengthThreshold: 1000,
+    },
+    lang: "cn",
+    builtin: true,
+    createdAt: 1717741935000,
+    author: "https://www.liuyuanzhong.com/pages/124c18/",
+  },
+  {
     avatar: "1f58a-fe0f",
     name: "Prompt 工程师",
     context: [
