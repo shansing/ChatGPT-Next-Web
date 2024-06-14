@@ -181,7 +181,7 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
         : "",
     ShansingHelperClaudeTip:
       productName === "Claude"
-        ? '\nWhen speaking CJK, make sure you write punctuation symbols in FULLWIDTH forms (for example `，` `。` `！` `？` and `「quote」` instead of `"quote"`).\n'
+        ? "" //'\nWhen speaking CJK, make sure you write punctuation symbols in FULLWIDTH forms (for example `，` `。` `！` `？` and `「quote」` instead of `"quote"`).\n'
         : "",
   };
 
