@@ -112,9 +112,9 @@ async function decreaseUserQuota(username: string, delta: Decimal) {
   return increaseUserQuota(username, new Decimal(-1).mul(delta));
 }
 
-const htpasswdManager = htpasswd_mgr(serverConfig.shansingPasswdFile);
 export function changePassword(username: string, newPassword: string) {
   return lock.acquire("PASSWD", async function () {
+    const htpasswdManager = htpasswd_mgr(serverConfig.shansingPasswdFile);
     return htpasswdManager.updateUser(username, newPassword, {
       algorithm: "bcrypt",
       export: true,
