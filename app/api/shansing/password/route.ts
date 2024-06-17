@@ -20,6 +20,7 @@ async function handle(req: NextRequest) {
   } catch (e) {
     console.error(
       "[ChangePassword] username " + username + " change password error",
+      e,
     );
     return NextResponse.json({
       // @ts-ignore
