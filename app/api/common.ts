@@ -341,25 +341,3 @@ export async function requestCompatibleOpenaiUploadFile(
     clearTimeout(timeoutId);
   }
 }
-export function parseUsageObj(
-  responseBody: string,
-  key: string,
-  fromStart: boolean,
-) {
-  const usageIndex = fromStart
-    ? responseBody.indexOf('"' + key + '"')
-    : responseBody.lastIndexOf('"' + key + '"');
-  if (usageIndex !== -1) {
-    const openBracket = responseBody.indexOf("{", usageIndex);
-    const closeBracket = responseBody.indexOf("}", openBracket);
-    if (openBracket !== -1 && closeBracket !== -1) {
-      const jsonString = responseBody.substring(openBracket, closeBracket + 1);
-      try {
-        return JSON.parse(jsonString);
-      } catch (e) {
-        return null;
-      }
-    }
-  }
-  return null;
-}

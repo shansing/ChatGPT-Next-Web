@@ -12,10 +12,10 @@ import { auth } from "../../auth";
 import {
   getUsernameFromHttpBasicAuth,
   hashUsername,
+  parseUsageObj,
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
-import { parseUsageObj } from "@/app/api/common";
 
 const ALLOWD_PATH = new Set([Anthropic.ChatPath]);
 

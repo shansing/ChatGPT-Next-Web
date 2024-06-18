@@ -3,12 +3,10 @@ import { IconButton } from "./button";
 
 import { useNavigate } from "react-router-dom";
 import { Path } from "../constant";
-import { useAccessStore } from "../store";
 import Locale from "../locales";
 
 import BotIcon from "../icons/bot.svg";
 import { useEffect, useState } from "react";
-import { getClientConfig } from "../config/client";
 import { EmojiAvatar } from "@/app/components/emoji";
 import { showToast } from "@/app/components/ui-lib";
 import { getHeaders } from "@/app/client/api";

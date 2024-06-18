@@ -21,7 +21,6 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from "@fortaine/fetch-event-source";
-import { prettyObject } from "@/app/utils/format";
 import {
   getMessageTextContent,
   getMessageImages,

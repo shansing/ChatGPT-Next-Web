@@ -4,10 +4,11 @@ import { ModelProvider, OpenaiPath } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
-import { parseUsageObj, requestOpenai } from "../../common";
+import { requestOpenai } from "../../common";
 import {
   getUsernameFromHttpBasicAuth,
   hashUsername,
+  parseUsageObj,
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
