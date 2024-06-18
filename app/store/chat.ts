@@ -486,7 +486,6 @@ export const useChatStore = createPersistStore(
             botMessage.content +=
               "\n\n" +
               Locale.Shansing.errorPrefix +
-              "" +
               extractErrorMessage(error.message) +
               "\n" +
               prettyObject({
@@ -902,58 +901,63 @@ export const useChatStore = createPersistStore(
 );
 
 function extractErrorMessage(text: string) {
-  if (!text || !text.trim()) {
-    return "";
-  }
+  try {
+    if (!text || !text.trim()) {
+      return "";
+    }
 
-  let obj;
-  const openBracket = text.indexOf("{");
-  const closeBracket = text.lastIndexOf("}");
-  if (openBracket !== -1 && closeBracket !== -1) {
-    const jsonString = text.substring(openBracket, closeBracket + 1);
-    try {
-      obj = JSON.parse(jsonString);
-    } catch (ignored) {}
-  }
-  if (!obj && !text.trim().startsWith("{")) {
-    return text;
-  }
+    let obj;
+    const openBracket = text.indexOf("{");
+    const closeBracket = text.lastIndexOf("}");
+    if (openBracket !== -1 && closeBracket !== -1) {
+      const jsonString = text.substring(openBracket, closeBracket + 1);
+      try {
+        obj = JSON.parse(jsonString);
+      } catch (ignored) {}
+    }
+    if (!obj && !text.trim().startsWith("{")) {
+      return text;
+    }
 
-  if (!obj) {
-    return "";
-  }
-  let candidateMessage: string | null = null;
-  function traverse(obj: object) {
-    for (let key in obj) {
-      if (!obj.hasOwnProperty(key)) {
-        continue;
-      }
-      if (
-        (key === "message" || key === "msg") &&
-        // @ts-ignore
-        typeof obj[key] === "string"
-      ) {
-        // @ts-ignore
-        candidateMessage = obj[key];
-        return; // If we found a message directly, no need to continue the loop
-        // @ts-ignore
-      } else if (
-        key.includes("err") &&
-        typeof obj[key] === "string" &&
-        !candidateMessage
-      ) {
-        // @ts-ignore
-        candidateMessage = obj[key];
-        // @ts-ignore
-      } else if (typeof obj[key] === "object") {
-        // @ts-ignore
-        traverse(obj[key]); // Recursively check nested objects
+    if (!obj) {
+      return "";
+    }
+    let candidateMessage: string | null = null;
+    function traverse(obj: object) {
+      for (let key in obj) {
+        if (!obj.hasOwnProperty(key)) {
+          continue;
+        }
+        if (
+          (key === "message" || key === "msg") &&
+          // @ts-ignore
+          typeof obj[key] === "string"
+        ) {
+          // @ts-ignore
+          candidateMessage = obj[key];
+          return; // If we found a message directly, no need to continue the loop
+          // @ts-ignore
+        } else if (
+          key.includes("err") &&
+          // @ts-ignore
+          typeof obj[key] === "string" &&
+          !candidateMessage
+        ) {
+          // @ts-ignore
+          candidateMessage = obj[key];
+          // @ts-ignore
+        } else if (typeof obj[key] === "object") {
+          // @ts-ignore
+          traverse(obj[key]); // Recursively check nested objects
+        }
       }
     }
-  }
-  traverse(obj);
+    traverse(obj);
 
-  return candidateMessage || "";
+    return candidateMessage || "";
+  } catch (error) {
+    return "";
+  }
 }
 // console.log(extractErrorMessage('{"error": {"type": "overloaded_error", "message": "🙂过载"}}  '))
 // console.log(extractErrorMessage('data: {"error": {"type": "overloaded_error", "message": "🙂Overloaded!"}}  '))
