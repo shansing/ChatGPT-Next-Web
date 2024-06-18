@@ -72,21 +72,10 @@ export class AlibabaApi implements LLMApi {
       ...{
         model: options.config.model,
       },
+      ...(options.config.max_tokens && {
+        max_tokens: options.config.max_tokens,
+      }),
     };
-
-    let max_tokens: number =
-      (modelMaxTotalTokenNumber?.find((obj) =>
-        modelConfig.model.startsWith(obj.name),
-      )?.number || 4000) -
-      modelConfig.compressMessageLengthThreshold -
-      1500;
-    if (modelConfig.max_tokens < max_tokens) {
-      max_tokens = modelConfig.max_tokens;
-    }
-    if (max_tokens > 2000) {
-      //qwen requires
-      max_tokens = 2000;
-    }
 
     const requestPayload: RequestPayload = {
       messages,
@@ -96,7 +85,9 @@ export class AlibabaApi implements LLMApi {
       presence_penalty: modelConfig.presence_penalty,
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
-      max_tokens: max_tokens,
+      //qwen requires <= 2000
+      max_tokens:
+        modelConfig.max_tokens <= 2000 ? modelConfig.max_tokens : 2000,
     };
     requestPayload["stream_options"] = options.config.stream
       ? {

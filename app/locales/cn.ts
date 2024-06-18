@@ -254,7 +254,7 @@ const cn = {
     },
     HistoryCount: {
       Title: "附带历史消息数",
-      SubTitle: "每次请求携带的历史消息数",
+      SubTitle: "每次请求携带的历史消息数；优先级低于压缩阈值",
     },
     CompressThreshold: {
       Title: "历史消息长度压缩阈值",
@@ -365,7 +365,7 @@ const cn = {
     },
     MaxTokens: {
       Title: "单次回复限制 (max_tokens)",
-      SubTitle: "单次交互所用的最大 Token 数",
+      SubTitle: "单次输出所用的最大 Token 数",
     },
     PresencePenalty: {
       Title: "话题新鲜度 (presence_penalty)",

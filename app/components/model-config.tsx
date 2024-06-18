@@ -187,6 +187,17 @@ export function ModelConfigList(props: {
         ></InputRange>
       </ListItem>
 
+      <ListItem title={Locale.Memory.Title} subTitle={Locale.Memory.Send}>
+        <input
+          type="checkbox"
+          checked={props.modelConfig.sendMemory}
+          onChange={(e) =>
+            props.updateConfig(
+              (config) => (config.sendMemory = e.currentTarget.checked),
+            )
+          }
+        ></input>
+      </ListItem>
       <ListItem
         title={Locale.Settings.CompressThreshold.Title}
         subTitle={Locale.Settings.CompressThreshold.SubTitle}
@@ -201,17 +212,6 @@ export function ModelConfigList(props: {
               (config) =>
                 (config.compressMessageLengthThreshold =
                   e.currentTarget.valueAsNumber),
-            )
-          }
-        ></input>
-      </ListItem>
-      <ListItem title={Locale.Memory.Title} subTitle={Locale.Memory.Send}>
-        <input
-          type="checkbox"
-          checked={props.modelConfig.sendMemory}
-          onChange={(e) =>
-            props.updateConfig(
-              (config) => (config.sendMemory = e.currentTarget.checked),
             )
           }
         ></input>

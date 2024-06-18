@@ -119,17 +119,10 @@ export class ChatGPTApi implements LLMApi {
       ...{
         model: options.config.model,
       },
+      ...(options.config.max_tokens && {
+        max_tokens: options.config.max_tokens,
+      }),
     };
-
-    let max_tokens: number =
-      (modelMaxTotalTokenNumber?.find((obj) =>
-        modelConfig.model.startsWith(obj.name),
-      )?.number || 4000) -
-      modelConfig.compressMessageLengthThreshold -
-      1500;
-    if (modelConfig.max_tokens < max_tokens) {
-      max_tokens = modelConfig.max_tokens;
-    }
 
     const requestPayload: RequestPayload = {
       messages,
@@ -139,7 +132,7 @@ export class ChatGPTApi implements LLMApi {
       presence_penalty: modelConfig.presence_penalty,
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
-      max_tokens: max_tokens,
+      max_tokens: modelConfig.max_tokens,
     };
     requestPayload["stream_options"] = options.config.stream
       ? {

@@ -258,7 +258,8 @@ const en: LocaleType = {
     },
     HistoryCount: {
       Title: "Attached Messages Count",
-      SubTitle: "Number of sent messages attached per request",
+      SubTitle:
+        "Number of sent messages attached per request; lower priority than Compression Threshold",
     },
     CompressThreshold: {
       Title: "History Compression Threshold",
@@ -370,7 +371,7 @@ const en: LocaleType = {
     },
     MaxTokens: {
       Title: "Max Tokens",
-      SubTitle: "Maximum length of input tokens and generated tokens",
+      SubTitle: "Maximum length of generated tokens",
     },
     PresencePenalty: {
       Title: "Presence Penalty",

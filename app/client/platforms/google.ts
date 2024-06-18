@@ -77,17 +77,10 @@ export class GeminiProApi implements LLMApi {
       ...{
         model: options.config.model,
       },
+      ...(options.config.max_tokens && {
+        max_tokens: options.config.max_tokens,
+      }),
     };
-
-    let max_tokens: number =
-      (modelMaxTotalTokenNumber?.find((obj) =>
-        modelConfig.model.startsWith(obj.name),
-      )?.number || 4000) -
-      modelConfig.compressMessageLengthThreshold -
-      1500;
-    if (modelConfig.max_tokens < max_tokens) {
-      max_tokens = modelConfig.max_tokens;
-    }
 
     const requestPayload = {
       contents: messages,
@@ -96,7 +89,7 @@ export class GeminiProApi implements LLMApi {
         //   "Title"
         // ],
         temperature: modelConfig.temperature,
-        maxOutputTokens: max_tokens,
+        maxOutputTokens: modelConfig.max_tokens,
         topP: modelConfig.top_p,
         // "topK": modelConfig.top_k,
       },

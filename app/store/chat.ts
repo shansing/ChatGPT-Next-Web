@@ -22,6 +22,7 @@ import {
   uploadFileModels,
   CLAUDE_SUMMARIZE_MODEL,
   ServiceProvider,
+  modelMaxTotalTokenNumber,
 } from "../constant";
 import { ClientApi, RequestMessage, MultimodalContent } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
@@ -380,10 +381,14 @@ export const useChatStore = createPersistStore(
             text: userContent,
           });
         }
-        let userMessage: ChatMessage = createMessage({
+        const userMessage: ChatMessage = createMessage({
           role: "user",
           content: mContent,
         });
+        const savedUserMessage = {
+          ...userMessage,
+          content: mContent,
+        };
 
         const botMessage: ChatMessage = createMessage({
           role: "assistant",
@@ -392,16 +397,14 @@ export const useChatStore = createPersistStore(
         });
 
         // get recent messages
-        const recentMessages = get().getMessagesWithMemory();
+        const recentMessages = get().getMessagesWithMemory(
+          estimateTokenLength(JSON.stringify(userMessage)),
+        );
         const sendMessages = recentMessages.concat(userMessage);
         const messageIndex = get().currentSession().messages.length + 1;
 
         // save user's and bot's message
         get().updateCurrentSession((session) => {
-          const savedUserMessage = {
-            ...userMessage,
-            content: mContent,
-          };
           session.messages = session.messages.concat([
             savedUserMessage,
             botMessage,
@@ -488,6 +491,7 @@ export const useChatStore = createPersistStore(
               });
             botMessage.streaming = false;
             userMessage.isError = !isAborted;
+            savedUserMessage.isError = userMessage.isError;
             botMessage.isError = !isAborted;
             get().updateCurrentSession((session) => {
               session.messages = session.messages.concat();
@@ -522,7 +526,7 @@ export const useChatStore = createPersistStore(
         }
       },
 
-      getMessagesWithMemory() {
+      getMessagesWithMemory(userMessageLength: number) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
         const clearContextIndex = session.clearContextIndex ?? 0;
@@ -582,7 +586,22 @@ export const useChatStore = createPersistStore(
           : shortTermMemoryStartIndex;
         // and if user has cleared history messages, we should exclude the memory too.
         const contextStartIndex = Math.max(clearContextIndex, memoryStartIndex);
-        const maxTokenThreshold = modelConfig.max_tokens;
+        // const maxTokenThreshold = modelConfig.max_tokens;
+        const maxTotalTokenNumber: number =
+          modelMaxTotalTokenNumber?.find((obj) =>
+            modelConfig.model.startsWith(obj.name),
+          )?.number || 4000;
+        const maxTokenThreshold =
+          maxTotalTokenNumber -
+          modelConfig.max_tokens -
+          userMessageLength -
+          estimateTokenLength(
+            JSON.stringify({
+              systemPrompts,
+              longTermMemoryPrompts,
+              contextPrompts,
+            }),
+          );
 
         // get recent messages as much as possible
         const reversedRecentMessages = [];
@@ -593,15 +612,26 @@ export const useChatStore = createPersistStore(
         ) {
           const msg = messages[i];
           if (!msg || msg.isError) continue;
-          tokenCount += estimateTokenLength(getMessageTextContent(msg));
+          // tokenCount += estimateTokenLength(getMessageTextContent(msg));
+          tokenCount += estimateTokenLength(JSON.stringify(msg));
           reversedRecentMessages.push(msg);
         }
+        //let recentMessages start with a user message
+        let reversedRecentMessageTo = 0;
+        for (let i = reversedRecentMessages.length - 1; i >= 0; i -= 1) {
+          const message = reversedRecentMessages[i];
+          if (message.role === "user") {
+            reversedRecentMessageTo = i + 1;
+            break;
+          }
+        }
+        console.log("reversedRecentMessageTo", reversedRecentMessageTo);
         // concat all messages
         const recentMessages = [
           ...systemPrompts,
           ...longTermMemoryPrompts,
           ...contextPrompts,
-          ...reversedRecentMessages.reverse(),
+          ...reversedRecentMessages.slice(0, reversedRecentMessageTo).reverse(),
         ];
 
         return recentMessages;
@@ -675,45 +705,54 @@ export const useChatStore = createPersistStore(
 
         const historyMsgLength = countMessages(toBeSummarizedMsgs);
 
-        if (historyMsgLength > modelConfig?.max_tokens ?? 4000) {
-          const n = toBeSummarizedMsgs.length;
-          toBeSummarizedMsgs = toBeSummarizedMsgs.slice(
-            Math.max(0, n - modelConfig.historyMessageCount),
-          );
-        }
-        const memoryPrompt = get().getMemoryPrompt();
-        if (memoryPrompt) {
-          // add memory prompt
-          toBeSummarizedMsgs.unshift(memoryPrompt);
-        }
-
-        const lastSummarizeIndex = session.messages.length;
-
-        console.log(
-          "[Chat History] ",
-          toBeSummarizedMsgs,
-          historyMsgLength,
-          modelConfig.compressMessageLengthThreshold,
-        );
-
         if (
           historyMsgLength > modelConfig.compressMessageLengthThreshold &&
           modelConfig.sendMemory
         ) {
-          /** Destruct max_tokens while summarizing
-           * this param is just shit
-           **/
-          const { max_tokens, ...modelcfg } = modelConfig;
+          const maxTotalTokenNumber: number =
+            modelMaxTotalTokenNumber?.find((obj) =>
+              modelConfig.model.startsWith(obj.name),
+            )?.number || 4000;
+          const SUMMARIZE_MAX_TOKENS = 500;
+
+          const summarizeRequestMessage = createMessage({
+            role: "user", //modelConfig.model.startsWith("gpt-") ? "system" : "user",
+            content: Locale.Store.Prompt.Summarize,
+            date: "",
+          });
+          const memoryPrompt = get().getMemoryPrompt();
+          const maxTokenThreshold =
+            maxTotalTokenNumber -
+            SUMMARIZE_MAX_TOKENS -
+            estimateTokenLength(
+              JSON.stringify({ summarizeRequestMessage, memoryPrompt }),
+            );
+          if (historyMsgLength > maxTokenThreshold) {
+            const n = toBeSummarizedMsgs.length;
+            toBeSummarizedMsgs = toBeSummarizedMsgs.slice(
+              Math.max(0, n - modelConfig.historyMessageCount),
+            );
+          }
+          if (memoryPrompt) {
+            // add memory prompt
+            toBeSummarizedMsgs.unshift(memoryPrompt);
+          }
+
+          const lastSummarizeIndex = session.messages.length;
+
+          console.log(
+            "[Chat History] ",
+            toBeSummarizedMsgs,
+            historyMsgLength,
+            modelConfig.compressMessageLengthThreshold,
+          );
+
+          // const { max_tokens, ...modelcfg } = modelConfig;
           api.llm.chat({
-            messages: toBeSummarizedMsgs.concat(
-              createMessage({
-                role: "user", //modelConfig.model.startsWith("gpt-") ? "system" : "user",
-                content: Locale.Store.Prompt.Summarize,
-                date: "",
-              }),
-            ),
+            messages: toBeSummarizedMsgs.concat(summarizeRequestMessage),
             config: {
-              ...modelcfg,
+              ...modelConfig,
+              max_tokens: SUMMARIZE_MAX_TOKENS,
               stream: true,
               model: getSummarizeModel(session.mask.modelConfig.model),
               checkShansingOnlineSearch: false,

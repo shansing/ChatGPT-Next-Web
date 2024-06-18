@@ -103,6 +103,9 @@ export class ClaudeApi implements LLMApi {
       ...{
         model: options.config.model,
       },
+      ...(options.config.max_tokens && {
+        max_tokens: options.config.max_tokens,
+      }),
     };
 
     // const messages = [...options.messages];
@@ -244,27 +247,14 @@ export class ClaudeApi implements LLMApi {
       }
     }
     // console.log("prompt4", prompt)
-
-    let max_tokens: number =
-      (modelMaxTotalTokenNumber?.find((obj) =>
-        modelConfig.model.startsWith(obj.name),
-      )?.number || 4000) -
-      modelConfig.compressMessageLengthThreshold -
-      1500;
-    if (modelConfig.max_tokens < max_tokens) {
-      max_tokens = modelConfig.max_tokens;
-    }
-    if (max_tokens > 4096) {
-      //claude requires
-      max_tokens = 4096;
-    }
-
     const requestBody: AnthropicChatRequest = {
       messages: prompt,
       stream: shouldStream,
 
       model: modelConfig.model,
-      max_tokens: max_tokens,
+      //claude requires <= 4096
+      max_tokens:
+        modelConfig.max_tokens <= 4096 ? modelConfig.max_tokens : 4096,
       temperature:
         modelConfig.temperature > 1.0 ? 1.0 : modelConfig.temperature,
       top_p: modelConfig.top_p,
