@@ -7,6 +7,7 @@ import {
   StoreKey,
 } from "../constant";
 import { createPersistStore } from "../utils/store";
+import { deepClone } from "@/app/utils/clone";
 
 export type ModelType = (typeof DEFAULT_MODELS)[number]["name"];
 
@@ -106,6 +107,14 @@ export const useAppConfig = createPersistStore(
   (set, get) => ({
     reset() {
       set(() => ({ ...DEFAULT_CONFIG }));
+    },
+
+    resetModels() {
+      const state = deepClone(get());
+      set({
+        ...state,
+        models: DEFAULT_MODELS,
+      });
     },
 
     mergeModels(newModels: LLMModel[]) {
