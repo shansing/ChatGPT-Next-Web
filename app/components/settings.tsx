@@ -250,6 +250,7 @@ function DangerItems() {
           text={Locale.Shansing.Refresh.Action}
           icon={<ResetIcon />}
           onClick={async () => {
+            appConfig.resetModels();
             if (await showConfirm(Locale.Shansing.Refresh.Confirm)) {
               // @ts-ignore
               location.reload(true);
