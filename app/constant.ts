@@ -128,14 +128,14 @@ Latex block: $$e=mc^2$$
 
 export const GPT_4_MODEL = "gpt-4o-2024-05-13";
 export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
-export const CLAUDE_3_HAIKU = "claude-3-haiku-20240307";
-export const CLAUDE_3_SONNET = "claude-3-sonnet-20240229";
+export const CLAUDE_HAIKU = "claude-3-haiku-20240307";
+export const CLAUDE_SONNET = "claude-3-5-sonnet-20240620";
 export const QWEN_MAX = "qwen-max";
 export const QWEN_LONG = "qwen-long";
 
 export const SUMMARIZE_MODEL = GPT_35_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-latest";
-export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_3_HAIKU;
+export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
@@ -156,6 +156,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "claude-3-opus-20240229": "2023-08",
   "claude-3-sonnet-20240229": "2023-08",
   "claude-3-haiku-20240307": "2023-08",
+  "claude-3-5-sonnet-20240620": "2024-04",
 };
 
 const openaiModels = [
@@ -182,6 +183,7 @@ const googleModels = [
 ];
 
 const anthropicModels = [
+  "claude-3-5-sonnet-20240620",
   "claude-3-opus-20240229",
   "claude-3-sonnet-20240229",
   "claude-3-haiku-20240307",
@@ -290,7 +292,7 @@ export const internalAllowedWebDavEndpoints = [
 
 export const visionKeywords = [
   "vision",
-  "claude-3",
+  "claude-3-",
   "gemini-1.5-pro",
   "gemini-1.5-flash",
   "gpt-4o",

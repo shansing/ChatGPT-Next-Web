@@ -1,7 +1,7 @@
 import { BuiltinMask } from "./typing";
 import {
-  CLAUDE_3_HAIKU,
-  CLAUDE_3_SONNET,
+  CLAUDE_HAIKU,
+  CLAUDE_SONNET,
   GPT_4_MODEL,
   QWEN_LONG,
 } from "@/app/constant";
@@ -72,7 +72,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_HAIKU,
+      model: CLAUDE_HAIKU,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -99,7 +99,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -126,7 +126,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -153,7 +153,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -180,7 +180,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -404,7 +404,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -431,7 +431,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -458,7 +458,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -485,7 +485,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -512,7 +512,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -831,7 +831,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: CLAUDE_3_SONNET,
+      model: CLAUDE_SONNET,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
