@@ -57,7 +57,7 @@ export const useAccessStore = createPersistStore(
 
   (set, get) => ({
     enabledAccessControl() {
-      this.fetch();
+      this.fetch(null);
 
       return get().needCode;
     },
@@ -79,7 +79,7 @@ export const useAccessStore = createPersistStore(
     },
 
     isAuthorized() {
-      this.fetch();
+      this.fetch(null);
 
       // has token or has code or disabled access control
       return (
@@ -91,7 +91,7 @@ export const useAccessStore = createPersistStore(
         (this.enabledAccessControl() && ensure(get(), ["accessCode"]))
       );
     },
-    fetch() {
+    fetch(afterFetch: Function | undefined | null) {
       if (fetchState > 0 || getClientConfig()?.buildMode === "export") return;
       fetchState = 1;
       fetch("/api/config", {
@@ -112,6 +112,9 @@ export const useAccessStore = createPersistStore(
         .then((res: DangerConfig) => {
           console.log("[Config] got config from server", res);
           set(() => ({ ...res }));
+          if (afterFetch) {
+            afterFetch();
+          }
         })
         .catch(() => {
           console.error("[Config] failed to fetch config");
