@@ -87,8 +87,8 @@ export const CN_MASKS: BuiltinMask[] = [
     createdAt: 1718076239000,
   },
   {
-    avatar: "1f4bb",
-    name: "代码顾问",
+    avatar: "1f468-200d-1f4bb",
+    name: "代码优化顾问",
     context: [
       {
         id: "sx4-0",
@@ -114,8 +114,8 @@ export const CN_MASKS: BuiltinMask[] = [
     author: "claude",
   },
   {
-    avatar: "1f4bb",
-    name: "代码解释器",
+    avatar: "1f50d",
+    name: "代码通俗解释器",
     context: [
       {
         id: "sx7-0",
