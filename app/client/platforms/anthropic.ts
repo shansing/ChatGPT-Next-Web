@@ -302,12 +302,6 @@ export class ClaudeApi implements LLMApi {
             typeof inError === "string" ? new Error(inError) : inError;
           if (!finished) {
             finished = true;
-            responseText +=
-              "\n\n" +
-              prettyObject({
-                error: true,
-                message: error.message,
-              });
             requestAnimationFrame(() => options.onError?.(error));
           }
         };

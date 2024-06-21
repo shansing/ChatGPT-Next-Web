@@ -469,9 +469,13 @@ export const useChatStore = createPersistStore(
             if (message) {
               botMessage.content = message;
             }
-            get().updateCurrentSession((session) => {
-              session.messages = session.messages.concat();
-            });
+            try {
+              get().updateCurrentSession((session) => {
+                session.messages = session.messages.concat();
+              });
+            } catch (err) {
+              console.error("updateCurrentSession", err);
+            }
           },
           onFinish(message) {
             botMessage.streaming = false;
@@ -831,11 +835,7 @@ export const useChatStore = createPersistStore(
         const sessions = get().sessions;
         const index = get().currentSessionIndex;
         updater(sessions[index]);
-        try {
-          set(() => ({ sessions }));
-        } catch (err) {
-          console.error("updateCurrentSession", err);
-        }
+        set(() => ({ sessions }));
       },
 
       clearAllData() {
