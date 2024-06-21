@@ -182,10 +182,11 @@ export function useLoadData() {
     api = new ClientApi(ModelProvider.GPT);
   }
   useEffect(() => {
-    (async () => {
-      // const models = await api.llm.models();
-      // config.mergeModels(models);
-    })();
+    // (async () => {
+    // const models = await api.llm.models();
+    // config.mergeModels(models);
+    config.resetModels();
+    // })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }
@@ -197,9 +198,7 @@ export function Home() {
 
   useEffect(() => {
     console.log("[Config] got config from build time", getClientConfig());
-    useAccessStore
-      .getState()
-      .fetch(() => useAppConfig.getState().resetModels());
+    useAccessStore.getState().fetch();
   }, []);
 
   if (!useHasHydrated()) {

@@ -110,11 +110,9 @@ export const useAppConfig = createPersistStore(
     },
 
     resetModels() {
-      const state = deepClone(get());
-      set({
-        ...state,
-        models: DEFAULT_MODELS,
-      });
+      set(() => ({
+        models: DEFAULT_MODELS as any as LLMModel[],
+      }));
     },
 
     mergeModels(newModels: LLMModel[]) {
