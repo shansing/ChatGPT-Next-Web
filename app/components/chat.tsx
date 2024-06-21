@@ -129,7 +129,7 @@ export function SessionConfigModel(props: { onClose: () => void }) {
             text={Locale.Chat.Config.Reset}
             onClick={async () => {
               if (await showConfirm(Locale.Memory.ResetConfirm)) {
-                chatStore.updateCurrentSession(
+                chatStore.updateCurrentSessionNow(
                   (session) => (session.memoryPrompt = ""),
                 );
               }
@@ -154,7 +154,9 @@ export function SessionConfigModel(props: { onClose: () => void }) {
           updateMask={(updater) => {
             const mask = { ...session.mask };
             updater(mask);
-            chatStore.updateCurrentSession((session) => (session.mask = mask));
+            chatStore.updateCurrentSessionNow(
+              (session) => (session.mask = mask),
+            );
           }}
           shouldSyncFromGlobal
           extraListItems={
@@ -331,7 +333,7 @@ function ClearContextDivider() {
     <div
       className={styles["clear-context"]}
       onClick={() =>
-        chatStore.updateCurrentSession(
+        chatStore.updateCurrentSessionNow(
           (session) => (session.clearContextIndex = undefined),
         )
       }
@@ -471,7 +473,7 @@ export function ChatActions(props: {
     chatStore.currentSession().mask.modelConfig.shansingOnlineSearch;
   function switchOnlineSearch() {
     const newStatus = !onlineSearch;
-    chatStore.updateCurrentSession(
+    chatStore.updateCurrentSessionNow(
       (session) => (session.mask.modelConfig.shansingOnlineSearch = newStatus),
     );
     showToast(
@@ -487,7 +489,7 @@ export function ChatActions(props: {
   // }
   const turnOnlineSearchWithoutTip = useCallback(
     (newStatus: boolean) => {
-      chatStore.updateCurrentSession(
+      chatStore.updateCurrentSessionNow(
         (session) =>
           (session.mask.modelConfig.shansingOnlineSearch = newStatus),
       );
@@ -556,7 +558,7 @@ export function ChatActions(props: {
       let nextModel: ModelType = (
         models.find((model) => model.isDefault) || models[0]
       ).name;
-      chatStore.updateCurrentSession(
+      chatStore.updateCurrentSessionNow(
         (session) => (session.mask.modelConfig.model = nextModel),
       );
       showToast(nextModel);
@@ -605,7 +607,7 @@ export function ChatActions(props: {
           onClose={() => setShowModelSelector(false)}
           onSelection={(s) => {
             if (s.length === 0) return;
-            chatStore.updateCurrentSession((session) => {
+            chatStore.updateCurrentSessionNow((session) => {
               session.mask.modelConfig.model = s[0] as ModelType;
               session.mask.syncGlobalConfig = false;
             });
@@ -691,7 +693,7 @@ export function ChatActions(props: {
         text={Locale.Chat.InputActions.Clear}
         icon={<BreakIcon />}
         onClick={() => {
-          chatStore.updateCurrentSession((session) => {
+          chatStore.updateCurrentSessionNow((session) => {
             if (session.clearContextIndex === session.messages.length) {
               session.clearContextIndex = undefined;
             } else {
@@ -730,7 +732,7 @@ export function EditMessageModal(props: { onClose: () => void }) {
             icon={<ConfirmIcon />}
             key="ok"
             onClick={() => {
-              chatStore.updateCurrentSession(
+              chatStore.updateCurrentSessionNow(
                 (session) => (session.messages = messages),
               );
               props.onClose();
@@ -747,7 +749,7 @@ export function EditMessageModal(props: { onClose: () => void }) {
               type="text"
               value={session.topic}
               onInput={(e) =>
-                chatStore.updateCurrentSession(
+                chatStore.updateCurrentSessionNow(
                   (session) => (session.topic = e.currentTarget.value),
                 )
               }
@@ -916,7 +918,7 @@ function _Chat() {
   };
 
   useEffect(() => {
-    chatStore.updateCurrentSession((session) => {
+    chatStore.updateCurrentSessionNow((session) => {
       const stopTiming = Date.now() - REQUEST_TIMEOUT_MS;
       session.messages.forEach((m) => {
         // check if should stop all stale messages
@@ -973,7 +975,7 @@ function _Chat() {
   };
 
   const deleteMessage = (msgId?: string) => {
-    chatStore.updateCurrentSession(
+    chatStore.updateCurrentSessionNow(
       (session) =>
         (session.messages = session.messages.filter((m) => m.id !== msgId)),
     );
@@ -1040,7 +1042,7 @@ function _Chat() {
   };
 
   const onPinMessage = (message: ChatMessage) => {
-    chatStore.updateCurrentSession((session) =>
+    chatStore.updateCurrentSessionNow((session) =>
       session.mask.context.push(message),
     );
 
@@ -1353,7 +1355,7 @@ function _Chat() {
   const uploadedFileIds =
     chatStore.currentSession().mask.modelConfig.shansingFileIds;
   function setUploadedFileIds(newFileIds: string[]) {
-    chatStore.updateCurrentSession(
+    chatStore.updateCurrentSessionNow(
       (session) => (session.mask.modelConfig.shansingFileIds = newFileIds),
     );
   }
@@ -1552,7 +1554,7 @@ function _Chat() {
                                 });
                               }
                             }
-                            chatStore.updateCurrentSession((session) => {
+                            chatStore.updateCurrentSessionNow((session) => {
                               const m = session.mask.context
                                 .concat(session.messages)
                                 .find((m) => m.id === message.id);

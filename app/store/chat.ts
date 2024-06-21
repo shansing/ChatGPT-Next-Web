@@ -348,12 +348,12 @@ export const useChatStore = createPersistStore(
         return session;
       },
 
-      onNewMessage(message: ChatMessage) {
-        get().updateCurrentSession((session) => {
+      onNewMessage(session: ChatSession, message: ChatMessage) {
+        get().updateSpecificSession(session, (session) => {
           session.messages = session.messages.concat();
           session.lastUpdate = Date.now();
         });
-        get().updateStat(message);
+        get().updateStat(session, message);
         get().summarizeSession();
       },
 
@@ -404,7 +404,7 @@ export const useChatStore = createPersistStore(
         const messageIndex = get().currentSession().messages.length + 1;
 
         // save user's and bot's message
-        get().updateCurrentSession((session) => {
+        get().updateSpecificSession(session, (session) => {
           session.messages = session.messages.concat([
             savedUserMessage,
             botMessage,
@@ -460,7 +460,7 @@ export const useChatStore = createPersistStore(
           },
           onBegin(isOnlineSearch) {
             botMessage.isOnlineSearch = isOnlineSearch;
-            get().updateCurrentSession((session) => {
+            get().updateSpecificSession(session, (session) => {
               session.messages = session.messages.concat();
             });
           },
@@ -470,7 +470,7 @@ export const useChatStore = createPersistStore(
               botMessage.content = message;
             }
             try {
-              get().updateCurrentSession((session) => {
+              get().updateSpecificSession(session, (session) => {
                 session.messages = session.messages.concat();
               });
             } catch (err) {
@@ -481,7 +481,7 @@ export const useChatStore = createPersistStore(
             botMessage.streaming = false;
             if (message) {
               botMessage.content = message;
-              get().onNewMessage(botMessage);
+              get().onNewMessage(session, botMessage);
             }
             ChatControllerPool.remove(session.id, botMessage.id);
           },
@@ -500,7 +500,7 @@ export const useChatStore = createPersistStore(
             userMessage.isError = !isAborted;
             savedUserMessage.isError = userMessage.isError;
             botMessage.isError = !isAborted;
-            get().updateCurrentSession((session) => {
+            get().updateSpecificSession(session, (session) => {
               session.messages = session.messages.concat();
             });
             ChatControllerPool.remove(
@@ -657,7 +657,7 @@ export const useChatStore = createPersistStore(
       },
 
       resetSession() {
-        get().updateCurrentSession((session) => {
+        get().updateCurrentSessionNow((session) => {
           session.messages = [];
           session.memoryPrompt = "";
         });
@@ -694,11 +694,13 @@ export const useChatStore = createPersistStore(
               checkShansingOnlineSearch: false,
             },
             onFinish(message) {
-              get().updateCurrentSession(
-                (session) =>
-                  (session.topic =
-                    message.length > 0 ? trimTopic(message) : DEFAULT_TOPIC),
-              );
+              const topic = message.length > 0 ? trimTopic(message) : "";
+              if (topic.length > 0) {
+                get().updateSpecificSession(
+                  session,
+                  (session) => (session.topic = topic),
+                );
+              }
             },
           });
         }
@@ -769,7 +771,7 @@ export const useChatStore = createPersistStore(
             },
             onFinish(message) {
               console.log("[Memory] ", message);
-              get().updateCurrentSession((session) => {
+              get().updateSpecificSession(session, (session) => {
                 session.lastSummarizeIndex = lastSummarizeIndex;
                 session.memoryPrompt = message; // Update the memory prompt for stored it in local storage
               });
@@ -804,7 +806,8 @@ export const useChatStore = createPersistStore(
           const fileNameWithoutExtension = fileName.includes(".")
             ? fileName.split(".").slice(0, -1).join(".")
             : fileName;
-          get().updateCurrentSession(
+          get().updateSpecificSession(
+            session,
             (session) => (session.topic = fileNameWithoutExtension),
           );
         }
@@ -824,17 +827,26 @@ export const useChatStore = createPersistStore(
         }
       },
 
-      updateStat(message: ChatMessage) {
-        get().updateCurrentSession((session) => {
+      updateStat(session: ChatSession, message: ChatMessage) {
+        get().updateSpecificSession(session, (session) => {
           session.stat.charCount += message.content.length;
           // TODO: should update chat count and word count
         });
       },
 
-      updateCurrentSession(updater: (session: ChatSession) => void) {
+      updateCurrentSessionNow(updater: (session: ChatSession) => void) {
         const sessions = get().sessions;
         const index = get().currentSessionIndex;
         updater(sessions[index]);
+        set(() => ({ sessions }));
+      },
+
+      updateSpecificSession(
+        session: ChatSession,
+        updater: (session: ChatSession) => void,
+      ) {
+        const sessions = get().sessions;
+        updater(session);
         set(() => ({ sessions }));
       },
 
