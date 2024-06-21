@@ -524,7 +524,7 @@ const cn = {
       SuccessTip: "文件上传成功；对话不保证长期有效",
       OverNumberTip: "部分文件上传成功，超出部分被移出",
       FullTip: "当前对话文件数达到上限",
-      FailureTip: "文件上传失败，请稍候再试",
+      FailureTip: "文件上传失败。",
     },
     uploadImageFullTip: "单会话图片数达到上限",
     uploadImageIncompatibleTip: "图片压缩不可用。浏览器处于锁定模式吗？",

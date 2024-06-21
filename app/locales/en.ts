@@ -533,7 +533,7 @@ const en: LocaleType = {
       SuccessTip: "File uploaded; chat files are not long-term valid",
       OverNumberTip: "Some files uploaded, except the excess ones",
       FullTip: "Maximum number of chat files reached",
-      FailureTip: "Failed to upload files; please try again later",
+      FailureTip: "Failed to upload files.",
     },
     uploadImageFullTip: "Maximum number of session images reached",
     uploadImageIncompatibleTip:

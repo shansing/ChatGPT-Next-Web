@@ -1403,7 +1403,9 @@ function _Chat() {
             })
             .catch((e) => {
               setUploading(false);
-              showToast(Locale.Shansing.UploadFile.FailureTip);
+              showToast(
+                Locale.Shansing.UploadFile.FailureTip + " " + e.message,
+              );
               rej(e);
             });
         };

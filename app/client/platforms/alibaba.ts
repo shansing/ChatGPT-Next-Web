@@ -257,7 +257,7 @@ export class AlibabaApi implements LLMApi {
     const controller = new AbortController();
     const requestTimeoutId = setTimeout(
       () => controller.abort(),
-      REQUEST_TIMEOUT_MS,
+      REQUEST_TIMEOUT_MS * 2,
     );
 
     const formData = new FormData();
@@ -285,8 +285,6 @@ export class AlibabaApi implements LLMApi {
     });
     clearTimeout(requestTimeoutId);
 
-    const responseJson = await response.json();
-    // @ts-ignore
-    return responseJson.id;
+    return await response.text();
   }
 }

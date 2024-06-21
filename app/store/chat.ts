@@ -793,11 +793,20 @@ export const useChatStore = createPersistStore(
 
         const fileIds: string[] = [];
         for (const file of files) {
-          const fileId = await api.llm.uploadFile(file);
-          if (!fileId) {
-            throw Error(`[uploadFiles] fileId not found.`);
+          const responseBody = await api.llm.uploadFile(file);
+          try {
+            const obj = JSON.parse(responseBody);
+            const fileId: string = obj?.id;
+            if (!fileId) {
+              throw Error("fileId not found.");
+            }
+            fileIds.push(fileId);
+          } catch (error: any) {
+            console.log("[uploadFiles]", error);
+            throw Error(
+              Locale.Shansing.errorPrefix + extractErrorMessage(responseBody),
+            );
           }
-          fileIds.push(fileId);
         }
 
         const config = useAppConfig.getState();
@@ -918,6 +927,12 @@ function extractErrorMessage(text: string) {
       return "";
     }
 
+    const openTag = text.toLowerCase().indexOf("<h1>");
+    const closeTag = text.toLowerCase().indexOf("</h1>");
+    if (openTag !== -1 && closeTag !== -1) {
+      return text.substring(openTag + 4, closeTag);
+    }
+
     let obj;
     const openBracket = text.indexOf("{");
     const closeBracket = text.lastIndexOf("}");
@@ -975,4 +990,5 @@ function extractErrorMessage(text: string) {
 // console.log(extractErrorMessage('data: {"error": {"type": "overloaded_error", "message": "🙂Overloaded!"}}  '))
 // console.log(extractErrorMessage('{"status":"-1", "error": "bad!", "message": "🙂It\'s me!"}'))
 // console.log(extractErrorMessage(' {"status":"-1", "error": "🙂error!"}  '))
+// console.log(extractErrorMessage('<html><meta charset="utf-8" /><head><title>401 Authorization Required</title></head><body><center><h1>🙂401 Authorization Required</h1></center><hr><center>nginx</center></body></html>'))
 // console.log(extractErrorMessage('🙂Mario'))
