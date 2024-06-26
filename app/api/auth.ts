@@ -40,6 +40,11 @@ export function auth(
   // console.log("[Auth] got access code:", accessCode);
   // console.log("[Auth] hashed access code:", hashedCode);
   console.log("[User IP]<" + username + ">", getIP(req));
+  console.log(
+    "[UserAgent]<" + username + ">",
+    req.headers.get("user-agent"),
+    "(" + (req.headers.get("sec-ch-ua") ?? "") + ")",
+  );
   // console.log("[Time] ", new Date().toLocaleString());
   //
   // if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !apiKey) {

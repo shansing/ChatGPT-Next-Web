@@ -58,7 +58,7 @@ async function handle(
     baseUrl = serverConfig.shansingOnlineSearchUrl;
   }
 
-  console.log("[Proxy Path]<" + username + ">", path);
+  // console.log("[Proxy Path]<" + username + ">", path);
   console.log("[Base Url]<" + username + ">", baseUrl, "(" + apiBaseUrl + ")");
 
   const timeoutId = setTimeout(
