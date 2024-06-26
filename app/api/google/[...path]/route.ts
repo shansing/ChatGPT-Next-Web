@@ -4,6 +4,7 @@ import { getServerSideConfig } from "@/app/config/server";
 import { GEMINI_BASE_URL, Google, ModelProvider } from "@/app/constant";
 import {
   getUsernameFromHttpBasicAuth,
+  hashUsername,
   parseUsageObj,
   pay,
   readUserQuota,
@@ -13,13 +14,28 @@ async function handle(
   req: NextRequest,
   { params }: { params: { path: string[] } },
 ) {
-  console.log("[Google Route] params ", params);
+  // console.log("[Google Route] params ", params);
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });
   }
 
+  const username = getUsernameFromHttpBasicAuth(req);
+  if (!username) {
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "[Shansing He2per] Http basic auth is needed",
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+
   const controller = new AbortController();
+
+  //to do forbidden route?
 
   const serverConfig = getServerSideConfig();
   const config = serverConfig;
@@ -42,9 +58,8 @@ async function handle(
     baseUrl = serverConfig.shansingOnlineSearchUrl;
   }
 
-  console.log("[Proxy] ", path);
-  console.log("[Base Url]", baseUrl);
-  console.log("[apiBaseUrl]", apiBaseUrl);
+  console.log("[Proxy Path]<" + username + ">", path);
+  console.log("[Base Url]<" + username + ">", baseUrl, "(" + apiBaseUrl + ")");
 
   const timeoutId = setTimeout(
     () => {
@@ -53,18 +68,6 @@ async function handle(
     10 * 60 * 1000,
   );
 
-  const username = getUsernameFromHttpBasicAuth(req);
-  if (!username) {
-    return NextResponse.json(
-      {
-        error: true,
-        msg: "[Shansing He2per] Http basic auth is needed",
-      },
-      {
-        status: 403,
-      },
-    );
-  }
   if ((await readUserQuota(username)).lessThanOrEqualTo(0)) {
     return NextResponse.json(
       {
@@ -104,8 +107,9 @@ async function handle(
       },
     );
   }
+  console.log("[Google]<" + username + "> using model " + modelChoice.model);
 
-  const authResult = auth(req, ModelProvider.GeminiPro);
+  const authResult = auth(req, ModelProvider.GeminiPro, username);
   if (authResult.error) {
     return NextResponse.json(authResult, {
       status: 401,
@@ -177,7 +181,8 @@ async function handle(
           false,
         );
         console.log(
-          "[usage][google]",
+          "[Google Usage]<" + username + ">",
+          JSON.stringify(usageMetadata),
           JSON.stringify({
             firstPromptTokenNumber,
             firstCompletionTokenNumber,
@@ -185,7 +190,6 @@ async function handle(
             newsCount,
             crawlerCount,
           }),
-          usageMetadata,
         );
         if (
           usageMetadata &&

@@ -23,25 +23,10 @@ async function handle(
   req: NextRequest,
   { params }: { params: { path: string[] } },
 ) {
-  console.log("[Anthropic Route] params ", params);
+  // console.log("[Anthropic Route] params ", params);
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });
-  }
-
-  const subpath = params.path.join("/");
-
-  if (!ALLOWD_PATH.has(subpath)) {
-    console.log("[Anthropic Route] forbidden path ", subpath);
-    return NextResponse.json(
-      {
-        error: true,
-        msg: "you are not allowed to request " + subpath,
-      },
-      {
-        status: 403,
-      },
-    );
   }
 
   const username = getUsernameFromHttpBasicAuth(req);
@@ -56,6 +41,25 @@ async function handle(
       },
     );
   }
+
+  const subpath = params.path.join("/");
+
+  if (!ALLOWD_PATH.has(subpath)) {
+    console.warn(
+      "[Anthropic Route]<" + username + "> forbidden path ",
+      subpath,
+    );
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "you are not allowed to request " + subpath,
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+
   if ((await readUserQuota(username)).lessThanOrEqualTo(0)) {
     return NextResponse.json(
       {
@@ -67,9 +71,8 @@ async function handle(
       },
     );
   }
-  const usernameHash = hashUsername(username);
 
-  const authResult = auth(req, ModelProvider.Claude);
+  const authResult = auth(req, ModelProvider.Claude, username);
   if (authResult.error) {
     return NextResponse.json(authResult, {
       status: 401,
@@ -91,9 +94,10 @@ async function handle(
       },
     );
   }
+  console.log("[Anthropic]<" + username + "> using model " + modelChoice.model);
 
   try {
-    const response = await request(req, requestJson, usernameHash);
+    const response = await request(req, requestJson, username);
 
     const firstPromptTokenNumber = parseInt(
         response?.headers.get("X-Shansing-First-Prompt-Token-Number") ?? "0",
@@ -119,7 +123,9 @@ async function handle(
         const startUsage = parseUsageObj(responseBody, "usage", true);
         const endUsage = parseUsageObj(responseBody, "usage", false);
         console.log(
-          "[usage][anthropic]",
+          "[Anthropic Usage]<" + username + ">",
+          JSON.stringify(startUsage),
+          JSON.stringify(endUsage),
           JSON.stringify({
             firstPromptTokenNumber,
             firstCompletionTokenNumber,
@@ -127,8 +133,6 @@ async function handle(
             newsCount,
             crawlerCount,
           }),
-          startUsage,
-          endUsage,
         );
         if (endUsage && endUsage.output_tokens != null) {
           const result = {
@@ -166,7 +170,10 @@ async function handle(
       })
       .then((obj) => {
         if (obj) {
-          console.log("[usage][anthropic][final]", obj);
+          console.log(
+            "[Anthropic Usage]<" + username + "> final",
+            JSON.stringify(obj),
+          );
           return pay(
             username,
             modelChoice,
@@ -214,11 +221,7 @@ export const preferredRegion = [
 
 const serverConfig = getServerSideConfig();
 
-async function request(
-  req: NextRequest,
-  requestJson: any,
-  usernameHash: string,
-) {
+async function request(req: NextRequest, requestJson: any, username: string) {
   const controller = new AbortController();
 
   let authHeaderName = "x-api-key";
@@ -247,22 +250,19 @@ async function request(
     baseUrl = baseUrl.slice(0, -1);
   }
 
-  console.log("[Base Url]", baseUrl);
-
   const apiBaseUrl = baseUrl;
   const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
   if (onlineSearch) {
     baseUrl = serverConfig.shansingOnlineSearchUrl;
   }
 
-  console.log("[Proxy] ", path);
-  console.log("[Base Url]", baseUrl);
-  console.log("[apiBaseUrl]", apiBaseUrl);
+  console.log("[Proxy Path]<" + username + ">", path);
+  console.log("[Base Url]<" + username + ">", baseUrl, "(" + apiBaseUrl + ")");
 
   const metadata = requestJson.metadata ?? {};
   requestJson.metadata = {
     ...metadata,
-    user_id: usernameHash,
+    user_id: hashUsername(username),
   };
 
   const fetchUrl = `${baseUrl}${path}`;

@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import { OPENAI_BASE_URL } from "../constant";
 import { makeAzurePath } from "../azure";
+import { hashUsername } from "@/app/api/shansing";
 
 const serverConfig = getServerSideConfig();
 
 export async function requestOpenai(
   req: NextRequest,
   requestJson: any,
-  usernameHash: string,
+  username: string,
 ) {
   const controller = new AbortController();
 
@@ -50,11 +51,10 @@ export async function requestOpenai(
     baseUrl = serverConfig.shansingOnlineSearchUrl;
   }
 
-  console.log("[Proxy] ", path);
-  console.log("[Base Url]", baseUrl);
-  console.log("[apiBaseUrl]", apiBaseUrl);
+  console.log("[Proxy Path]<" + username + ">", path);
+  console.log("[Base Url]<" + username + ">", baseUrl, "(" + apiBaseUrl + ")");
 
-  requestJson.user = usernameHash;
+  requestJson.user = hashUsername(username);
 
   const timeoutId = setTimeout(
     () => {
@@ -131,12 +131,12 @@ export async function requestOpenai(
     const openaiOrganizationHeader = res.headers.get("OpenAI-Organization");
 
     // Check if serverConfig.openaiOrgId is defined and not an empty string
-    if (serverConfig.openaiOrgId && serverConfig.openaiOrgId.trim() !== "") {
-      // If openaiOrganizationHeader is present, log it; otherwise, log that the header is not present
-      console.log("[Org ID]", openaiOrganizationHeader);
-    } else {
-      console.log("[Org ID] is not set up.");
-    }
+    // if (serverConfig.openaiOrgId && serverConfig.openaiOrgId.trim() !== "") {
+    //   // If openaiOrganizationHeader is present, log it; otherwise, log that the header is not present
+    //   console.log("[Org ID]", openaiOrganizationHeader);
+    // } else {
+    //   console.log("[Org ID] is not set up.");
+    // }
 
     // to prevent browser prompt for credentials
     const newHeaders = new Headers(res.headers);
@@ -173,9 +173,8 @@ export async function requestOpenai(
 export async function requestCompatibleOpenai(
   req: NextRequest,
   requestJson: any,
-  usernameHash: string,
+  username: string,
   baseUrl: string,
-  socks?: string,
 ) {
   const controller = new AbortController();
 
@@ -201,10 +200,9 @@ export async function requestCompatibleOpenai(
     baseUrl = serverConfig.shansingOnlineSearchUrl;
   }
 
-  console.log("[apiBaseUrl]", apiBaseUrl);
-  console.log("[Base Url]", baseUrl);
+  console.log("[Base Url]<" + username + ">", baseUrl, "(" + apiBaseUrl + ")");
 
-  requestJson.user = usernameHash;
+  requestJson.user = hashUsername(username);
   // console.log("requestBody", requestBody)
 
   const timeoutId = setTimeout(
@@ -267,6 +265,7 @@ export async function requestCompatibleOpenai(
 export async function requestCompatibleOpenaiUploadFile(
   req: NextRequest,
   baseUrl: string,
+  username: string,
 ) {
   const controller = new AbortController();
 
@@ -283,7 +282,7 @@ export async function requestCompatibleOpenaiUploadFile(
     baseUrl = baseUrl.slice(0, -1);
   }
 
-  console.log("[Base Url]", baseUrl);
+  console.log("[Base Url]<" + username + ">", baseUrl);
 
   const timeoutId = setTimeout(
     () => {

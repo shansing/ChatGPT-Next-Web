@@ -24,8 +24,8 @@ async function handle(
 
   // Validate the endpoint to prevent potential SSRF attacks
   if (
-    !mergedAllowedWebDavEndpoints.some(
-      (allowedEndpoint) => endpoint?.startsWith(allowedEndpoint),
+    !mergedAllowedWebDavEndpoints.some((allowedEndpoint) =>
+      endpoint?.startsWith(allowedEndpoint),
     )
   ) {
     return NextResponse.json(
@@ -137,8 +137,8 @@ async function handle(
   return fetchResult;
 }
 
-export const PUT = handle;
-export const GET = handle;
-export const OPTIONS = handle;
+// export const PUT = handle;
+// export const GET = handle;
+// export const OPTIONS = handle;
 
 // export const runtime = "edge";

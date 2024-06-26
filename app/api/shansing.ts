@@ -53,13 +53,7 @@ export async function pay(
         .mul(completionTokenNumber),
     )
     .plus(extraFee);
-  console.log(
-    "[pay]",
-    "username",
-    username,
-    "thisBilling",
-    thisBilling.toFixed(),
-  );
+  console.log("[Pay]<" + username + ">", thisBilling.toFixed());
   return decreaseUserQuota(username, thisBilling);
 }
 
@@ -67,7 +61,7 @@ export async function payFixed(username: string, fee: Decimal) {
   if (!username) {
     throw Error("Username not found");
   }
-  console.log("[payFixed]", "username", username, "fee", fee.toFixed());
+  console.log("[Pay Fixed]<" + username + ">", fee.toFixed());
   return decreaseUserQuota(username, fee);
 }
 

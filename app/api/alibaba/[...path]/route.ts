@@ -28,25 +28,10 @@ async function handle(
   req: NextRequest,
   { params }: { params: { path: string[] } },
 ) {
-  console.log("[Alibaba Route] params ", params);
+  // console.log("[Alibaba Route] params ", params);
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });
-  }
-
-  const subpath = params.path.join("/");
-
-  if (!ALLOWD_PATH.has(subpath)) {
-    console.log("[Alibaba Route] forbidden path ", subpath);
-    return NextResponse.json(
-      {
-        error: true,
-        msg: "[Shansing He2per] You are not allowed to request " + subpath,
-      },
-      {
-        status: 403,
-      },
-    );
   }
 
   const username = getUsernameFromHttpBasicAuth(req);
@@ -61,6 +46,22 @@ async function handle(
       },
     );
   }
+
+  const subpath = params.path.join("/");
+
+  if (!ALLOWD_PATH.has(subpath)) {
+    console.warn("[Alibaba Route]<" + username + "> forbidden path ", subpath);
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "[Shansing He2per] You are not allowed to request " + subpath,
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+
   if ((await readUserQuota(username)).lessThanOrEqualTo(0)) {
     return NextResponse.json(
       {
@@ -72,10 +73,8 @@ async function handle(
       },
     );
   }
-  const usernameHash = hashUsername(username);
-  // console.log("usernameHash", usernameHash)
 
-  const authResult = auth(req, ModelProvider.Alibaba);
+  const authResult = auth(req, ModelProvider.Alibaba, username);
   if (authResult.error) {
     return NextResponse.json(authResult, {
       status: 401,
@@ -83,10 +82,11 @@ async function handle(
   }
 
   if (subpath === AlibabaPath.FilePath) {
-    console.log("[Alibaba Route] upload file; username=" + username);
+    console.log("[Alibaba Route]<" + username + "> upload file");
     const response = await requestCompatibleOpenaiUploadFile(
       req,
       ALIBABA_BASE_URL,
+      username,
     );
     if (response.ok) {
       payFixed(username, config.shansingUploadFilePrice.mul(1)).then();
@@ -111,6 +111,7 @@ async function handle(
       },
     );
   }
+  console.log("[Alibaba]<" + username + "> using model " + modelChoice.model);
   if (
     requestJson.stream &&
     (!requestJson.stream_options ||
@@ -131,7 +132,7 @@ async function handle(
     const response = await requestCompatibleOpenai(
       req,
       requestJson,
-      usernameHash,
+      username,
       ALIBABA_BASE_URL,
     );
 
@@ -158,7 +159,8 @@ async function handle(
         //console.log("[responseBody]" + responseBody)
         const usage = parseUsageObj(responseBody, "usage", false);
         console.log(
-          "[usage][alibaba]",
+          "[Alibaba Usage]<" + username + ">",
+          JSON.stringify(usage),
           JSON.stringify({
             firstPromptTokenNumber,
             firstCompletionTokenNumber,
@@ -166,7 +168,6 @@ async function handle(
             newsCount,
             crawlerCount,
           }),
-          usage,
         );
         if (
           usage &&

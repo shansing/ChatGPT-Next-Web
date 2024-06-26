@@ -23,7 +23,11 @@ function parseApiKey(bearToken: string) {
   };
 }
 
-export function auth(req: NextRequest, modelProvider: ModelProvider) {
+export function auth(
+  req: NextRequest,
+  modelProvider: ModelProvider,
+  username: string,
+) {
   // const authToken = req.headers.get("Authorization") ?? "";
   //
   // // check if it is openai api key or user token
@@ -35,7 +39,7 @@ export function auth(req: NextRequest, modelProvider: ModelProvider) {
   // console.log("[Auth] allowed hashed codes: ", [...serverConfig.codes]);
   // console.log("[Auth] got access code:", accessCode);
   // console.log("[Auth] hashed access code:", hashedCode);
-  console.log("[User IP] ", getIP(req));
+  console.log("[User IP]<" + username + ">", getIP(req));
   // console.log("[Time] ", new Date().toLocaleString());
   //
   // if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !apiKey) {

@@ -37,6 +37,7 @@ declare global {
 
 async function handle(req: NextRequest) {
   const username = getUsernameFromHttpBasicAuth(req);
+  console.log("[Route]<" + username + "> fetched config");
   return NextResponse.json({
     ...DANGER_CONFIG,
     userName: username,

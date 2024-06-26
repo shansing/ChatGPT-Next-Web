@@ -12,14 +12,14 @@ async function handle(req: NextRequest) {
     }
     const requestJson = await req.json();
     await changePassword(username, requestJson.newPassword);
-    console.log("[ChangePassword] username " + username + " changed password");
+    console.log("[ChangePassword]<" + username + "> changed password");
     return NextResponse.json({
       success: true,
       username,
     });
   } catch (e) {
     console.error(
-      "[ChangePassword] username " + username + " change password error",
+      "[ChangePassword]<" + username + "> change password error",
       e,
     );
     return NextResponse.json({

@@ -66,8 +66,8 @@ async function handle(
   return fetchResult;
 }
 
-export const POST = handle;
-export const GET = handle;
-export const OPTIONS = handle;
+// export const POST = handle;
+// export const GET = handle;
+// export const OPTIONS = handle;
 
 // export const runtime = "edge";

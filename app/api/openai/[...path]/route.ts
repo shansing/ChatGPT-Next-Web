@@ -30,25 +30,10 @@ async function handle(
   req: NextRequest,
   { params }: { params: { path: string[] } },
 ) {
-  console.log("[OpenAI Route] params ", params);
+  // console.log("[OpenAI Route] params ", params);
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });
-  }
-
-  const subpath = params.path.join("/");
-
-  if (!ALLOWD_PATH.has(subpath)) {
-    console.log("[OpenAI Route] forbidden path ", subpath);
-    return NextResponse.json(
-      {
-        error: true,
-        msg: "[Shansing He2per] You are not allowed to request " + subpath,
-      },
-      {
-        status: 403,
-      },
-    );
   }
 
   const username = getUsernameFromHttpBasicAuth(req);
@@ -63,6 +48,22 @@ async function handle(
       },
     );
   }
+
+  const subpath = params.path.join("/");
+
+  if (!ALLOWD_PATH.has(subpath)) {
+    console.warn("[OpenAI Route]<" + username + "> forbidden path ", subpath);
+    return NextResponse.json(
+      {
+        error: true,
+        msg: "[Shansing He2per] You are not allowed to request " + subpath,
+      },
+      {
+        status: 403,
+      },
+    );
+  }
+
   if ((await readUserQuota(username)).lessThanOrEqualTo(0)) {
     return NextResponse.json(
       {
@@ -74,7 +75,6 @@ async function handle(
       },
     );
   }
-  const usernameHash = hashUsername(username);
 
   const requestJson = await req.json();
   const modelChoice = config.shansingModelChoices.find(
@@ -91,6 +91,7 @@ async function handle(
       },
     );
   }
+  console.log("[OpenAI]<" + username + "> using model " + modelChoice.model);
   if (
     requestJson.stream &&
     (!requestJson.stream_options ||
@@ -107,7 +108,7 @@ async function handle(
     );
   }
 
-  const authResult = auth(req, ModelProvider.GPT);
+  const authResult = auth(req, ModelProvider.GPT, username);
   if (authResult.error) {
     return NextResponse.json(authResult, {
       status: 401,
@@ -115,7 +116,7 @@ async function handle(
   }
 
   try {
-    const response = await requestOpenai(req, requestJson, usernameHash);
+    const response = await requestOpenai(req, requestJson, username);
 
     // list models
     if (subpath === OpenaiPath.ListModelPath && response.status === 200) {
@@ -149,7 +150,8 @@ async function handle(
         //console.log("[responseBody]" + responseBody)
         const usage = parseUsageObj(responseBody, "usage", false);
         console.log(
-          "[usage][openai]",
+          "[OpenAI Usage]<" + username + ">",
+          JSON.stringify(usage),
           JSON.stringify({
             firstPromptTokenNumber,
             firstCompletionTokenNumber,
@@ -157,7 +159,6 @@ async function handle(
             newsCount,
             crawlerCount,
           }),
-          usage,
         );
         if (
           usage &&
