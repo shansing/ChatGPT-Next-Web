@@ -3,14 +3,16 @@
   "private": false,
   "license": "mit",
   "scripts": {
-    "dev": "next dev",
-    "build": "cross-env BUILD_MODE=standalone next build",
+    "mask": "npx tsx app/masks/build.ts",
+    "mask:watch": "npx watch 'yarn mask' app/masks",
+    "dev": "yarn run mask:watch & next dev",
+    "build": "yarn mask && cross-env BUILD_MODE=standalone next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "cross-env BUILD_MODE=export BUILD_APP=1 next build",
-    "export:dev": "cross-env BUILD_MODE=export BUILD_APP=1 next dev",
-    "app:dev": "yarn tauri dev",
-    "app:build": "yarn tauri build",
+    "export": "yarn mask && cross-env BUILD_MODE=export BUILD_APP=1 next build",
+    "export:dev": "yarn mask:watch & cross-env BUILD_MODE=export BUILD_APP=1 next dev",
+    "app:dev": "yarn mask:watch & yarn tauri dev",
+    "app:build": "yarn mask && yarn tauri build",
     "prompts": "node ./scripts/fetch-prompts.mjs",
     "prepare": "husky install",
     "proxy-dev": "sh ./scripts/init-proxy.sh && proxychains -f ./scripts/proxychains.conf yarn dev"
@@ -64,14 +66,13 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.5",
     "prettier": "^3.3.1",
+    "tsx": "^4.16.0",
     "typescript": "5.4.5",
-    "webpack": "^5.91.0"
+    "webpack": "^5.91.0",
+    "watch": "^1.0.2"
   },
   "resolutions": {
     "lint-staged/yaml": "^2.2.2"
   },
-  "packageManager": "yarn@1.22.19",
-  "browser": {
-    "fs": false
-  }
+  "packageManager": "yarn@1.22.19"
 }

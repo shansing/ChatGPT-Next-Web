@@ -8,6 +8,10 @@ import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
 import { DEFAULT_API_HOST } from "@/app/constant";
 import {
+  EventStreamContentType,
+  fetchEventSource,
+} from "@fortaine/fetch-event-source";
+import {
   getMessageTextContent,
   getMessageImages,
   isVisionModel,
@@ -27,7 +31,7 @@ export class GeminiProApi implements LLMApi {
     );
   }
   async chat(options: ChatOptions): Promise<void> {
-    // const apiClient = this;
+    const apiClient = this;
     let multimodal = false;
     const messages = options.messages.map((v) => {
       let parts: any[] = [{ text: getMessageTextContent(v) }];
@@ -160,6 +164,7 @@ export class GeminiProApi implements LLMApi {
 
       if (shouldStream) {
         let responseText = "";
+        let remainText = "";
         let finished = false;
 
         const error = (inError: Error | string) => {
@@ -174,93 +179,94 @@ export class GeminiProApi implements LLMApi {
         let existingTexts: string[] = [];
         const finish = () => {
           finished = true;
-          requestAnimationFrame(() => options.onFinish(existingTexts.join("")));
+          requestAnimationFrame(() =>
+            options.onFinish(responseText + remainText),
+          );
         };
 
-        fetch(
-          baseUrl.replace("generateContent", "streamGenerateContent"),
-          chatPayload,
-        )
-          .then((response) => {
-            const reader = response?.body?.getReader();
-            const decoder = new TextDecoder();
-            let partialData = "";
+        controller.signal.onabort = finish;
 
-            const searchCount = parseInt(
-              response.headers.get("x-shansing-search-count") ?? "0",
-            );
-            const newsCount = parseInt(
-              response.headers.get("x-shansing-news-count") ?? "0",
-            );
-            const crawlerCount = parseInt(
-              response.headers.get("x-shansing-crawler-count") ?? "0",
-            );
-            options.onBegin?.(
-              searchCount > 0 || newsCount > 0 || crawlerCount > 0,
+        // https://github.com/google-gemini/cookbook/blob/main/quickstarts/rest/Streaming_REST.ipynb
+        const chatPath =
+          baseUrl.replace("generateContent", "streamGenerateContent") +
+          (baseUrl.indexOf("?") > -1 ? "&alt=sse" : "?alt=sse");
+        fetchEventSource(chatPath, {
+          ...chatPayload,
+          async onopen(res) {
+            clearTimeout(requestTimeoutId);
+            const contentType = res.headers.get("content-type");
+            console.log(
+              "[Gemini] request response content type: ",
+              contentType,
             );
 
-            return reader?.read().then(function processText({
-              done,
-              value,
-            }): Promise<any> {
-              if (done) {
-                if (response.status !== 200) {
-                  try {
-                    let data = JSON.parse(ensureProperEnding(partialData));
-                    if (data && data[0].error) {
-                      options.onError?.(new Error(data[0].error.message));
-                    } else {
-                      options.onError?.(new Error("Request failed"));
-                    }
-                  } catch (_) {
-                    options.onError?.(new Error("Request failed"));
-                  }
-                }
+            //to do searchCount
+            //to do requestAnimationFrame
+            // to do 更严谨的错误检测和处理
 
-                console.log("Stream complete");
-                requestAnimationFrame(() => options.onFinish(responseText));
-                finished = true;
-                return Promise.resolve();
-              }
+            if (contentType?.startsWith("text/plain")) {
+              responseText = await res.clone().text();
+              return finish();
+            }
 
-              partialData += decoder.decode(value, { stream: true });
-
+            if (
+              !res.ok ||
+              !res.headers
+                .get("content-type")
+                ?.startsWith(EventStreamContentType) ||
+              res.status !== 200
+            ) {
+              const responseTexts = [responseText];
+              let extraInfo = await res.clone().text();
               try {
-                let data = JSON.parse(ensureProperEnding(partialData));
+                const resJson = await res.clone().json();
+                extraInfo = prettyObject(resJson);
+              } catch {}
 
-                const textArray = data.reduce(
-                  (acc: string[], item: { candidates: any[] }) => {
-                    const texts = item.candidates.map((candidate) =>
-                      candidate.content.parts
-                        .map((part: { text: any }) => part.text)
-                        .join(""),
-                    );
-                    return acc.concat(texts);
-                  },
-                  [],
-                );
-
-                if (textArray.length > existingTexts.length) {
-                  const deltaArray = textArray.slice(existingTexts.length);
-                  existingTexts = textArray;
-                  const delta = deltaArray.join("");
-                  responseText += delta;
-                  requestAnimationFrame(() => options.onUpdate?.(responseText));
-                }
-              } catch (error) {
-                // console.log("[Response Animation] error: ", error,partialData);
-                // skip error message when parsing json
-                // to do 更严谨的错误检测和处理
-                showToast(Locale.Shansing.messageParseFailure);
+              if (res.status === 401) {
+                responseTexts.push(Locale.Error.Unauthorized);
               }
 
-              return reader.read().then(processText);
-            });
-          })
-          .catch((error) => {
-            showToast(Locale.Shansing.messageSendFailure);
-            console.error("Error:", error);
-          });
+              if (extraInfo) {
+                responseTexts.push(extraInfo);
+              }
+
+              responseText = responseTexts.join("\n\n");
+
+              return finish();
+            }
+          },
+          onmessage(msg) {
+            if (msg.data === "[DONE]" || finished) {
+              return finish();
+            }
+            const text = msg.data;
+            try {
+              const json = JSON.parse(text);
+              const delta = apiClient.extractMessage(json);
+
+              if (delta) {
+                remainText += delta;
+              }
+
+              const blockReason = json?.promptFeedback?.blockReason;
+              if (blockReason) {
+                // being blocked
+                console.log(`[Google] [Safety Ratings] result:`, blockReason);
+              }
+            } catch (e) {
+              console.error("[Request] parse error", text, msg);
+            }
+          },
+          onclose() {
+            finish();
+          },
+          onerror(e) {
+            options.onError?.(e);
+            throw e;
+          },
+          openWhenHidden: true,
+        });
       } else {
         const res = await fetch(baseUrl, chatPayload);
         clearTimeout(requestTimeoutId);
@@ -274,7 +280,7 @@ export class GeminiProApi implements LLMApi {
             ),
           );
         }
-        const message = this.extractMessage(resJson);
+        const message = apiClient.extractMessage(resJson);
         options.onFinish(message);
       }
     } catch (e) {

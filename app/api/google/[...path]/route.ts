@@ -133,7 +133,9 @@ async function handle(
     );
   }
 
-  const fetchUrl = `${baseUrl}/${path}?key=${key}`;
+  const fetchUrl = `${baseUrl}/${path}?key=${key}${
+    req?.nextUrl?.searchParams?.get("alt") == "sse" ? "&alt=sse" : ""
+  }`;
   const fetchOptions: RequestInit = {
     headers: {
       "Content-Type": "application/json",
