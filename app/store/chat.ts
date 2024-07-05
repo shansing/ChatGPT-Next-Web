@@ -145,7 +145,7 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     serviceProvider = modelInfo.provider.providerName;
   }
 
-  let productName = "We:oh AI";
+  let productName = "Shansing He2per";
   if (serviceProvider === ServiceProvider.OpenAI) {
     productName = "ChatGPT";
   } else if (serviceProvider === ServiceProvider.Google) {

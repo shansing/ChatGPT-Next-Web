@@ -44,4 +44,3 @@ dev
 
 *.key
 *.key.pub
-public/masks.json

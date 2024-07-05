@@ -105,7 +105,7 @@ export const useUpdateStore = createPersistStore(
                       if (version === remoteId) {
                         // Show a notification using Tauri
                         window.__TAURI__?.notification.sendNotification({
-                          title: "We:oh AI",
+                          title: "Shansing He2per",
                           body: `${Locale.Settings.Update.IsLatest}`,
                           icon: `${StarOutlineIcon.src}`,
                           sound: "Default",
@@ -115,7 +115,7 @@ export const useUpdateStore = createPersistStore(
                           Locale.Settings.Update.FoundUpdate(`${remoteId}`);
                         // Show a notification for the new version using Tauri
                         window.__TAURI__?.notification.sendNotification({
-                          title: "We:oh AI",
+                          title: "Shansing He2per",
                           body: updateMessage,
                           icon: `${StarOutlineIcon.src}`,
                           sound: "Default",

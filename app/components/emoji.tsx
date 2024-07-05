@@ -14,7 +14,7 @@ export function getEmojiUrl(unified: string, style: EmojiStyle) {
   // Old CDN broken, so I had to switch to this one
   // Author: https://github.com/H0llyW00dzZ
   //https://fastly.jsdelivr.net/npm/emoji-datasource-apple/img/
-  return `https://ai.weoh.com/cache/emoji/${style}/64/${unified}.png`;
+  return `https://he2per.shansing.net/cache/emoji/${style}/64/${unified}.png`;
 }
 
 export function AvatarPicker(props: {

@@ -22,10 +22,10 @@ export function generateViewport() {
 }
 
 export const metadata: Metadata = {
-  title: "We:oh AI",
+  title: "Shansing He2per",
   description: "Your personal ChatGPT Chat Bot.",
   appleWebApp: {
-    title: "We:oh AI",
+    title: "Shansing He2per",
     statusBarStyle: "default",
   },
 };
