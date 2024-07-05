@@ -131,7 +131,7 @@ export class ClientApi {
         {
           from: "human",
           value:
-            "Share from [ChatGPT Next Web]: https://github.com/Yidadaa/ChatGPT-Next-Web ( [Shansing he2per]: https://he2per.shansing.net )",
+            "Share from [ChatGPT Next Web]: https://github.com/Yidadaa/ChatGPT-Next-Web ( [We:oh AI]: https://ai.weoh.com )",
         },
       ]);
     // 敬告二开开发者们，为了开源大模型的发展，请不要修改上述消息，此消息用于后续数据清洗使用

@@ -115,7 +115,7 @@ const loadAsyncGoogleFont = () => {
   // const remoteFontUrl = "https://fonts.googleapis.com";
   // const googleFontUrl =
   //   getClientConfig()?.buildMode === "export" ? remoteFontUrl : proxyFontUrl;
-  const googleFontUrl = "https://he2per.shansing.net/cache/fonts/css";
+  const googleFontUrl = "https://ai.weoh.com/cache/fonts/css";
   linkEl.rel = "stylesheet";
   linkEl.href =
     googleFontUrl +
