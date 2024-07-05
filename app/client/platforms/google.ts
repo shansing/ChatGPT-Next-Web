@@ -199,9 +199,6 @@ export class GeminiProApi implements LLMApi {
               "[Gemini] request response content type: ",
               contentType,
             );
-
-            //to do searchCount
-            //to do requestAnimationFrame
             // to do 更严谨的错误检测和处理
 
             if (contentType?.startsWith("text/plain")) {
@@ -216,25 +213,25 @@ export class GeminiProApi implements LLMApi {
                 ?.startsWith(EventStreamContentType) ||
               res.status !== 200
             ) {
-              const responseTexts = [responseText];
-              let extraInfo = await res.clone().text();
-              try {
-                const resJson = await res.clone().json();
-                extraInfo = prettyObject(resJson);
-              } catch {}
-
+              let responseBody = await res.clone().text();
               if (res.status === 401) {
-                responseTexts.push(Locale.Error.Unauthorized);
+                return error(Locale.Error.Unauthorized);
               }
-
-              if (extraInfo) {
-                responseTexts.push(extraInfo);
-              }
-
-              responseText = responseTexts.join("\n\n");
-
-              return finish();
+              return error("responseBody: " + responseBody);
             }
+
+            const searchCount = parseInt(
+              res.headers.get("x-shansing-search-count") ?? "0",
+            );
+            const newsCount = parseInt(
+              res.headers.get("x-shansing-news-count") ?? "0",
+            );
+            const crawlerCount = parseInt(
+              res.headers.get("x-shansing-crawler-count") ?? "0",
+            );
+            options.onBegin?.(
+              searchCount > 0 || newsCount > 0 || crawlerCount > 0,
+            );
           },
           onmessage(msg) {
             if (msg.data === "[DONE]" || finished) {
@@ -243,17 +240,22 @@ export class GeminiProApi implements LLMApi {
             const text = msg.data;
             try {
               const json = JSON.parse(text);
+              //to do 这里可能需要修改
+              if (!json.candidates) {
+                return error("No candidates: " + text);
+              }
               const delta = apiClient.extractMessage(json);
 
               if (delta) {
                 remainText += delta;
+                requestAnimationFrame(() => options.onUpdate?.(responseText));
               }
 
-              const blockReason = json?.promptFeedback?.blockReason;
-              if (blockReason) {
-                // being blocked
-                console.log(`[Google] [Safety Ratings] result:`, blockReason);
-              }
+              // const blockReason = json?.promptFeedback?.blockReason;
+              // if (blockReason) {
+              //   // being blocked
+              //   console.log(`[Google] [Safety Ratings] result:`, blockReason);
+              // }
             } catch (e) {
               console.error("[Request] parse error", text, msg);
             }
