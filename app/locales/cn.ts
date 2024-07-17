@@ -365,7 +365,7 @@ const cn = {
     },
     MaxTokens: {
       Title: "单次回复限制 (max_tokens)",
-      SubTitle: "单次输出所用的最大 Token 数",
+      SubTitle: "单次输出所用的最大词元数",
     },
     PresencePenalty: {
       Title: "话题新鲜度 (presence_penalty)",
@@ -493,7 +493,7 @@ const cn = {
     imageSelectorFailure: "图片过大或格式暂不支持",
     animationFailure: "打字机动画渲染有误",
     modelPrice: "模型单价",
-    modelPriceDescription: "单位：元 / 1000 tokens",
+    modelPriceDescription: "单位：元 / 1000 词元",
     modelAlias: "别名",
     modelName: "模型名",
     modelPromptUnitPrice: "输入",

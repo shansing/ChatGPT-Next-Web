@@ -181,17 +181,20 @@ export function SideBar(props: { className?: string }) {
             Anthropic
           </a>
           ,{" "}
+          <a href="https://ai.google.dev" target="_blank" className="link">
+            Google
+          </a>{" "}
+          &{" "}
           <a href="https://tongyi.aliyun.com" target="_blank" className="link">
             Alibaba
           </a>{" "}
-          &{" "}
-          <a
-            href="https://github.com/shansing/ChatGPT-Next-Web"
-            target="_blank"
-            className="link"
-          >
-            GitHub
-          </a>
+          {/*<a*/}
+          {/*  href="https://github.com/shansing/ChatGPT-Next-Web"*/}
+          {/*  target="_blank"*/}
+          {/*  className="link"*/}
+          {/*>*/}
+          {/*  GitHub*/}
+          {/*</a>*/}
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <StarOutlineIcon />
