@@ -527,6 +527,9 @@ const en: LocaleType = {
       OnTip: "Online search is enabled; please be aware of the charges",
       OffTip: "Online search is disabled",
     },
+    CodeExecution: {
+      Title: "Code Execution",
+    },
     UploadFile: {
       Title: "Upload File",
       UploadedTitle: " file(s)",
