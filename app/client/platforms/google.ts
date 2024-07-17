@@ -51,15 +51,31 @@ export class GeminiProApi implements LLMApi {
         }
       }
       return {
-        role: v.role.replace("assistant", "model").replace("system", "user"),
+        role: v.role.replace("assistant", "model"),
         parts: parts,
       };
     });
 
+    let systemMessage: string | undefined = messages
+      // @ts-ignore
+      .filter((v) => v.role === "system" && v?.parts)
+      // @ts-ignore
+      .flatMap((v) =>
+        v.parts.filter((part) => part?.text).map((part) => part?.text),
+      )
+      .filter((text) => !!text)
+      .join("\n\n");
+    if (systemMessage && !systemMessage.trim()) {
+      systemMessage = undefined;
+    }
+
     // google requires that role in neighboring messages must not be the same
     for (let i = 0; i < messages.length - 1; ) {
+      if (messages[i].role === "system") {
+        messages.splice(i, 1);
+      }
       // Check if current and next item both have the role "model"
-      if (messages[i].role === messages[i + 1].role) {
+      else if (messages[i].role === messages[i + 1].role) {
         // Concatenate the 'parts' of the current and next item
         messages[i].parts = messages[i].parts.concat(messages[i + 1].parts);
         // Remove the next item
@@ -116,6 +132,13 @@ export class GeminiProApi implements LLMApi {
           threshold: "BLOCK_NONE",
         },
       ],
+      ...(systemMessage && {
+        systemInstruction: {
+          parts: {
+            text: systemMessage,
+          },
+        },
+      }),
       ...(modelConfig.shansingCodeExecution && {
         tools: [
           {
