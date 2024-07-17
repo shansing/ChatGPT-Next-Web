@@ -3,7 +3,6 @@ import {
   ApiPath,
   DEFAULT_API_HOST,
   DEFAULT_MODELS,
-  modelMaxTotalTokenNumber,
   OpenaiPath,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
@@ -32,6 +31,7 @@ import {
   isVisionModel,
 } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
+import { fitMaxCompletionToken } from "@/app/client/shansing";
 
 export interface OpenAIListModelResponse {
   object: string;
@@ -120,9 +120,13 @@ export class ChatGPTApi implements LLMApi {
         model: options.config.model,
       },
       ...(options.config.max_tokens && {
-        max_tokens: options.config.max_tokens,
+        max_tokens: fitMaxCompletionToken(
+          options.config.model,
+          options.config.max_tokens,
+        ),
       }),
     };
+    console.log("max_tokens", modelConfig.max_tokens);
 
     const requestPayload: RequestPayload = {
       messages,

@@ -257,22 +257,26 @@ export const DEFAULT_MODELS = [
   })),
 ] as const;
 
-export const modelMaxTotalTokenNumber = [
-  { name: "gpt-4o", number: 128_000 },
-  { name: "gpt-4-turbo", number: 128_000 },
-  { name: "gpt-4", number: 8192 },
-  { name: "gpt-3.5-turbo", number: 16385 },
-  { name: "qwen-turbo", number: 6_000 },
-  { name: "qwen-plus", number: 30_000 },
-  { name: "qwen-max-longcontext", number: 28_000 },
-  { name: "qwen-max", number: 6_000 },
-  { name: "qwen-long", number: 9_000 }, // it's not 10_000_000
-  { name: "qwen-vl-", number: 6_000 },
-  { name: "gemini-", number: 128_000 },
-  { name: "claude-3-", number: 200_000 },
-  { name: "claude-2.1", number: 200_000 },
-  { name: "claude-", number: 100_000 },
-  { name: "", number: 4_000 }, //default
+export const modelThresholdTokenNumbers = [
+  { name: "gpt-4o", total: 128_000, prompt: null, completion: null },
+  { name: "gpt-4-turbo", total: 128_000, prompt: null, completion: null },
+  { name: "gpt-4", total: 8192, prompt: null, completion: null },
+  { name: "gpt-3.5-turbo", total: 16385, prompt: null, completion: null },
+  { name: "qwen-turbo", total: null, prompt: 6_000, completion: 1500 },
+  { name: "qwen-plus", total: null, prompt: 30_000, completion: 2000 },
+  {
+    name: "qwen-max-longcontext",
+    total: null,
+    prompt: 28_000,
+    completion: 2000,
+  },
+  { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
+  { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
+  { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576,000;  1.5pro 2,097,152,000;  but under 128k is cheap
+  { name: "claude-3-", total: 200_000, prompt: null, completion: 4096 },
+  { name: "claude-2.1", total: 200_000, prompt: null, completion: 4096 },
+  { name: "claude-", total: 100_000, prompt: null, completion: 4096 },
+  { name: "", total: 4_000, prompt: null, completion: null }, //default
 ] as const;
 
 export const CHAT_PAGE_SIZE = 15;

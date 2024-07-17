@@ -1,8 +1,4 @@
-import {
-  Google,
-  modelMaxTotalTokenNumber,
-  REQUEST_TIMEOUT_MS,
-} from "@/app/constant";
+import { Google, REQUEST_TIMEOUT_MS } from "@/app/constant";
 import { ChatOptions, getHeaders, LLMApi, LLMModel, LLMUsage } from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
@@ -19,6 +15,7 @@ import {
 import { showToast } from "@/app/components/ui-lib";
 import Locale from "@/app/locales";
 import { prettyObject } from "@/app/utils/format";
+import { fitMaxCompletionToken } from "@/app/client/shansing";
 
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
@@ -82,9 +79,13 @@ export class GeminiProApi implements LLMApi {
         model: options.config.model,
       },
       ...(options.config.max_tokens && {
-        max_tokens: options.config.max_tokens,
+        max_tokens: fitMaxCompletionToken(
+          options.config.model,
+          options.config.max_tokens,
+        ),
       }),
     };
+    console.log("max_tokens", modelConfig.max_tokens);
 
     const requestPayload = {
       contents: messages,

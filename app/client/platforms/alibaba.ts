@@ -1,8 +1,6 @@
 "use client";
 import {
-  ALIBABA_BASE_URL,
   AlibabaPath,
-  modelMaxTotalTokenNumber,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
 } from "@/app/constant";
@@ -27,6 +25,7 @@ import {
   isVisionModel,
 } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
+import { fitMaxCompletionToken } from "@/app/client/shansing";
 
 //ref: openai.ts
 
@@ -72,9 +71,13 @@ export class AlibabaApi implements LLMApi {
         model: options.config.model,
       },
       ...(options.config.max_tokens && {
-        max_tokens: options.config.max_tokens,
+        max_tokens: fitMaxCompletionToken(
+          options.config.model,
+          options.config.max_tokens,
+        ),
       }),
     };
+    console.log("max_tokens", modelConfig.max_tokens);
 
     const requestPayload: RequestPayload = {
       messages,
@@ -84,9 +87,7 @@ export class AlibabaApi implements LLMApi {
       presence_penalty: modelConfig.presence_penalty,
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
-      //qwen requires <= 2000
-      max_tokens:
-        modelConfig.max_tokens <= 2000 ? modelConfig.max_tokens : 2000,
+      max_tokens: modelConfig.max_tokens,
     };
     requestPayload["stream_options"] = options.config.stream
       ? {

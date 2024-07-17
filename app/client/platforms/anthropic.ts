@@ -1,9 +1,7 @@
 import {
-  ACCESS_CODE_PREFIX,
   Anthropic,
   ApiPath,
   DEFAULT_API_HOST,
-  modelMaxTotalTokenNumber,
   REQUEST_TIMEOUT_MS,
 } from "@/app/constant";
 import {
@@ -24,6 +22,7 @@ import Locale from "../../locales";
 import { prettyObject } from "@/app/utils/format";
 import { getMessageTextContent, isVisionModel } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
+import { fitMaxCompletionToken } from "@/app/client/shansing";
 
 export type MultiBlockContent = {
   type: "image" | "text";
@@ -104,9 +103,13 @@ export class ClaudeApi implements LLMApi {
         model: options.config.model,
       },
       ...(options.config.max_tokens && {
-        max_tokens: options.config.max_tokens,
+        max_tokens: fitMaxCompletionToken(
+          options.config.model,
+          options.config.max_tokens,
+        ),
       }),
     };
+    console.log("max_tokens", modelConfig.max_tokens);
 
     // const messages = [...options.messages];
 
@@ -252,9 +255,7 @@ export class ClaudeApi implements LLMApi {
       stream: shouldStream,
 
       model: modelConfig.model,
-      //claude requires <= 4096
-      max_tokens:
-        modelConfig.max_tokens <= 4096 ? modelConfig.max_tokens : 4096,
+      max_tokens: modelConfig.max_tokens,
       temperature:
         modelConfig.temperature > 1.0 ? 1.0 : modelConfig.temperature,
       top_p: modelConfig.top_p,
