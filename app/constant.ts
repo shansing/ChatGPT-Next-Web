@@ -227,15 +227,6 @@ export const DEFAULT_MODELS = [
       providerType: "openai",
     },
   })),
-  ...googleModels.map((name) => ({
-    name,
-    available: true,
-    provider: {
-      id: "google",
-      providerName: "Google",
-      providerType: "google",
-    },
-  })),
   ...anthropicModels.map((name) => ({
     name,
     available: true,
@@ -243,6 +234,15 @@ export const DEFAULT_MODELS = [
       id: "anthropic",
       providerName: "Anthropic",
       providerType: "anthropic",
+    },
+  })),
+  ...googleModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "google",
+      providerName: "Google",
+      providerType: "google",
     },
   })),
   ...alibabaModels.map((name) => ({
