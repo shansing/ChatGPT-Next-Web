@@ -19,7 +19,7 @@ import { fitMaxCompletionToken } from "@/app/client/shansing";
 
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
-    console.log("[Response] gemini-pro response: ", res);
+    // console.log("[Response] gemini-pro response: ", res);
 
     return (
       res?.candidates?.at(0)?.content?.parts.at(0)?.text ||
@@ -172,7 +172,6 @@ export class GeminiProApi implements LLMApi {
 
       if (shouldStream) {
         let responseText = "";
-        let remainText = "";
         let finished = false;
 
         const error = (inError: Error | string) => {
@@ -187,9 +186,7 @@ export class GeminiProApi implements LLMApi {
         const finish = () => {
           if (!finished) {
             finished = true;
-            requestAnimationFrame(() =>
-              options.onFinish(responseText + remainText),
-            );
+            requestAnimationFrame(() => options.onFinish(responseText));
           }
         };
 
@@ -246,18 +243,18 @@ export class GeminiProApi implements LLMApi {
             if (msg.data === "[DONE]" || finished) {
               return finish();
             }
-            console.log(msg);
+            // console.log("msg", msg);
             const text = msg.data;
             try {
               const json = JSON.parse(text);
-              //to do 这里可能需要修改
               if (!json.candidates) {
                 return error("No candidates: " + text);
               }
               const delta = apiClient.extractMessage(json);
 
               if (delta) {
-                remainText += delta;
+                responseText += delta;
+                // console.log("delta", delta)
                 requestAnimationFrame(() => options.onUpdate?.(responseText));
               }
 
