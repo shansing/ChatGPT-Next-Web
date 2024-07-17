@@ -606,11 +606,6 @@ export function ImagePreviewer(props: {
               </div>
 
               <div className={styles["body"]}>
-                <Markdown
-                  content={getMessageTextContent(m)}
-                  fontSize={config.fontSize}
-                  defaultShow
-                />
                 {getMessageImages(m).length == 1 && (
                   <img
                     key={i}
@@ -638,6 +633,11 @@ export function ImagePreviewer(props: {
                     ))}
                   </div>
                 )}
+                <Markdown
+                  content={getMessageTextContent(m)}
+                  fontSize={config.fontSize}
+                  defaultShow
+                />
               </div>
             </div>
           );
