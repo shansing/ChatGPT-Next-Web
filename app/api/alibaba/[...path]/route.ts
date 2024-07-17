@@ -16,10 +16,7 @@ import {
   payFixed,
   readUserQuota,
 } from "@/app/api/shansing";
-import {
-  requestCompatibleOpenai,
-  requestCompatibleOpenaiUploadFile,
-} from "@/app/api/common";
+import { requestOpenai, requestOpenaiUploadFile } from "@/app/api/common";
 
 const ALLOWD_PATH = new Set(Object.values(AlibabaPath));
 const config = getServerSideConfig();
@@ -83,7 +80,7 @@ async function handle(
 
   if (subpath === AlibabaPath.FilePath) {
     console.log("[Alibaba Route]<" + username + "> upload file");
-    const response = await requestCompatibleOpenaiUploadFile(
+    const response = await requestOpenaiUploadFile(
       req,
       ALIBABA_BASE_URL,
       username,
@@ -129,7 +126,7 @@ async function handle(
   }
 
   try {
-    const response = await requestCompatibleOpenai(
+    const response = await requestOpenai(
       req,
       requestJson,
       username,

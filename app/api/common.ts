@@ -10,6 +10,7 @@ export async function requestOpenai(
   req: NextRequest,
   requestJson: any,
   username: string,
+  compatibleBaseUrl: string | null,
 ) {
   const controller = new AbortController();
 
@@ -29,13 +30,15 @@ export async function requestOpenai(
     authHeaderName = "Authorization";
   }
 
-  let path = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
-    "/api/openai/",
-    "",
-  );
+  let path = `${req.nextUrl.pathname}${req.nextUrl.search}`
+    .replaceAll("/api/openai/", "")
+    .replaceAll("/api/alibaba/", "");
 
   let baseUrl =
-    serverConfig.azureUrl || serverConfig.baseUrl || OPENAI_BASE_URL;
+    compatibleBaseUrl ||
+    serverConfig.azureUrl ||
+    serverConfig.baseUrl ||
+    OPENAI_BASE_URL;
 
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;
@@ -177,99 +180,7 @@ export async function requestOpenai(
   }
 }
 
-export async function requestCompatibleOpenai(
-  req: NextRequest,
-  requestJson: any,
-  username: string,
-  baseUrl: string,
-) {
-  const controller = new AbortController();
-
-  var authValue = req.headers.get("Authorization") ?? "",
-    authHeaderName = "Authorization";
-
-  let path = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
-    "/api/alibaba/",
-    "",
-  );
-
-  if (!baseUrl.startsWith("http")) {
-    baseUrl = `https://${baseUrl}`;
-  }
-
-  if (baseUrl.endsWith("/")) {
-    baseUrl = baseUrl.slice(0, -1);
-  }
-
-  const apiBaseUrl = baseUrl;
-  const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
-  if (onlineSearch) {
-    baseUrl = serverConfig.shansingOnlineSearchUrl;
-  }
-
-  console.log("[Base Url]<" + username + ">", baseUrl, "(" + apiBaseUrl + ")");
-
-  requestJson.user = hashUsername(username);
-  // console.log("requestBody", requestBody)
-
-  const timeoutId = setTimeout(
-    () => {
-      controller.abort();
-    },
-    10 * 60 * 1000,
-  );
-
-  const fetchUrl = `${baseUrl}/${path}`;
-
-  const fetchOptions: RequestInit = {
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-store",
-      [authHeaderName]: authValue,
-      ...(onlineSearch && {
-        "X-Shansing-Base-Url": apiBaseUrl,
-      }),
-    },
-    method: req.method,
-    body: JSON.stringify(requestJson),
-    // to fix #2485: https://stackoverflow.com/questions/55920957/cloudflare-worker-typeerror-one-time-use-body
-    redirect: "manual",
-    // @ts-ignore
-    duplex: "half",
-    signal: controller.signal,
-  };
-
-  try {
-    // console.log("[fetchUrl]", fetchUrl);
-    const res = await fetch(fetchUrl, fetchOptions);
-
-    // to prevent browser prompt for credentials
-    const newHeaders = new Headers(res.headers);
-    newHeaders.delete("www-authenticate");
-    // to disable nginx buffering
-    newHeaders.set("X-Accel-Buffering", "no");
-
-    // The latest version of the OpenAI API forced the content-encoding to be "br" in json response
-    // So if the streaming is disabled, we need to remove the content-encoding header
-    // Because Vercel uses gzip to compress the response, if we don't remove the content-encoding header
-    // The browser will try to decode the response with brotli and fail
-    newHeaders.delete("content-encoding");
-
-    newHeaders.delete("set-cookie");
-    newHeaders.delete("alt-svc");
-    newHeaders.delete("strict-transport-security");
-
-    return new Response(res.body, {
-      status: res.status,
-      statusText: res.statusText,
-      headers: newHeaders,
-    });
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-export async function requestCompatibleOpenaiUploadFile(
+export async function requestOpenaiUploadFile(
   req: NextRequest,
   baseUrl: string,
   username: string,

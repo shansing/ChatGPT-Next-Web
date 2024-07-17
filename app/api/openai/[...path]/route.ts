@@ -116,7 +116,7 @@ async function handle(
   }
 
   try {
-    const response = await requestOpenai(req, requestJson, username);
+    const response = await requestOpenai(req, requestJson, username, null);
 
     // list models
     if (subpath === OpenaiPath.ListModelPath && response.status === 200) {
