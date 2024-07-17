@@ -464,6 +464,10 @@ export function ImagePreviewer(props: {
           .then(() => {
             showToast(Locale.Copy.Success);
             refreshPreview();
+          })
+          .catch((e) => {
+            console.error("[Copy Image] catch", e);
+            showToast(Locale.Shansing.CopyTooLongFailed);
           });
       } catch (e) {
         console.error("[Copy Image] ", e);

@@ -557,6 +557,7 @@ const en: LocaleType = {
       light: "Light",
       dark: "Dark",
     },
+    CopyTooLongFailed: "复制失败，可能文本过大",
   },
 };
 
