@@ -550,7 +550,7 @@ const cn = {
       light: "开灯",
       dark: "关灯",
     },
-    CopyTooLongFailed: "复制失败，可能文本过大",
+    CopyTooLongFailed: "复制失败，可能文本过大，或尚未加载完整",
   },
 };
 

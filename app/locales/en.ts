@@ -560,7 +560,8 @@ const en: LocaleType = {
       light: "Light",
       dark: "Dark",
     },
-    CopyTooLongFailed: "复制失败，可能文本过大",
+    CopyTooLongFailed:
+      "Copy failed. Content too large or not all resource loaded.",
   },
 };
 
