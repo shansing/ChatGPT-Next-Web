@@ -177,12 +177,13 @@ export class GeminiProApi implements LLMApi {
           }
         };
 
-        let existingTexts: string[] = [];
         const finish = () => {
-          finished = true;
-          requestAnimationFrame(() =>
-            options.onFinish(responseText + remainText),
-          );
+          if (!finished) {
+            finished = true;
+            requestAnimationFrame(() =>
+              options.onFinish(responseText + remainText),
+            );
+          }
         };
 
         controller.signal.onabort = finish;

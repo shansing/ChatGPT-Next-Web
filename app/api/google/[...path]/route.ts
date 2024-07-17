@@ -238,6 +238,7 @@ async function handle(
     newHeaders.delete("set-cookie");
     newHeaders.delete("alt-svc");
     newHeaders.delete("strict-transport-security");
+    newHeaders.delete("content-encoding");
 
     return new Response(response.body, {
       status: response.status,

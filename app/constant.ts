@@ -310,7 +310,7 @@ export const onlineSearchKeywords = [
   // "qwen-max",
   // "qwen-long",
   // "gemini-1.5-",
-  "gemini-1.5-pro",
+  // "gemini-1.5-pro",
   "claude-3-",
 ];
 
