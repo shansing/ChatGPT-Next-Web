@@ -29,14 +29,14 @@ export class GeminiProApi implements LLMApi {
   }
   async chat(options: ChatOptions): Promise<void> {
     const apiClient = this;
-    let multimodal = false;
+    // let multimodal = false;
     const messages = options.messages.map((v) => {
       let parts: any[] = [{ text: getMessageTextContent(v) }];
       if (isVisionModel(options.config.model)) {
         const images = getMessageImages(v);
         if (images.length > 0) {
-          multimodal = true;
-          parts = parts.concat(
+          // multimodal = true;
+          parts.unshift(
             images.map((image) => {
               const imageType = image.split(";")[0].split(":")[1];
               const imageData = image.split(",")[1];
@@ -57,9 +57,7 @@ export class GeminiProApi implements LLMApi {
     });
 
     let systemMessage: string | undefined = messages
-      // @ts-ignore
       .filter((v) => v.role === "system" && v?.parts)
-      // @ts-ignore
       .flatMap((v) =>
         v.parts.filter((part) => part?.text).map((part) => part?.text),
       )
