@@ -307,7 +307,7 @@ export const onlineSearchKeywords = [
   "gpt-",
   // "qwen-turbo",
   // "qwen-plus",
-  "qwen-max",
+  // "qwen-max",
   // "qwen-long",
   // "gemini-1.5-",
   "gemini-1.5-pro",
