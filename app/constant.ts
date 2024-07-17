@@ -124,7 +124,7 @@ Knowledge cutoff: {{cutoff}}
 Current date: {{ShansingHelperUserDate}}
 Latex inline: \\(x^2\\) 
 Latex block: $$e=mc^2$$
-{{ShansingHelperVisionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}`;
+{{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}`;
 
 export const GPT_4_MODEL = "gpt-4o-2024-05-13";
 export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
@@ -313,6 +313,8 @@ export const onlineSearchKeywords = [
   // "gemini-1.5-pro",
   "claude-3-",
 ];
+
+export const codeExecutionKeywords = ["gemini-1.5-"];
 
 export const uploadFileModels: {
   name: string;

@@ -31,6 +31,8 @@ import ConfirmIcon from "../icons/confirm.svg";
 import CancelIcon from "../icons/cancel.svg";
 import ImageIcon from "../icons/image.svg";
 import EarthIcon from "../icons/earth.svg";
+import LaptopIcon from "../icons/laptop.svg";
+import LaptopOffIcon from "../icons/laptop-off.svg";
 import EarthOffIcon from "../icons/earth-off.svg";
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
@@ -64,6 +66,7 @@ import {
   isVisionModel,
   isOnlineSearchModel,
   isUploadFileModel,
+  isCodeExecutionModel,
 } from "../utils";
 
 import { compressImage } from "@/app/utils/chat";
@@ -497,6 +500,24 @@ export function ChatActions(props: {
     [chatStore],
   );
 
+  const codeExecution =
+    chatStore.currentSession().mask.modelConfig.shansingCodeExecution;
+  function switchCodeExecution() {
+    const newStatus = !codeExecution;
+    chatStore.updateCurrentSessionNow(
+      (session) => (session.mask.modelConfig.shansingCodeExecution = newStatus),
+    );
+  }
+  const turnCodeExecutionWithoutTip = useCallback(
+    (newStatus: boolean) => {
+      chatStore.updateCurrentSessionNow(
+        (session) =>
+          (session.mask.modelConfig.shansingCodeExecution = newStatus),
+      );
+    },
+    [chatStore],
+  );
+
   // stop all responses
   const couldStop = ChatControllerPool.hasPending();
   const stopAll = () => ChatControllerPool.stopAll();
@@ -524,6 +545,7 @@ export function ChatActions(props: {
   const [showUploadImage, setShowUploadImage] = useState(false);
   const [showUploadFile, setShowUploadFile] = useState(false);
   const [showOnlineSearch, setShowOnlineSearch] = useState(false);
+  const [showCodeExecution, setShowCodeExecution] = useState(false);
 
   useEffect(() => {
     const show = isVisionModel(currentModel);
@@ -536,6 +558,11 @@ export function ChatActions(props: {
     setShowOnlineSearch(showOnlineSearch);
     if (!showOnlineSearch && onlineSearch) {
       turnOnlineSearchWithoutTip(false);
+    }
+    const showCodeExecution = isCodeExecutionModel(currentModel);
+    setShowCodeExecution(showCodeExecution);
+    if (!showCodeExecution && codeExecution) {
+      turnCodeExecutionWithoutTip(false);
     }
     const showUploadFile = isUploadFileModel(currentModel);
     setShowUploadFile(showUploadFile);
@@ -648,6 +675,14 @@ export function ChatActions(props: {
             props.uploadedFileIds.length > 0 &&
             !props.uploading
           }
+        />
+      )}
+
+      {showCodeExecution && (
+        <ChatAction
+          onClick={switchCodeExecution}
+          text={Locale.Shansing.CodeExecution.Title}
+          icon={codeExecution ? <LaptopIcon /> : <LaptopOffIcon />}
         />
       )}
 

@@ -52,6 +52,7 @@ import Locale, {
 } from "../locales";
 import {
   copyToClipboard,
+  isCodeExecutionModel,
   isOnlineSearchModel,
   isUploadFileModel,
   isVisionModel,
@@ -819,6 +820,15 @@ export function Settings() {
                         {isUploadFileModel(choice.model) ? (
                           <Emoji
                             unified="1f4c4"
+                            size={14}
+                            getEmojiUrl={getEmojiUrl}
+                          />
+                        ) : (
+                          ""
+                        )}
+                        {isCodeExecutionModel(choice.model) ? (
+                          <Emoji
+                            unified="1f4bb"
                             size={14}
                             getEmojiUrl={getEmojiUrl}
                           />

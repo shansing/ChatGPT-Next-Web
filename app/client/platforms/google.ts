@@ -116,6 +116,13 @@ export class GeminiProApi implements LLMApi {
           threshold: "BLOCK_NONE",
         },
       ],
+      ...(modelConfig.shansingCodeExecution && {
+        tools: [
+          {
+            codeExecution: {},
+          },
+        ],
+      }),
     };
 
     const accessStore = useAccessStore.getState();
@@ -239,6 +246,7 @@ export class GeminiProApi implements LLMApi {
             if (msg.data === "[DONE]" || finished) {
               return finish();
             }
+            console.log(msg);
             const text = msg.data;
             try {
               const json = JSON.parse(text);

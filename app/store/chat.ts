@@ -3,6 +3,7 @@ import {
   getMessageTextContent,
   isVisionModel,
   isOnlineSearchModel,
+  isCodeExecutionModel,
 } from "../utils";
 
 import Locale, { getLang } from "../locales";
@@ -182,6 +183,11 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     ShansingHelperOnlineSearchFlag:
       isOnlineSearchModel(modelConfig.model) && modelConfig.shansingOnlineSearch
         ? "Online Search (search and visit webpages): on\n"
+        : "",
+    ShansingHelperCodeExecutionFlag:
+      isCodeExecutionModel(modelConfig.model) &&
+      modelConfig.shansingCodeExecution
+        ? "Code Execution: on\n"
         : "",
     ShansingHelperClaudeTip:
       productName === "Claude"

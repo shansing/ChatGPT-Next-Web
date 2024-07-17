@@ -518,6 +518,9 @@ const cn = {
       OnTip: "联网搜索已开启，请留意费用",
       OffTip: "联网搜索已关闭",
     },
+    CodeExecution: {
+      Title: "代码执行",
+    },
     UploadFile: {
       Title: "上传文件",
       UploadedTitle: " 个文件",

@@ -3,6 +3,7 @@ import { showToast } from "./components/ui-lib";
 import Locale from "./locales";
 import { RequestMessage } from "./client/api";
 import {
+  codeExecutionKeywords,
   onlineSearchKeywords,
   uploadFileModels,
   visionKeywords,
@@ -265,6 +266,10 @@ export function isVisionModel(model: string) {
 
 export function isOnlineSearchModel(model: string) {
   return onlineSearchKeywords.some((keyword) => model.includes(keyword));
+}
+
+export function isCodeExecutionModel(model: string) {
+  return codeExecutionKeywords.some((keyword) => model.includes(keyword));
 }
 
 export function isUploadFileModel(model: string) {
