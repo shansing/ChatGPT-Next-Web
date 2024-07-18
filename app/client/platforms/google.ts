@@ -20,12 +20,34 @@ import { fitMaxCompletionToken } from "@/app/client/shansing";
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
     // console.log("[Response] gemini-pro response: ", res);
+    let message = "";
+    const parts = res?.candidates?.at(0)?.content?.parts;
+    if (!parts) {
+      return message;
+    }
+    for (const part of parts) {
+      if (part?.text) {
+        message += part.text;
+      }
+      // || res?.error?.message
 
-    return (
-      res?.candidates?.at(0)?.content?.parts.at(0)?.text ||
-      res?.error?.message ||
-      ""
-    );
+      if (part?.executableCode) {
+        message +=
+          "\n```" +
+          part.executableCode?.language?.toLowerCase() +
+          "\n" +
+          part.executableCode?.code +
+          "\n```\n";
+      }
+
+      if (part?.codeExecutionResult) {
+        message +=
+          "\nCode Execution Result: \n```\n" +
+          part.codeExecutionResult?.output +
+          "\n```\n";
+      }
+    }
+    return message;
   }
   async chat(options: ChatOptions): Promise<void> {
     const apiClient = this;
@@ -268,8 +290,8 @@ export class GeminiProApi implements LLMApi {
             const text = msg.data;
             try {
               const json = JSON.parse(text);
-              if (!json.candidates) {
-                return error("No candidates: " + text);
+              if (!json?.candidates?.at(0)?.content?.parts) {
+                return error("No candidate parts: " + text);
               }
               const delta = apiClient.extractMessage(json);
 
