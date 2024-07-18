@@ -20,34 +20,37 @@ import { fitMaxCompletionToken } from "@/app/client/shansing";
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
     // console.log("[Response] gemini-pro response: ", res);
-    let message = "";
+    const result = {
+      message: "",
+      isCodeExecution: false,
+    };
     const parts = res?.candidates?.at(0)?.content?.parts;
     if (!parts) {
-      return message;
+      return result;
     }
     for (const part of parts) {
       if (part?.text) {
-        message += part.text;
+        result.message += part.text;
       }
       // || res?.error?.message
 
       if (part?.executableCode) {
-        message +=
+        result.message +=
           "\n```" +
           part.executableCode?.language?.toLowerCase() +
           "\n" +
-          part.executableCode?.code +
+          part.executableCode?.code?.trim() +
           "\n```\n";
+        result.isCodeExecution = true;
       }
 
       if (part?.codeExecutionResult) {
-        message +=
-          "\nCode Execution Result: \n```\n" +
-          part.codeExecutionResult?.output +
-          "\n```\n";
+        result.message +=
+          "\nOutput: \n```\n" + part.codeExecutionResult?.output + "\n```\n";
+        result.isCodeExecution = true;
       }
     }
-    return message;
+    return result;
   }
   async chat(options: ChatOptions): Promise<void> {
     const apiClient = this;
@@ -278,8 +281,9 @@ export class GeminiProApi implements LLMApi {
             const crawlerCount = parseInt(
               res.headers.get("x-shansing-crawler-count") ?? "0",
             );
-            options.onBegin?.(
+            options.onFlag?.(
               searchCount > 0 || newsCount > 0 || crawlerCount > 0,
+              undefined,
             );
           },
           onmessage(msg) {
@@ -293,7 +297,11 @@ export class GeminiProApi implements LLMApi {
               if (!json?.candidates?.at(0)?.content?.parts) {
                 return error("No candidate parts: " + text);
               }
-              const delta = apiClient.extractMessage(json);
+              const result = apiClient.extractMessage(json);
+              const delta = result.message;
+              if (result.isCodeExecution) {
+                options.onFlag?.(undefined, true);
+              }
 
               if (delta) {
                 responseText += delta;
@@ -332,7 +340,8 @@ export class GeminiProApi implements LLMApi {
             ),
           );
         }
-        const message = apiClient.extractMessage(resJson);
+        const result = apiClient.extractMessage(resJson);
+        const message = result.message;
         options.onFinish(message);
       }
     } catch (e) {

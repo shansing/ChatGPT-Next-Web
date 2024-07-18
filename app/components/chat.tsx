@@ -1545,6 +1545,7 @@ function _Chat() {
           const isSystem = message.role === "system";
           const isContext = i < context.length;
           const isOnlineSearch = message.isOnlineSearch;
+          const isCodeExecution = message.isCodeExecution;
           const isError = message.isError;
           const showActions =
             i > 0 &&
@@ -1725,6 +1726,13 @@ function _Chat() {
                     {!isContext && isError && (
                       <Emoji
                         unified="1f534"
+                        size={12}
+                        getEmojiUrl={getEmojiUrl}
+                      />
+                    )}
+                    {!isContext && isCodeExecution && (
+                      <Emoji
+                        unified="1f4bb"
                         size={12}
                         getEmojiUrl={getEmojiUrl}
                       />

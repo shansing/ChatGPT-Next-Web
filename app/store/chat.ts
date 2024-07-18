@@ -45,6 +45,7 @@ export type ChatMessage = RequestMessage & {
   id: string;
   model?: ModelType;
   isOnlineSearch?: boolean;
+  isCodeExecution?: boolean;
 };
 
 export function createMessage(override: Partial<ChatMessage>): ChatMessage {
@@ -467,8 +468,13 @@ export const useChatStore = createPersistStore(
             stream: true,
             checkShansingOnlineSearch: true,
           },
-          onBegin(isOnlineSearch) {
-            botMessage.isOnlineSearch = isOnlineSearch;
+          onFlag(isOnlineSearch, isCodeExecution) {
+            if (isOnlineSearch != null) {
+              botMessage.isOnlineSearch = isOnlineSearch;
+            }
+            if (isCodeExecution != null) {
+              botMessage.isCodeExecution = isCodeExecution;
+            }
             get().updateSpecificSession(session, (session) => {
               session.messages = session.messages.concat();
             });

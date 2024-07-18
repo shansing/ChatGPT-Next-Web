@@ -188,8 +188,9 @@ export class AlibabaApi implements LLMApi {
             const crawlerCount = parseInt(
               res.headers.get("x-shansing-crawler-count") ?? "0",
             );
-            options.onBegin?.(
+            options.onFlag?.(
               searchCount > 0 || newsCount > 0 || crawlerCount > 0,
+              undefined,
             );
           },
           onmessage(msg) {
