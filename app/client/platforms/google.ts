@@ -15,7 +15,7 @@ import {
 import { showToast } from "@/app/components/ui-lib";
 import Locale from "@/app/locales";
 import { prettyObject } from "@/app/utils/format";
-import { fitMaxCompletionToken } from "@/app/client/shansing";
+import { fitMaxCompletionToken, trimNewline } from "@/app/client/shansing";
 
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
@@ -37,16 +37,18 @@ export class GeminiProApi implements LLMApi {
       if (part?.executableCode) {
         result.message +=
           "\n```" +
-          part.executableCode?.language?.toLowerCase() +
+          (part.executableCode?.language?.toLowerCase() ?? "") +
           "\n" +
-          part.executableCode?.code?.trim() +
+          trimNewline(part.executableCode?.code ?? "") +
           "\n```\n";
         result.isCodeExecution = true;
       }
 
       if (part?.codeExecutionResult) {
         result.message +=
-          "\nOutput: \n```\n" + part.codeExecutionResult?.output + "\n```\n";
+          "\nOutput: \n```\n" +
+          (part.codeExecutionResult?.output ?? "") +
+          "\n```\n";
         result.isCodeExecution = true;
       }
     }

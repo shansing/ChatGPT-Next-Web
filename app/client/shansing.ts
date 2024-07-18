@@ -35,6 +35,24 @@ export function fitMaxCompletionToken(model: string, givenMaxTokens: number) {
     : givenMaxTokens;
 }
 
+export function trimNewline(str: string | null): string | null {
+  if (str == null) {
+    return null;
+  }
+  let start = 0;
+  let end = str.length - 1;
+
+  while (str.charAt(start) === "\n") {
+    start++;
+  }
+
+  while (str.charAt(end) === "\n") {
+    end--;
+  }
+
+  return str.slice(start, end + 1);
+}
+
 export function extractErrorMessage(text: string) {
   try {
     if (!text || !text.trim()) {
