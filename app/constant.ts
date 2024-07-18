@@ -127,12 +127,13 @@ Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}`;
 
 export const GPT_4_MODEL = "gpt-4o-2024-05-13";
-export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
+// export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
+export const GPT_4_MINI_MODEL = "gpt-4o-mini-2024-07-18\t";
 export const CLAUDE_HAIKU = "claude-3-haiku-20240307";
 export const CLAUDE_SONNET = "claude-3-5-sonnet-20240620";
 export const QWEN_LONG = "qwen-long";
 
-export const SUMMARIZE_MODEL = GPT_35_MODEL;
+export const SUMMARIZE_MODEL = GPT_4_MINI_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-latest";
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
@@ -147,6 +148,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4-turbo-preview": "2023-12",
   "gpt-4o": "2023-10",
   "gpt-4o-2024-05-13": "2023-10",
+  "gpt-4o-mini": "2023-10",
+  "gpt-4o-mini-2024-07-18": "2023-10",
   "gpt-4-vision-preview": "2023-04",
   // After improvements,
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
@@ -161,6 +164,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
 const openaiModels = [
   "gpt-4o",
   "gpt-4o-2024-05-13",
+  "gpt-4o-mini",
+  "gpt-4o-mini-2024-07-18",
   "gpt-4",
   "gpt-4-turbo-preview",
   "gpt-4-turbo",
@@ -257,7 +262,8 @@ export const DEFAULT_MODELS = [
 ] as const;
 
 export const modelThresholdTokenNumbers = [
-  { name: "gpt-4o", total: 128_000, prompt: null, completion: null },
+  { name: "gpt-4o", total: 128_000, prompt: null, completion: 16_000 },
+  { name: "gpt-4o-mini", total: 128_000, prompt: null, completion: 16_000 },
   { name: "gpt-4-turbo", total: 128_000, prompt: null, completion: null },
   { name: "gpt-4", total: 8192, prompt: null, completion: null },
   { name: "gpt-3.5-turbo", total: 16385, prompt: null, completion: null },
