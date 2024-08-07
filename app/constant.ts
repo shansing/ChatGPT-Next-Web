@@ -126,9 +126,9 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}`;
 
-export const GPT_4_MODEL = "gpt-4o-2024-05-13";
+export const GPT_4_MODEL = "gpt-4o-2024-08-06";
 // export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
-export const GPT_4_MINI_MODEL = "gpt-4o-mini-2024-07-18\t";
+export const GPT_4_MINI_MODEL = "gpt-4o-mini-2024-07-18";
 export const CLAUDE_HAIKU = "claude-3-haiku-20240307";
 export const CLAUDE_SONNET = "claude-3-5-sonnet-20240620";
 export const QWEN_LONG = "qwen-long";
@@ -147,6 +147,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4-turbo-2024-04-09": "2023-12",
   "gpt-4-turbo-preview": "2023-12",
   "gpt-4o": "2023-10",
+  "gpt-4o-2024-08-06": "2023-10",
   "gpt-4o-2024-05-13": "2023-10",
   "gpt-4o-mini": "2023-10",
   "gpt-4o-mini-2024-07-18": "2023-10",
@@ -163,6 +164,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
 
 const openaiModels = [
   "gpt-4o",
+  "gpt-4o-2024-08-06",
   "gpt-4o-2024-05-13",
   "gpt-4o-mini",
   "gpt-4o-mini-2024-07-18",
@@ -262,11 +264,17 @@ export const DEFAULT_MODELS = [
 ] as const;
 
 export const modelThresholdTokenNumbers = [
-  { name: "gpt-4o", total: 128_000, prompt: null, completion: 16_000 },
-  { name: "gpt-4o-mini", total: 128_000, prompt: null, completion: 16_000 },
-  { name: "gpt-4-turbo", total: 128_000, prompt: null, completion: null },
-  { name: "gpt-4", total: 8192, prompt: null, completion: null },
-  { name: "gpt-3.5-turbo", total: 16385, prompt: null, completion: null },
+  {
+    name: "gpt-4o-2024-08-06",
+    total: 128_000,
+    prompt: null,
+    completion: 16_384,
+  },
+  { name: "gpt-4o", total: 128_000, prompt: null, completion: 4_096 },
+  { name: "gpt-4o-mini", total: 128_000, prompt: null, completion: 16_384 },
+  { name: "gpt-4-turbo", total: 128_000, prompt: null, completion: 4_096 },
+  { name: "gpt-4", total: 8192, prompt: null, completion: 4_096 },
+  { name: "gpt-3.5-turbo", total: 16385, prompt: null, completion: 4_096 },
   { name: "qwen-turbo", total: null, prompt: 6_000, completion: 1500 },
   { name: "qwen-plus", total: null, prompt: 30_000, completion: 2000 },
   {
