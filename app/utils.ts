@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { showToast } from "./components/ui-lib";
 import Locale from "./locales";
