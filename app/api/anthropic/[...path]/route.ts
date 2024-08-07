@@ -17,7 +17,6 @@ import {
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
-import { isOnlineSearchModel } from "@/app/utils";
 
 const ALLOWD_PATH = new Set([Anthropic.ChatPath]);
 
@@ -99,12 +98,7 @@ async function handle(
   console.log("[Anthropic]<" + username + "> using model " + modelChoice.model);
 
   try {
-    const response = await request(
-      req,
-      requestJson,
-      username,
-      modelChoice.model,
-    );
+    const response = await request(req, requestJson, username);
 
     const firstPromptTokenNumber = parseInt(
         response?.headers.get("X-Shansing-First-Prompt-Token-Number") ?? "0",
@@ -228,12 +222,7 @@ export const preferredRegion = [
 
 const serverConfig = getServerSideConfig();
 
-async function request(
-  req: NextRequest,
-  requestJson: any,
-  username: string,
-  model: string,
-) {
+async function request(req: NextRequest, requestJson: any, username: string) {
   const controller = new AbortController();
 
   let authHeaderName = "x-api-key";
@@ -263,9 +252,7 @@ async function request(
   }
 
   const apiBaseUrl = baseUrl;
-  const onlineSearch =
-    req.headers.get("X-Shansing-Online-Search") == "true" &&
-    isOnlineSearchModel(model);
+  const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
   if (onlineSearch) {
     baseUrl = serverConfig.shansingOnlineSearchUrl;
   }

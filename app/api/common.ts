@@ -3,7 +3,6 @@ import { getServerSideConfig } from "../config/server";
 import { OPENAI_BASE_URL } from "../constant";
 import { makeAzurePath } from "../azure";
 import { hashUsername } from "@/app/api/shansing";
-import { isOnlineSearchModel } from "@/app/utils";
 
 const serverConfig = getServerSideConfig();
 
@@ -11,7 +10,6 @@ export async function requestOpenai(
   req: NextRequest,
   requestJson: any,
   username: string,
-  model: string,
   compatibleBaseUrl: string | null,
 ) {
   const controller = new AbortController();
@@ -51,9 +49,7 @@ export async function requestOpenai(
   }
 
   const apiBaseUrl = baseUrl;
-  const onlineSearch =
-    req.headers.get("X-Shansing-Online-Search") == "true" &&
-    isOnlineSearchModel(model);
+  const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
   if (onlineSearch) {
     baseUrl = serverConfig.shansingOnlineSearchUrl;
   }
