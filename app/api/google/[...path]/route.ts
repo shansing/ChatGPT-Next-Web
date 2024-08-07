@@ -9,6 +9,7 @@ import {
   pay,
   readUserQuota,
 } from "@/app/api/shansing";
+import { isOnlineSearchModel } from "@/app/utils";
 
 async function handle(
   req: NextRequest,
@@ -33,40 +34,10 @@ async function handle(
     );
   }
 
-  const controller = new AbortController();
-
-  //to do forbidden route?
+  let path = `${req.nextUrl.pathname}`.replaceAll("/api/google/", "");
 
   const serverConfig = getServerSideConfig();
   const config = serverConfig;
-
-  let baseUrl = serverConfig.googleUrl || GEMINI_BASE_URL;
-
-  if (!baseUrl.startsWith("http")) {
-    baseUrl = `https://${baseUrl}`;
-  }
-
-  if (baseUrl.endsWith("/")) {
-    baseUrl = baseUrl.slice(0, -1);
-  }
-
-  let path = `${req.nextUrl.pathname}`.replaceAll("/api/google/", "");
-
-  const apiBaseUrl = baseUrl;
-  const onlineSearch = req.headers.get("X-Shansing-Online-Search") == "true";
-  if (onlineSearch) {
-    baseUrl = serverConfig.shansingOnlineSearchUrl;
-  }
-
-  // console.log("[Proxy Path]<" + username + ">", path);
-  console.log("[Base Url]<" + username + ">", baseUrl, "(" + apiBaseUrl + ")");
-
-  const timeoutId = setTimeout(
-    () => {
-      controller.abort();
-    },
-    10 * 60 * 1000,
-  );
 
   if ((await readUserQuota(username)).lessThanOrEqualTo(0)) {
     return NextResponse.json(
@@ -108,6 +79,36 @@ async function handle(
     );
   }
   console.log("[Google]<" + username + "> using model " + modelChoice.model);
+
+  const controller = new AbortController();
+
+  let baseUrl = serverConfig.googleUrl || GEMINI_BASE_URL;
+
+  if (!baseUrl.startsWith("http")) {
+    baseUrl = `https://${baseUrl}`;
+  }
+
+  if (baseUrl.endsWith("/")) {
+    baseUrl = baseUrl.slice(0, -1);
+  }
+
+  const apiBaseUrl = baseUrl;
+  const onlineSearch =
+    req.headers.get("X-Shansing-Online-Search") == "true" &&
+    isOnlineSearchModel(modelChoice.model);
+  if (onlineSearch) {
+    baseUrl = serverConfig.shansingOnlineSearchUrl;
+  }
+
+  // console.log("[Proxy Path]<" + username + ">", path);
+  console.log("[Base Url]<" + username + ">", baseUrl, "(" + apiBaseUrl + ")");
+
+  const timeoutId = setTimeout(
+    () => {
+      controller.abort();
+    },
+    10 * 60 * 1000,
+  );
 
   const authResult = auth(req, ModelProvider.GeminiPro, username);
   if (authResult.error) {

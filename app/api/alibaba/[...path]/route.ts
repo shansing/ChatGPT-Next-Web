@@ -130,6 +130,7 @@ async function handle(
       req,
       requestJson,
       username,
+      modelChoice.model,
       ALIBABA_BASE_URL,
     );
 
