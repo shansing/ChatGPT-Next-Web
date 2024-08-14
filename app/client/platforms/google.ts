@@ -268,9 +268,9 @@ export class GeminiProApi implements LLMApi {
               res.status !== 200
             ) {
               let responseBody = await res.clone().text();
-              if (res.status === 401) {
-                return error(Locale.Error.Unauthorized);
-              }
+              // if (res.status === 401) {
+              //   return error(Locale.Error.Unauthorized);
+              // }
               return error("responseBody: " + responseBody);
             }
 
