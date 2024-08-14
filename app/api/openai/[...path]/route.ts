@@ -19,7 +19,7 @@ const config = getServerSideConfig();
 function getModels(remoteModelRes: OpenAIListModelResponse) {
   if (config.disableGPT4) {
     remoteModelRes.data = remoteModelRes.data.filter(
-      (m) => !m.id.startsWith("gpt-4"),
+      (m) => !m.id.startsWith("gpt-4") && !m.id.startsWith("chatgpt-4"),
     );
   }
 

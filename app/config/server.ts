@@ -96,10 +96,16 @@ export const getServerSideConfig = () => {
 
   if (disableGPT4) {
     if (customModels) customModels += ",";
-    customModels += DEFAULT_MODELS.filter((m) => m.name.startsWith("gpt-4"))
+    customModels += DEFAULT_MODELS.filter(
+      (m) => m.name.startsWith("gpt-4") || m.name.startsWith("chatgpt-4"),
+    )
       .map((m) => "-" + m.name)
       .join(",");
-    if (defaultModel.startsWith("gpt-4")) defaultModel = "";
+    if (
+      defaultModel.startsWith("gpt-4") ||
+      defaultModel.startsWith("chatgpt-4")
+    )
+      defaultModel = "";
   }
 
   const isAzure = !!process.env.AZURE_URL;
