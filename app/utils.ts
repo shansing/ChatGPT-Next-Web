@@ -265,7 +265,11 @@ export function isVisionModel(model: string) {
 }
 
 export function isOnlineSearchModel(model: string) {
-  return onlineSearchKeywords.some((keyword) => model.includes(keyword));
+  const isChatGpt = model.startsWith("chatgpt-");
+  return (
+    onlineSearchKeywords.some((keyword) => model.includes(keyword)) &&
+    !isChatGpt
+  );
 }
 
 export function isCodeExecutionModel(model: string) {
