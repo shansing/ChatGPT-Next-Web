@@ -126,13 +126,22 @@ export function parseUsageObj(
     : responseBody.lastIndexOf('"' + key + '"');
   if (usageIndex !== -1) {
     const openBracket = responseBody.indexOf("{", usageIndex);
-    const closeBracket = responseBody.indexOf("}", openBracket);
-    if (openBracket !== -1 && closeBracket !== -1) {
-      const jsonString = responseBody.substring(openBracket, closeBracket + 1);
-      try {
-        return JSON.parse(jsonString);
-      } catch (e) {
-        return null;
+    let closeBracket = openBracket;
+    if (openBracket !== -1) {
+      let stack = 1;
+      while (stack > 0 && closeBracket < responseBody.length) {
+        closeBracket++;
+        if (responseBody[closeBracket] === "{") {
+          stack++;
+        } else if (responseBody[closeBracket] === "}") {
+          stack--;
+        }
+      }
+      if (stack === 0) {
+        let jsonString = responseBody.substring(openBracket, closeBracket + 1);
+        try {
+          return JSON.parse(jsonString);
+        } catch (ignored) {}
       }
     }
   }
