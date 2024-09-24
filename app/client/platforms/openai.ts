@@ -4,6 +4,7 @@ import {
   DEFAULT_API_HOST,
   DEFAULT_MODELS,
   OpenaiPath,
+  REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
 } from "@/app/constant";
@@ -109,7 +110,10 @@ export class ChatGPTApi implements LLMApi {
   async chat(options: ChatOptions) {
     const visionModel = isVisionModel(options.config.model);
     const messages = options.messages.map((v) => ({
-      role: v.role,
+      role:
+        options.config.model.startsWith("o1-") && v.role === "system"
+          ? "user"
+          : v.role,
       content: visionModel ? v.content : getMessageTextContent(v),
     }));
 
@@ -167,7 +171,9 @@ export class ChatGPTApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        REQUEST_TIMEOUT_MS,
+        modelConfig.model.startsWith("o1-")
+          ? REQUEST_LONG_TIMEOUT_MS
+          : REQUEST_TIMEOUT_MS,
       );
 
       if (shouldStream) {

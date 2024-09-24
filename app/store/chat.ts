@@ -564,7 +564,8 @@ export const useChatStore = createPersistStore(
 
         var systemPrompts: ChatMessage[] = [];
         systemPrompts = shouldInjectSystemPrompts
-          ? [
+          ? // && !modelConfig.model.startsWith("o1-")
+            [
               createMessage({
                 role: "system",
                 content: fillTemplateWith("", {
