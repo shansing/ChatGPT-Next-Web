@@ -132,9 +132,11 @@ export class ChatGPTApi implements LLMApi {
     };
     console.log("max_tokens", modelConfig.max_tokens);
 
+    const shouldStream =
+      !!options.config.stream && !options.config.model.startsWith("o1-");
     const requestPayload: RequestPayload = {
       messages,
-      stream: options.config.stream,
+      stream: shouldStream,
       model: modelConfig.model,
       temperature: modelConfig.temperature,
       presence_penalty: modelConfig.presence_penalty,
@@ -142,15 +144,16 @@ export class ChatGPTApi implements LLMApi {
       top_p: modelConfig.top_p,
       max_completion_tokens: modelConfig.max_tokens,
     };
-    requestPayload["stream_options"] = options.config.stream
-      ? {
-          include_usage: true,
-        }
-      : undefined;
+    if (shouldStream) {
+      requestPayload["stream_options"] = options.config.stream
+        ? {
+            include_usage: true,
+          }
+        : undefined;
+    }
 
     console.log("[Request] openai payload: ", requestPayload);
 
-    const shouldStream = !!options.config.stream;
     const controller = new AbortController();
     options.onController?.(controller);
 
