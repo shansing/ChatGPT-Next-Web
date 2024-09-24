@@ -57,7 +57,7 @@ interface RequestPayload {
   presence_penalty: number;
   frequency_penalty: number;
   top_p: number;
-  max_tokens?: number;
+  max_completion_tokens?: number;
 }
 
 export class ChatGPTApi implements LLMApi {
@@ -140,7 +140,7 @@ export class ChatGPTApi implements LLMApi {
       presence_penalty: modelConfig.presence_penalty,
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
-      max_tokens: modelConfig.max_tokens,
+      max_completion_tokens: modelConfig.max_tokens,
     };
     requestPayload["stream_options"] = options.config.stream
       ? {
