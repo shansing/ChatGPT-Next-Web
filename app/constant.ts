@@ -202,6 +202,7 @@ const anthropicModels = [
 ];
 
 const alibabaModels = [
+  "qwen-max-latest",
   "qwen-max",
   "qwen-max-0428",
   "qwen-max-0403",
@@ -288,6 +289,7 @@ export const modelThresholdTokenNumbers = [
     completion: 2000,
   },
   { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
+  { name: "qwen-max-latest", total: null, prompt: 30_720, completion: 8_192 },
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
   { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576,000;  1.5pro 2,097,152,000;  but under 128k is cheap
   { name: "claude-3-", total: 200_000, prompt: null, completion: 4096 },
