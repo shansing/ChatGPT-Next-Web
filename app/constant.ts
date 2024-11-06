@@ -131,7 +131,7 @@ export const GPT_4_MODEL = "gpt-4o-2024-08-06";
 // export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
 export const GPT_4_MINI_MODEL = "gpt-4o-mini-2024-07-18";
 export const CLAUDE_HAIKU = "claude-3-haiku-20240307";
-export const CLAUDE_SONNET = "claude-3-5-sonnet-20241022";
+export const CLAUDE_SONNET = "claude-3-5-sonnet-latest";
 export const QWEN_LONG = "qwen-long";
 
 export const SUMMARIZE_MODEL = GPT_4_MINI_MODEL;
@@ -167,6 +167,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "claude-3-haiku-20240307": "2023-08",
   "claude-3-5-sonnet-20240620": "2024-04",
   "claude-3-5-sonnet-20241022": "2024-04",
+  "claude-3-5-sonnet-latest": "2024-04",
 };
 
 const openaiModels = [
@@ -205,6 +206,7 @@ const googleModels = [
 ];
 
 const anthropicModels = [
+  "claude-3-5-sonnet-latest",
   "claude-3-5-sonnet-20241022",
   "claude-3-5-sonnet-20240620",
   "claude-3-opus-20240229",
@@ -308,6 +310,7 @@ export const modelThresholdTokenNumbers = [
   { name: "qwen-max-latest", total: null, prompt: 30_720, completion: 8_192 },
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
   { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576,000;  1.5pro 2,097,152,000;  but under 128k is cheap
+  { name: "claude-3-5-", total: 200_000, prompt: null, completion: 8192 },
   { name: "claude-3-", total: 200_000, prompt: null, completion: 4096 },
   { name: "claude-2.1", total: 200_000, prompt: null, completion: 4096 },
   { name: "claude-", total: 100_000, prompt: null, completion: 4096 },
