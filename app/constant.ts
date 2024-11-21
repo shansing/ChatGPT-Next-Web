@@ -127,7 +127,7 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}`;
 
-export const GPT_4_MODEL = "gpt-4o-2024-08-06";
+export const GPT_4_MODEL = "gpt-4o-2024-11-20";
 // export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
 export const GPT_4_MINI_MODEL = "gpt-4o-mini-2024-07-18";
 export const CLAUDE_HAIKU = "claude-3-5-haiku-latest";
@@ -149,6 +149,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4-turbo-2024-04-09": "2023-12",
   "gpt-4-turbo-preview": "2023-12",
   "gpt-4o": "2023-10",
+  "gpt-4o-2024-11-20": "2023-10",
   "gpt-4o-2024-08-06": "2023-10",
   "gpt-4o-2024-05-13": "2023-10",
   "gpt-4o-mini": "2023-10",
@@ -174,6 +175,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
 
 const openaiModels = [
   "gpt-4o",
+  "gpt-4o-2024-11-20",
   "gpt-4o-2024-08-06",
   "gpt-4o-2024-05-13",
   "gpt-4o-mini",
@@ -288,6 +290,12 @@ export const DEFAULT_MODELS = [
 ] as const;
 
 export const modelThresholdTokenNumbers = [
+  {
+    name: "gpt-4o-2024-11-20",
+    total: 128_000,
+    prompt: null,
+    completion: 16_384,
+  },
   {
     name: "gpt-4o-2024-08-06",
     total: 128_000,
