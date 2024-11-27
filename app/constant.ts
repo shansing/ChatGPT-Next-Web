@@ -130,8 +130,9 @@ Latex block: $$e=mc^2$$
 export const GPT_4_MODEL = "gpt-4o-2024-11-20";
 // export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
 export const GPT_4_MINI_MODEL = "gpt-4o-mini-2024-07-18";
-export const CLAUDE_HAIKU = "claude-3-5-haiku-latest";
-export const CLAUDE_SONNET = "claude-3-5-sonnet-latest";
+//temporarily disable claude
+export const CLAUDE_HAIKU = GPT_4_MINI_MODEL; //claude-3-5-haiku-latest
+export const CLAUDE_SONNET = GPT_4_MODEL; //claude-3-5-sonnet-latest
 export const QWEN_LONG = "qwen-long";
 
 export const SUMMARIZE_MODEL = GPT_4_MINI_MODEL;
