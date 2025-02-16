@@ -311,8 +311,8 @@ export const modelThresholdTokenNumbers = [
     prompt: null,
     completion: 16_384,
   },
-  { name: "gpt-4o", total: 128_000, prompt: null, completion: 4_096 },
   { name: "gpt-4o-mini", total: 128_000, prompt: null, completion: 16_384 },
+  { name: "gpt-4o", total: 128_000, prompt: null, completion: 4_096 },
   { name: "chatgpt-4o", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-4-turbo", total: 128_000, prompt: null, completion: 4_096 },
   { name: "gpt-4", total: 8192, prompt: null, completion: 4_096 },
@@ -328,9 +328,10 @@ export const modelThresholdTokenNumbers = [
     prompt: 28_000,
     completion: 2000,
   },
-  { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
   { name: "qwen-max-latest", total: null, prompt: 30_720, completion: 8_192 },
+  { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
+  { name: "gemini-2.0-", total: null, prompt: 1_048_576, completion: 8192 },
   { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576;  1.5pro 2,097,152;  but under 128k is cheap
   { name: "claude-3-5-", total: 200_000, prompt: null, completion: 8192 },
   { name: "claude-3-", total: 200_000, prompt: null, completion: 4096 },
