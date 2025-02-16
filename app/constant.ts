@@ -160,6 +160,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "o1-preview-2024-09-12": "2023-10",
   "o1-mini": "2023-10",
   "o1-mini-2024-09-12": "2023-10",
+  "o3-mini": "2023-10",
+  "o3-mini-2025-01-31": "2023-10",
   // After improvements,
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
@@ -197,6 +199,8 @@ const openaiModels = [
   "o1-preview-2024-09-12",
   "o1-mini",
   "o1-mini-2024-09-12",
+  "o3-mini",
+  "o3-mini-2025-01-31",
 ];
 
 const googleModels = [
@@ -311,6 +315,7 @@ export const modelThresholdTokenNumbers = [
   { name: "gpt-3.5-turbo", total: 16385, prompt: null, completion: 4_096 },
   { name: "o1-preview", total: 128_000, prompt: null, completion: 32_768 },
   { name: "o1-mini", total: 128_000, prompt: null, completion: 65_536 },
+  { name: "o3-mini", total: 200_000, prompt: null, completion: 100_000 },
   { name: "qwen-turbo", total: null, prompt: 6_000, completion: 1500 },
   { name: "qwen-plus", total: null, prompt: 30_000, completion: 2000 },
   {
