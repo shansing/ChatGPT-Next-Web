@@ -273,7 +273,10 @@ export function isOnlineSearchModel(model: string) {
 }
 
 export function isCodeExecutionModel(model: string) {
-  return codeExecutionKeywords.some((keyword) => model.includes(keyword));
+  return (
+    codeExecutionKeywords.some((keyword) => model.includes(keyword)) &&
+    !model.includes("-lite")
+  );
 }
 
 export function isUploadFileModel(model: string) {

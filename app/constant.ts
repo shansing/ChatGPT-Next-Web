@@ -136,7 +136,7 @@ export const CLAUDE_SONNET = GPT_4_MODEL; //claude-3-5-sonnet-latest
 export const QWEN_LONG = "qwen-long";
 
 export const SUMMARIZE_MODEL = GPT_4_MINI_MODEL;
-export const GEMINI_SUMMARIZE_MODEL = "gemini-1.5-flash-8b";
+export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash-lite-preview-02-05";
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
 
@@ -166,6 +166,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
   "gemini-pro-vision": "2023-12",
+  "gemini-2.0-flash": "2024-08",
+  "gemini-2.0-flash-lite-preview-02-05": "2024-08",
   "claude-3-opus-20240229": "2023-08",
   "claude-3-sonnet-20240229": "2023-08",
   "claude-3-haiku-20240307": "2023-08",
@@ -195,15 +197,17 @@ const openaiModels = [
   "gpt-3.5-turbo",
   "gpt-3.5-turbo-1106",
   "gpt-3.5-turbo-0125",
+  "o3-mini",
+  "o3-mini-2025-01-31",
   "o1-preview",
   "o1-preview-2024-09-12",
   "o1-mini",
   "o1-mini-2024-09-12",
-  "o3-mini",
-  "o3-mini-2025-01-31",
 ];
 
 const googleModels = [
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-lite-preview-02-05",
   "gemini-1.5-pro-latest",
   "gemini-1.5-pro",
   "gemini-1.5-flash-latest",
@@ -327,7 +331,7 @@ export const modelThresholdTokenNumbers = [
   { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
   { name: "qwen-max-latest", total: null, prompt: 30_720, completion: 8_192 },
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
-  { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576,000;  1.5pro 2,097,152,000;  but under 128k is cheap
+  { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576;  1.5pro 2,097,152;  but under 128k is cheap
   { name: "claude-3-5-", total: 200_000, prompt: null, completion: 8192 },
   { name: "claude-3-", total: 200_000, prompt: null, completion: 4096 },
   { name: "claude-2.1", total: 200_000, prompt: null, completion: 4096 },
@@ -355,6 +359,7 @@ export const visionKeywords = [
   "claude-3-",
   "gemini-1.5-pro",
   "gemini-1.5-flash",
+  "gemini-2.0",
   "gpt-4o",
   "-vl",
 ];
@@ -370,7 +375,7 @@ export const onlineSearchKeywords = [
   "claude-3-",
 ];
 
-export const codeExecutionKeywords = ["gemini-1.5-"];
+export const codeExecutionKeywords = ["gemini-1.5-", "gemini-2.0-"];
 
 export const uploadFileModels: {
   name: string;
