@@ -4,7 +4,7 @@ import { getServerSideConfig } from "@/app/config/server";
 import { GEMINI_BASE_URL, Google, ModelProvider } from "@/app/constant";
 import {
   getUsernameFromHttpBasicAuth,
-  hashUsername,
+  parseUsageArr,
   parseUsageObj,
   pay,
   readUserQuota,
@@ -162,8 +162,8 @@ async function handle(
       firstCompletionTokenNumber = parseInt(
         response?.headers.get("X-Shansing-First-Completion-Token-Number") ??
           "0",
-      ),
-      searchCount = parseInt(
+      );
+    let searchCount = parseInt(
         response?.headers.get("X-Shansing-Search-Count") ?? "0",
       ),
       newsCount = parseInt(
@@ -177,6 +177,24 @@ async function handle(
       .text()
       .then((responseBody) => {
         //console.log("[responseBody]" + responseBody)
+        const webSearchQueries = parseUsageArr(
+          responseBody,
+          "webSearchQueries",
+          false,
+        );
+        if (
+          webSearchQueries &&
+          Array.isArray(webSearchQueries) &&
+          webSearchQueries.length > 0
+        ) {
+          const nativeSearchCount = webSearchQueries.length;
+          console.log(
+            "[Google Usage]<" + username + "> nativeSearchCount",
+            nativeSearchCount,
+          );
+          searchCount += nativeSearchCount;
+        }
+
         const usageMetadata = parseUsageObj(
           responseBody,
           "usageMetadata",

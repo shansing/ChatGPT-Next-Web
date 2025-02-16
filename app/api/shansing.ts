@@ -147,3 +147,35 @@ export function parseUsageObj(
   }
   return null;
 }
+
+export function parseUsageArr(
+  responseBody: string,
+  key: string,
+  fromStart: boolean,
+) {
+  const usageIndex = fromStart
+    ? responseBody.indexOf('"' + key + '"')
+    : responseBody.lastIndexOf('"' + key + '"');
+  if (usageIndex !== -1) {
+    const openBracket = responseBody.indexOf("[", usageIndex);
+    let closeBracket = openBracket;
+    if (openBracket !== -1) {
+      let stack = 1;
+      while (stack > 0 && closeBracket < responseBody.length) {
+        closeBracket++;
+        if (responseBody[closeBracket] === "[") {
+          stack++;
+        } else if (responseBody[closeBracket] === "]") {
+          stack--;
+        }
+      }
+      if (stack === 0) {
+        let jsonString = responseBody.substring(openBracket, closeBracket + 1);
+        try {
+          return JSON.parse(jsonString);
+        } catch (ignored) {}
+      }
+    }
+  }
+  return null;
+}

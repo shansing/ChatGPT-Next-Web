@@ -268,6 +268,7 @@ export function isOnlineSearchModel(model: string) {
   const isChatGpt = model.startsWith("chatgpt-");
   return (
     onlineSearchKeywords.some((keyword) => model.includes(keyword)) &&
+    !model.includes("-lite") &&
     !isChatGpt
   );
 }

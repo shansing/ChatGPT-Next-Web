@@ -128,6 +128,29 @@ export class GeminiProApi implements LLMApi {
     };
     console.log("max_tokens", modelConfig.max_tokens);
 
+    const tools = [
+      ...(modelConfig.shansingCodeExecution
+        ? [
+            {
+              codeExecution: {},
+            },
+          ]
+        : []),
+      ...(options.config.checkShansingOnlineSearch &&
+      modelConfig.shansingOnlineSearch
+        ? [
+            {
+              // "googleSearchRetrieval": {
+              //   "dynamicRetrievalConfig": {
+              //     "mode": "MODE_DYNAMIC",
+              //     // "dynamic_threshold": 0.3,
+              //   }
+              // },
+              googleSearch: {},
+            },
+          ]
+        : []),
+    ];
     const requestPayload = {
       contents: messages,
       generationConfig: {
@@ -164,13 +187,7 @@ export class GeminiProApi implements LLMApi {
           },
         },
       }),
-      ...(modelConfig.shansingCodeExecution && {
-        tools: [
-          {
-            codeExecution: {},
-          },
-        ],
-      }),
+      tools: tools,
     };
 
     const accessStore = useAccessStore.getState();
@@ -206,9 +223,9 @@ export class GeminiProApi implements LLMApi {
         signal: controller.signal,
         headers: {
           ...getHeaders(),
-          ...(options.config.checkShansingOnlineSearch && {
-            "X-Shansing-Online-Search": modelConfig.shansingOnlineSearch + "",
-          }),
+          // ...(options.config.checkShansingOnlineSearch && {
+          //   "X-Shansing-Online-Search": modelConfig.shansingOnlineSearch + "",
+          // }),
         },
       };
 
@@ -253,7 +270,7 @@ export class GeminiProApi implements LLMApi {
               "[Gemini] request response content type: ",
               contentType,
             );
-            // to do 更严谨的错误检测和处理
+            //to do 更严谨的错误检测和处理
 
             if (contentType?.startsWith("text/plain")) {
               responseText = await res.clone().text();
@@ -274,19 +291,19 @@ export class GeminiProApi implements LLMApi {
               return error("responseBody: " + responseBody);
             }
 
-            const searchCount = parseInt(
-              res.headers.get("x-shansing-search-count") ?? "0",
-            );
-            const newsCount = parseInt(
-              res.headers.get("x-shansing-news-count") ?? "0",
-            );
-            const crawlerCount = parseInt(
-              res.headers.get("x-shansing-crawler-count") ?? "0",
-            );
-            options.onFlag?.(
-              searchCount > 0 || newsCount > 0 || crawlerCount > 0,
-              undefined,
-            );
+            // const searchCount = parseInt(
+            //   res.headers.get("x-shansing-search-count") ?? "0",
+            // );
+            // const newsCount = parseInt(
+            //   res.headers.get("x-shansing-news-count") ?? "0",
+            // );
+            // const crawlerCount = parseInt(
+            //   res.headers.get("x-shansing-crawler-count") ?? "0",
+            // );
+            // options.onFlag?.(
+            //   searchCount > 0 || newsCount > 0 || crawlerCount > 0,
+            //   undefined,
+            // );
           },
           onmessage(msg) {
             if (msg.data === "[DONE]" || finished) {
@@ -300,6 +317,15 @@ export class GeminiProApi implements LLMApi {
                 return error("No candidate parts: " + text);
               }
               const result = apiClient.extractMessage(json);
+
+              const webSearchQueries =
+                json?.candidates?.at(0)?.groundingMetadata?.webSearchQueries;
+              const isSearch =
+                webSearchQueries &&
+                Array.isArray(webSearchQueries) &&
+                webSearchQueries.length > 0;
+              options.onFlag?.(isSearch, undefined);
+
               const delta = result.message;
               if (result.isCodeExecution) {
                 options.onFlag?.(undefined, true);

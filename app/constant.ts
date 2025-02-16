@@ -136,7 +136,7 @@ export const CLAUDE_SONNET = GPT_4_MODEL; //claude-3-5-sonnet-latest
 export const QWEN_LONG = "qwen-long";
 
 export const SUMMARIZE_MODEL = GPT_4_MINI_MODEL;
-export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash-lite-preview-02-05";
+export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash";
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
 
@@ -206,6 +206,7 @@ const openaiModels = [
 ];
 
 const googleModels = [
+  "gemini-2.0-flash-latest",
   "gemini-2.0-flash",
   "gemini-2.0-flash-lite-preview-02-05",
   "gemini-1.5-pro-latest",
@@ -371,6 +372,7 @@ export const onlineSearchKeywords = [
   // "qwen-plus",
   // "qwen-max",
   // "qwen-long",
+  "gemini-2.0-",
   // "gemini-1.5-",
   // "gemini-1.5-pro",
   "claude-3-",
