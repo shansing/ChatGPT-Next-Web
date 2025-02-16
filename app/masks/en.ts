@@ -98,7 +98,7 @@ export const EN_MASKS: BuiltinMask[] = [
     author: "https://www.liuyuanzhong.com/pages/124c18/",
   },
   {
-    avatar: "1f392",
+    avatar: "1f914",
     name: "Thinking Claude",
     context: [
       {
