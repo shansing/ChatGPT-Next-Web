@@ -103,28 +103,36 @@ function createEmptySession(): ChatSession {
 }
 
 function getSummarizeModel(currentModel: string) {
-  // if it is using gpt-* models, force to use 3.5 to summarize
-  if (currentModel.startsWith("gpt")) {
-    const configStore = useAppConfig.getState();
-    const accessStore = useAccessStore.getState();
-    const allModel = collectModelsWithDefaultModel(
-      configStore.models,
-      [configStore.customModels, accessStore.customModels].join(","),
-      accessStore.defaultModel,
-    );
-    const summarizeModel = allModel.find(
-      (m) => m.name === SUMMARIZE_MODEL && m.available,
-    );
-    return summarizeModel?.name ?? currentModel;
-  }
+  // // if it is using gpt-* models, force to use 3.5 to summarize
+  // if (currentModel.startsWith("gpt")) {
+  //   const configStore = useAppConfig.getState();
+  //   const accessStore = useAccessStore.getState();
+  //   const allModel = collectModelsWithDefaultModel(
+  //     configStore.models,
+  //     [configStore.customModels, accessStore.customModels].join(","),
+  //     accessStore.defaultModel,
+  //   );
+  //   const summarizeModel = allModel.find(
+  //     (m) => m.name === SUMMARIZE_MODEL && m.available,
+  //   );
+  //   return summarizeModel?.name ?? currentModel;
+  // }
   if (currentModel.startsWith("gemini")) {
     return GEMINI_SUMMARIZE_MODEL;
   }
   if (currentModel.startsWith("claude")) {
     return CLAUDE_SUMMARIZE_MODEL;
   }
-  if (currentModel.startsWith("qwen-")) {
+  if (currentModel.startsWith("qwen")) {
     return ALIBABA_SUMMARIZE_MODEL;
+  }
+  if (
+    currentModel.startsWith("gpt") ||
+    currentModel.startsWith("chatgpt") ||
+    currentModel.startsWith("o1") ||
+    currentModel.startsWith("o3")
+  ) {
+    return SUMMARIZE_MODEL;
   }
   return currentModel;
 }
