@@ -244,7 +244,7 @@ export class OpenRouterApi implements LLMApi {
                 if (!reasoningStarted && !reasoningEnded) {
                   reasoningStarted = true;
                   delta = "```thinking\n" + reasonContent;
-                  delta = reasonContent;
+                  // delta = reasonContent;
                 } else {
                   delta = delta + reasonContent;
                 }
