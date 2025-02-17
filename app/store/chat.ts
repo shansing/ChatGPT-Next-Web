@@ -209,7 +209,7 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
         ? "" //'\nWhen speaking CJK, make sure you write punctuation symbols in FULLWIDTH forms (for example `，` `。` `！` `？` and `「quote」` instead of `"quote"`).\n'
         : "",
     ShansingHelperDeepseekR1Tip: modelConfig.model.includes("deepseek-r1")
-      ? "\nALWAYS response starting with `<think>\\n`"
+      ? "\nALWAYS think before you answer, and response starting with `<think>\\n`"
       : "",
   };
 
