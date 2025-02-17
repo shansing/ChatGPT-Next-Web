@@ -15,6 +15,7 @@ export const ANTHROPIC_BASE_URL = "https://api.anthropic.com";
 export const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/";
 export const ALIBABA_BASE_URL =
   "https://dashscope.aliyuncs.com/compatible-mode";
+export const OPEN_ROUTER_BASE_URL = "https://openrouter.ai/api";
 
 export enum Path {
   Home = "/",
@@ -64,7 +65,7 @@ export const UNFINISHED_INPUT = (id: string) => "unfinished-input-" + id;
 export const STORAGE_KEY = "chatgpt-next-web";
 
 export const REQUEST_TIMEOUT_MS = 60000;
-export const REQUEST_LONG_TIMEOUT_MS = 600000;
+export const REQUEST_LONG_TIMEOUT_MS = 1200000;
 
 export const EXPORT_MESSAGE_CLASS_NAME = "export-markdown";
 
@@ -74,6 +75,7 @@ export enum ServiceProvider {
   Google = "Google",
   Anthropic = "Anthropic",
   Alibaba = "Alibaba",
+  OpenRouter = "OpenRouter",
 }
 
 export enum ModelProvider {
@@ -81,6 +83,7 @@ export enum ModelProvider {
   GeminiPro = "GeminiPro",
   Claude = "Claude",
   Alibaba = "Alibaba",
+  OpenRouter = "OpenRouter",
 }
 
 export const Anthropic = {
@@ -111,6 +114,10 @@ export const AlibabaPath = {
   FilePath: "v1/files",
 };
 
+export const OpenRouterPath = {
+  ChatPath: "v1/chat/completions",
+};
+
 export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lang
 // export const DEFAULT_SYSTEM_TEMPLATE = `
 // You are ChatGPT, a large language model trained by {{ServiceProvider}}.
@@ -125,7 +132,7 @@ Knowledge cutoff: {{cutoff}}
 Current date: {{ShansingHelperUserDate}}
 Latex inline: \\(x^2\\) 
 Latex block: $$e=mc^2$$
-{{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}`;
+{{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}{{ShansingHelperDeepseekR1Tip}}`;
 
 export const GPT_4_MODEL = "gpt-4o-2024-11-20";
 // export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
@@ -138,7 +145,8 @@ export const QWEN_LONG = "qwen-long";
 export const SUMMARIZE_MODEL = GPT_4_MINI_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash";
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
-export const ALIBABA_SUMMARIZE_MODEL = "qwen-long";
+export const QWEN_SUMMARIZE_MODEL = "qwen-long";
+export const DEEPSEEK_SUMMARIZE_MODEL = "deepseek/deepseek-chat"; //of OpenRouter
 
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "as it is",
@@ -260,6 +268,8 @@ const alibabaModels = [
   "qwen-1.8b-chat",
 ];
 
+const openRouterModels = ["deepseek/deepseek-chat", "deepseek/deepseek-r1"];
+
 export const DEFAULT_MODELS = [
   ...openaiModels.map((name) => ({
     name,
@@ -295,6 +305,15 @@ export const DEFAULT_MODELS = [
       id: "alibaba",
       providerName: "Alibaba",
       providerType: "alibaba-compatible",
+    },
+  })),
+  ...openRouterModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "openrouter",
+      providerName: "OpenRouter",
+      providerType: "openrouter-compatible",
     },
   })),
 ] as const;
@@ -338,6 +357,18 @@ export const modelThresholdTokenNumbers = [
   { name: "claude-3-", total: 200_000, prompt: null, completion: 4096 },
   { name: "claude-2.1", total: 200_000, prompt: null, completion: 4096 },
   { name: "claude-", total: 100_000, prompt: null, completion: 4096 },
+  {
+    name: "deepseek/deepseek-chat",
+    total: 64_000,
+    prompt: null,
+    completion: 2_000,
+  },
+  {
+    name: "deepseek/deepseek-r1",
+    total: 66_000,
+    prompt: null,
+    completion: 8_000,
+  },
   { name: "", total: 4_000, prompt: null, completion: null }, //default
 ] as const;
 

@@ -32,7 +32,8 @@ export async function requestOpenai(
 
   let path = `${req.nextUrl.pathname}${req.nextUrl.search}`
     .replaceAll("/api/openai/", "")
-    .replaceAll("/api/alibaba/", "");
+    .replaceAll("/api/alibaba/", "")
+    .replaceAll("/api/openrouter/", "");
 
   let baseUrl =
     compatibleBaseUrl ||
@@ -190,7 +191,10 @@ export async function requestOpenaiUploadFile(
   var authValue = req.headers.get("Authorization") ?? "",
     authHeaderName = "Authorization";
 
-  let path = `${req.nextUrl.pathname}`.replaceAll("/api/alibaba/", ""); //${req.nextUrl.search}
+  let path = `${req.nextUrl.pathname}`
+    .replaceAll("/api/alibaba/", "")
+    .replaceAll("/api/openrouter/", "");
+  //${req.nextUrl.search}
 
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;

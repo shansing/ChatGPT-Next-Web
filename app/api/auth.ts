@@ -85,6 +85,9 @@ export function auth(
       case ModelProvider.Alibaba:
         systemApiKey = serverConfig.alibabaApiKey;
         break;
+      case ModelProvider.OpenRouter:
+        systemApiKey = serverConfig.openRouterApiKey;
+        break;
       case ModelProvider.GPT:
       default:
         if (serverConfig.isAzure) {

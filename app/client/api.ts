@@ -10,6 +10,7 @@ import { ChatGPTApi } from "./platforms/openai";
 import { GeminiProApi } from "./platforms/google";
 import { ClaudeApi } from "./platforms/anthropic";
 import { AlibabaApi } from "@/app/client/platforms/alibaba";
+import { OpenRouterApi } from "@/app/client/platforms/openrouter";
 export const ROLES = ["system", "user", "assistant"] as const;
 export type MessageRole = (typeof ROLES)[number];
 
@@ -112,6 +113,9 @@ export class ClientApi {
         break;
       case ModelProvider.Alibaba:
         this.llm = new AlibabaApi();
+        break;
+      case ModelProvider.OpenRouter:
+        this.llm = new OpenRouterApi();
         break;
       default:
         this.llm = new ChatGPTApi();

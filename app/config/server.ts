@@ -112,6 +112,7 @@ export const getServerSideConfig = () => {
   const isGoogle = !!process.env.GOOGLE_API_KEY;
   const isAnthropic = !!process.env.ANTHROPIC_API_KEY;
   const isAlibaba = !!process.env.ALIBABA_API_KEY;
+  const isOpenRouter = !!process.env.OPEN_ROUTER_API_KEY;
 
   // const apiKeyEnvVar = process.env.OPENAI_API_KEY ?? "";
   // const apiKeys = apiKeyEnvVar.split(",").map((v) => v.trim());
@@ -147,6 +148,10 @@ export const getServerSideConfig = () => {
     isAlibaba,
     alibabaApiKey: getApiKey(process.env.ALIBABA_API_KEY),
     alibabaUrl: process.env.ALIBABA_URL,
+
+    isOpenRouter,
+    openRouterApiKey: getApiKey(process.env.OPEN_ROUTER_API_KEY),
+    openRouterUrl: process.env.OPEN_ROUTER_URL,
 
     gtmId: process.env.GTM_ID,
 

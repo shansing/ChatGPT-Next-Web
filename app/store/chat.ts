@@ -19,10 +19,11 @@ import {
   StoreKey,
   SUMMARIZE_MODEL,
   GEMINI_SUMMARIZE_MODEL,
-  ALIBABA_SUMMARIZE_MODEL,
+  QWEN_SUMMARIZE_MODEL,
   uploadFileModels,
   CLAUDE_SUMMARIZE_MODEL,
   ServiceProvider,
+  DEEPSEEK_SUMMARIZE_MODEL,
 } from "../constant";
 import { ClientApi, RequestMessage, MultimodalContent } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
@@ -124,7 +125,10 @@ function getSummarizeModel(currentModel: string) {
     return CLAUDE_SUMMARIZE_MODEL;
   }
   if (currentModel.startsWith("qwen")) {
-    return ALIBABA_SUMMARIZE_MODEL;
+    return QWEN_SUMMARIZE_MODEL;
+  }
+  if (currentModel.startsWith("deepseek")) {
+    return DEEPSEEK_SUMMARIZE_MODEL;
   }
   if (
     currentModel.startsWith("gpt") ||
@@ -167,6 +171,8 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     productName = "Claude";
   } else if (serviceProvider === ServiceProvider.Alibaba) {
     productName = "Tongyi Qianwen";
+  } else if (modelInfo?.name?.startsWith("deepseek")) {
+    productName = "DeepSeek";
   }
 
   const vars = {
@@ -202,6 +208,9 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
       productName === "Claude"
         ? "" //'\nWhen speaking CJK, make sure you write punctuation symbols in FULLWIDTH forms (for example `，` `。` `！` `？` and `「quote」` instead of `"quote"`).\n'
         : "",
+    ShansingHelperDeepseekR1Tip: modelConfig.model.includes("deepseek-r1")
+      ? "\nALWAYS response starting with `<think>\\n`"
+      : "",
   };
 
   let output = modelConfig.template ?? DEFAULT_INPUT_TEMPLATE;
@@ -852,6 +861,8 @@ export const useChatStore = createPersistStore(
           return new ClientApi(ModelProvider.Claude);
         } else if (model.startsWith("qwen-")) {
           return new ClientApi(ModelProvider.Alibaba);
+        } else if (model.startsWith("deepseek/")) {
+          return new ClientApi(ModelProvider.OpenRouter);
         } else {
           return new ClientApi(ModelProvider.GPT);
         }
