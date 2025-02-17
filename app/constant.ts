@@ -298,15 +298,6 @@ export const DEFAULT_MODELS = [
       providerType: "google",
     },
   })),
-  ...alibabaModels.map((name) => ({
-    name,
-    available: true,
-    provider: {
-      id: "alibaba",
-      providerName: "Alibaba",
-      providerType: "alibaba-compatible",
-    },
-  })),
   ...openRouterModels.map((name) => ({
     name,
     available: true,
@@ -314,6 +305,15 @@ export const DEFAULT_MODELS = [
       id: "openrouter",
       providerName: "OpenRouter",
       providerType: "openrouter-compatible",
+    },
+  })),
+  ...alibabaModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "alibaba",
+      providerName: "Alibaba",
+      providerType: "alibaba-compatible",
     },
   })),
 ] as const;
