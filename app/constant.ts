@@ -277,6 +277,8 @@ const openRouterModels = [
   "deepseek/deepseek-chat",
   "deepseek/deepseek-r1",
   "anthropic/claude-3.5-sonnet",
+  "openai/o3-mini-high",
+  "openai/o3-mini",
 ];
 
 export const DEFAULT_MODELS = [
