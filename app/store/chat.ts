@@ -175,6 +175,10 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     productName = "DeepSeek";
   } else if (modelInfo?.name?.includes("claude")) {
     productName = "Claude";
+  } else if (modelInfo?.name?.includes("o1")) {
+    productName = "ChatGPT";
+  } else if (modelInfo?.name?.includes("o3")) {
+    productName = "ChatGPT";
   }
 
   const vars = {
