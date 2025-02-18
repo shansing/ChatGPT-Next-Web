@@ -133,8 +133,8 @@ function getSummarizeModel(currentModel: string) {
   if (
     currentModel.startsWith("gpt") ||
     currentModel.startsWith("chatgpt") ||
-    currentModel.startsWith("o1") ||
-    currentModel.startsWith("o3")
+    currentModel.includes("o1") ||
+    currentModel.includes("o3")
   ) {
     return SUMMARIZE_MODEL;
   }
