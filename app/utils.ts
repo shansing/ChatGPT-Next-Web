@@ -261,7 +261,8 @@ export function isVisionModel(model: string) {
 
   return (
     (visionKeywords.some((keyword) => model.includes(keyword)) &&
-      !model.includes("o1-mini")) ||
+      !model.includes("o1-mini") &&
+      !model.includes("o1-preview")) ||
     isGpt4Turbo
   );
 }
