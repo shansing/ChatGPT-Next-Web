@@ -137,8 +137,8 @@ export const GPT_4_MODEL = "gpt-4o-2024-11-20";
 // export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
 export const GPT_4_MINI_MODEL = "gpt-4o-mini-2024-07-18";
 //temporarily disable claude
-export const CLAUDE_HAIKU = GPT_4_MINI_MODEL; //claude-3-5-haiku-latest
-export const CLAUDE_SONNET = GPT_4_MODEL; //claude-3-5-sonnet-latest
+export const CLAUDE_SONNET = "anthropic/claude-3.5-sonnet"; //claude-3-5-sonnet-latest
+export const CLAUDE_HAIKU = CLAUDE_SONNET; //claude-3-5-haiku-latest
 export const QWEN_LONG = "qwen-long";
 
 export const SUMMARIZE_MODEL = GPT_4_MINI_MODEL;
@@ -185,6 +185,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "claude-3-5-sonnet-20240620": "2024-04",
   "claude-3-5-sonnet-20241022": "2024-04",
   "claude-3-5-sonnet-latest": "2024-04",
+  "anthropic/claude-3.5-sonnet": "2024-04",
 };
 
 const openaiModels = [
@@ -271,7 +272,11 @@ const alibabaModels = [
   "qwen-1.8b-chat",
 ];
 
-const openRouterModels = ["deepseek/deepseek-chat", "deepseek/deepseek-r1"];
+const openRouterModels = [
+  "deepseek/deepseek-chat",
+  "deepseek/deepseek-r1",
+  "anthropic/claude-3.5-sonnet",
+];
 
 export const DEFAULT_MODELS = [
   ...openaiModels.map((name) => ({
@@ -357,6 +362,12 @@ export const modelThresholdTokenNumbers = [
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
   { name: "gemini-2.0-", total: null, prompt: 1_048_576, completion: 8192 },
   { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576;  1.5pro 2,097,152;  but under 128k is cheap
+  {
+    name: "anthropic/claude-3.5-sonnet",
+    total: 200_000,
+    prompt: null,
+    completion: 8_000,
+  },
   { name: "claude-3-5-", total: 200_000, prompt: null, completion: 8192 },
   { name: "claude-3-", total: 200_000, prompt: null, completion: 4096 },
   { name: "claude-2.1", total: 200_000, prompt: null, completion: 4096 },
@@ -400,6 +411,8 @@ export const visionKeywords = [
   "gpt-4o",
   "o1",
   "-vl",
+  "deepseek",
+  "claude-3.",
 ];
 
 export const onlineSearchKeywords = [
@@ -411,7 +424,7 @@ export const onlineSearchKeywords = [
   "gemini-2.0-",
   // "gemini-1.5-",
   // "gemini-1.5-pro",
-  "claude-3-",
+  // "claude-3-",
 ];
 
 export const codeExecutionKeywords = ["gemini-1.5-", "gemini-2.0-"];

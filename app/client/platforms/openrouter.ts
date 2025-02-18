@@ -62,17 +62,28 @@ export class OpenRouterApi implements LLMApi {
 
   async chat(options: ChatOptions) {
     const visionModel = isVisionModel(options.config.model);
-    const messages = options.messages.map((v) => ({
-      role:
-        options.config.model.startsWith("deepseek") && v.role === "system"
-          ? "user"
-          : v.role,
-      // content: visionModel ? v.content : getMessageTextContent(v),
-      content:
-        options.config.model.includes("deepseek-r1") && v.role === "user"
-          ? getMessageTextContent(v) + "\n<think>\n"
-          : getMessageTextContent(v),
-    }));
+    let messages = options.messages.map((v) => {
+      let content = visionModel ? v.content : getMessageTextContent(v);
+      if (options.config.model.includes("deepseek-r1") && v.role === "user") {
+        if (typeof content === "string") {
+          content = content + "\n<think>\n";
+        } else if (typeof content === "object") {
+          const arr: MultimodalContent[] = content;
+          content = arr.map((c) => ({
+            type: c.type,
+            text: c.type === "text" ? c.text + "\n<think>\n" : c.text,
+            image_url: c.image_url,
+          }));
+        }
+      }
+      return {
+        role:
+          options.config.model.startsWith("deepseek") && v.role === "system"
+            ? "user"
+            : v.role,
+        content: content,
+      };
+    });
 
     const modelConfig = {
       ...useAppConfig.getState().modelConfig,

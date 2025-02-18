@@ -173,6 +173,8 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     productName = "Tongyi Qianwen";
   } else if (modelInfo?.name?.startsWith("deepseek")) {
     productName = "DeepSeek";
+  } else if (modelInfo?.name?.includes("claude")) {
+    productName = "Claude";
   }
 
   const vars = {
@@ -863,7 +865,7 @@ export const useChatStore = createPersistStore(
           return new ClientApi(ModelProvider.Claude);
         } else if (model.startsWith("qwen-")) {
           return new ClientApi(ModelProvider.Alibaba);
-        } else if (model.startsWith("deepseek/")) {
+        } else if (model.includes("/")) {
           return new ClientApi(ModelProvider.OpenRouter);
         } else {
           return new ClientApi(ModelProvider.GPT);
