@@ -411,7 +411,7 @@ export const visionKeywords = [
   "gpt-4o",
   "o1",
   "-vl",
-  "deepseek",
+  // "deepseek",
   "claude-3.",
 ];
 
