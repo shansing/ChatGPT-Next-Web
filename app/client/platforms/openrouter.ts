@@ -106,12 +106,13 @@ export class OpenRouterApi implements LLMApi {
       top_p: modelConfig.top_p,
       max_tokens: modelConfig.max_tokens,
       include_reasoning: true,
-      ...(modelConfig.model.includes("deepseek") && {
-        provider: {
+      provider: {
+        data_collection: "deny",
+        ...(modelConfig.model.includes("deepseek-r1") && {
           order: ["Fireworks"],
           allow_fallbacks: true,
-        },
-      }),
+        }),
+      },
     };
     requestPayload["stream_options"] = options.config.stream
       ? {

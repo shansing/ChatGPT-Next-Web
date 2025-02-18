@@ -360,11 +360,11 @@ export const modelThresholdTokenNumbers = [
     name: "deepseek/deepseek-chat",
     total: 64_000,
     prompt: null,
-    completion: 2_000,
+    completion: 8_000,
   },
   {
     name: "deepseek/deepseek-r1",
-    total: 66_000,
+    total: 64_000,
     prompt: null,
     completion: 8_000,
   },
