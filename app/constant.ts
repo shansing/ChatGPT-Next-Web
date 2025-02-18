@@ -413,7 +413,7 @@ export const visionKeywords = [
   "gemini-2.0",
   "gpt-4o",
   "o1",
-  "o3",
+  // "o3",
   "-vl",
   // "deepseek",
   "claude-3.",
