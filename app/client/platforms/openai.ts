@@ -111,8 +111,8 @@ export class ChatGPTApi implements LLMApi {
     const visionModel = isVisionModel(options.config.model);
     const messages = options.messages.map((v) => ({
       role:
-        (options.config.model.startsWith("o1-") ||
-          options.config.model.startsWith("o3-")) &&
+        (options.config.model.startsWith("o1") ||
+          options.config.model.startsWith("o3")) &&
         v.role === "system"
           ? "user"
           : v.role,
@@ -134,10 +134,7 @@ export class ChatGPTApi implements LLMApi {
     };
     console.log("max_tokens", modelConfig.max_tokens);
 
-    const shouldStream =
-      !!options.config.stream &&
-      !options.config.model.startsWith("o1-") &&
-      !options.config.model.startsWith("o3-");
+    const shouldStream = !!options.config.stream;
     const requestPayload: RequestPayload = {
       messages,
       stream: shouldStream,
@@ -178,8 +175,8 @@ export class ChatGPTApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        modelConfig.model.startsWith("o1-") ||
-          modelConfig.model.startsWith("o3-") ||
+        modelConfig.model.startsWith("o1") ||
+          modelConfig.model.startsWith("o3") ||
           modelConfig.model.includes("deepseek-r1")
           ? REQUEST_LONG_TIMEOUT_MS
           : REQUEST_TIMEOUT_MS,
