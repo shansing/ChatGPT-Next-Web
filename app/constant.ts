@@ -127,8 +127,7 @@ export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lan
 // Latex inline: $x^2$
 // Latex block: $$e=mc^2$$
 // `;
-export const DEFAULT_SYSTEM_TEMPLATE = `You are {{ShansingHelperProductName}}, a large language model trained by {{ServiceProvider}}, based on the {{model}} architecture.
-Knowledge cutoff: {{cutoff}}
+export const DEFAULT_SYSTEM_TEMPLATE = `You are {{ShansingHelperProductName}}, a large language model trained by {{ServiceProvider}}, based on the {{model}} architecture.{{ShansingCutoff}}
 Current date: {{ShansingHelperUserDate}}
 Latex inline: \\(x^2\\) 
 Latex block: $$e=mc^2$$
@@ -149,7 +148,7 @@ export const QWEN_SUMMARIZE_MODEL = "qwen-long";
 export const DEEPSEEK_SUMMARIZE_MODEL = "deepseek/deepseek-chat"; //of OpenRouter
 
 export const KnowledgeCutOffDate: Record<string, string> = {
-  default: "as it is",
+  default: "",
   "gpt-3.5-turbo": "2021-09",
   "gpt-3.5-turbo-1106": "2021-09",
   "gpt-3.5-turbo-0125": "2021-09",

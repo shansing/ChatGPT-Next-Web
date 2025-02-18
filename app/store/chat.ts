@@ -177,7 +177,8 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
 
   const vars = {
     ServiceProvider: serviceProvider,
-    cutoff,
+    // cutoff,
+    ShansingCutoff: cutoff ? "\nKnowledge cutoff: " + cutoff : "",
     model: modelConfig.model,
     time: new Date().toString(),
     lang: getLang(),
@@ -209,7 +210,8 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
         ? "" //'\nWhen speaking CJK, make sure you write punctuation symbols in FULLWIDTH forms (for example `，` `。` `！` `？` and `「quote」` instead of `"quote"`).\n'
         : "",
     ShansingHelperDeepseekR1Tip: modelConfig.model.includes("deepseek-r1")
-      ? "\nALWAYS think before you answer, and response starting with `<think>\\n`"
+      ? //ref: https://linux.do/t/topic/408247
+        "\nALWAYS think before you answer. Response using the following format:\n<think>\n{reasoning_content}\n</think>\n\n{content}"
       : "",
   };
 
