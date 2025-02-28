@@ -113,6 +113,7 @@ export const getServerSideConfig = () => {
   const isAnthropic = !!process.env.ANTHROPIC_API_KEY;
   const isAlibaba = !!process.env.ALIBABA_API_KEY;
   const isOpenRouter = !!process.env.OPEN_ROUTER_API_KEY;
+  const isDeepSeek = !!process.env.DEEP_SEEK_API_KEY;
 
   // const apiKeyEnvVar = process.env.OPENAI_API_KEY ?? "";
   // const apiKeys = apiKeyEnvVar.split(",").map((v) => v.trim());
@@ -152,6 +153,10 @@ export const getServerSideConfig = () => {
     isOpenRouter,
     openRouterApiKey: getApiKey(process.env.OPEN_ROUTER_API_KEY),
     openRouterUrl: process.env.OPEN_ROUTER_URL,
+
+    isDeepSeek,
+    deepSeekApiKey: getApiKey(process.env.DEEP_SEEK_API_KEY),
+    deepSeekUrl: process.env.DEEP_SEEK_URL,
 
     gtmId: process.env.GTM_ID,
 

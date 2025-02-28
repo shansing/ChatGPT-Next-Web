@@ -1,8 +1,8 @@
 import { getServerSideConfig } from "@/app/config/server";
 import {
   ModelProvider,
-  OpenRouterPath,
-  OPEN_ROUTER_BASE_URL,
+  DeepSeekPath,
+  DEEP_SEEK_BASE_URL,
   OpenaiPath,
 } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
@@ -18,14 +18,14 @@ import {
 } from "@/app/api/shansing";
 import { requestOpenai, requestOpenaiUploadFile } from "@/app/api/common";
 
-const ALLOWD_PATH = new Set(Object.values(OpenRouterPath));
+const ALLOWD_PATH = new Set(Object.values(DeepSeekPath));
 const config = getServerSideConfig();
 
 async function handle(
   req: NextRequest,
   { params }: { params: { path: string[] } },
 ) {
-  // console.log("[OpenRouter Route] params ", params);
+  // console.log("[DeepSeek Route] params ", params);
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });
@@ -47,10 +47,7 @@ async function handle(
   const subpath = params.path.join("/");
 
   if (!ALLOWD_PATH.has(subpath)) {
-    console.warn(
-      "[OpenRouter Route]<" + username + "> forbidden path ",
-      subpath,
-    );
+    console.warn("[DeepSeek Route]<" + username + "> forbidden path ", subpath);
     return NextResponse.json(
       {
         error: true,
@@ -74,7 +71,7 @@ async function handle(
     );
   }
 
-  const authResult = auth(req, ModelProvider.OpenRouter, username);
+  const authResult = auth(req, ModelProvider.DeepSeek, username);
   if (authResult.error) {
     return NextResponse.json(authResult, {
       status: 401,
@@ -96,9 +93,7 @@ async function handle(
       },
     );
   }
-  console.log(
-    "[OpenRouter]<" + username + "> using model " + modelChoice.model,
-  );
+  console.log("[DeepSeek]<" + username + "> using model " + modelChoice.model);
   if (
     requestJson.stream &&
     (!requestJson.stream_options ||
@@ -120,7 +115,7 @@ async function handle(
       req,
       requestJson,
       username,
-      OPEN_ROUTER_BASE_URL,
+      DEEP_SEEK_BASE_URL,
     );
 
     const firstPromptTokenNumber = parseInt(
@@ -146,7 +141,7 @@ async function handle(
         //console.log("[responseBody]" + responseBody)
         const usage = parseUsageObj(responseBody, "usage", false);
         console.log(
-          "[OpenRouter Usage]<" + username + ">",
+          "[DeepSeek Usage]<" + username + ">",
           JSON.stringify(usage),
           JSON.stringify({
             firstPromptTokenNumber,
@@ -167,7 +162,7 @@ async function handle(
           };
         }
         console.warn(
-          "[ATTENTION][OpenRouter] unable to find usage, username=" +
+          "[ATTENTION][DeepSeek] unable to find usage, username=" +
             username +
             ", url=" +
             req.url +
@@ -191,7 +186,7 @@ async function handle(
 
     return response;
   } catch (e) {
-    console.error("[OpenRouter]compatible ", e);
+    console.error("[DeepSeek]compatible ", e);
     return NextResponse.json(prettyObject(e));
   }
 }

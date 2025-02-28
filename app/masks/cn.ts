@@ -3,7 +3,7 @@ import {
   CLAUDE_HAIKU,
   CLAUDE_SONNET,
   GPT_4_MODEL,
-  QWEN_LONG,
+  DEEPSEEK_REASONER,
 } from "@/app/constant";
 
 export const CN_MASKS: BuiltinMask[] = [
@@ -214,7 +214,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: QWEN_LONG,
+      model: DEEPSEEK_REASONER,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -248,7 +248,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: QWEN_LONG,
+      model: DEEPSEEK_REASONER,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -275,7 +275,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: QWEN_LONG,
+      model: GPT_4_MODEL,
       temperature: 1,
       max_tokens: 500,
       presence_penalty: 0,

@@ -175,9 +175,7 @@ export class ChatGPTApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        modelConfig.model.includes("o1") ||
-          modelConfig.model.includes("o3") ||
-          modelConfig.model.includes("deepseek-r1")
+        modelConfig.model.includes("o1") || modelConfig.model.includes("o3")
           ? REQUEST_LONG_TIMEOUT_MS
           : REQUEST_TIMEOUT_MS,
       );

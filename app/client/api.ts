@@ -11,6 +11,7 @@ import { GeminiProApi } from "./platforms/google";
 import { ClaudeApi } from "./platforms/anthropic";
 import { AlibabaApi } from "@/app/client/platforms/alibaba";
 import { OpenRouterApi } from "@/app/client/platforms/openrouter";
+import { DeepSeekApi } from "@/app/client/platforms/deepseek";
 export const ROLES = ["system", "user", "assistant"] as const;
 export type MessageRole = (typeof ROLES)[number];
 
@@ -114,6 +115,9 @@ export class ClientApi {
         break;
       case ModelProvider.Alibaba:
         this.llm = new AlibabaApi();
+        break;
+      case ModelProvider.DeepSeek:
+        this.llm = new DeepSeekApi();
         break;
       case ModelProvider.OpenRouter:
         this.llm = new OpenRouterApi();

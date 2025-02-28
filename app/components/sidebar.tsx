@@ -185,8 +185,8 @@ export function SideBar(props: { className?: string }) {
             Google
           </a>{" "}
           &{" "}
-          <a href="https://tongyi.aliyun.com" target="_blank" className="link">
-            Alibaba
+          <a href="https://www.deepseek.com" target="_blank" className="link">
+            DeepSeek
           </a>{" "}
           {/*<a*/}
           {/*  href="https://github.com/shansing/ChatGPT-Next-Web"*/}

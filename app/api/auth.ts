@@ -88,6 +88,9 @@ export function auth(
       case ModelProvider.OpenRouter:
         systemApiKey = serverConfig.openRouterApiKey;
         break;
+      case ModelProvider.DeepSeek:
+        systemApiKey = serverConfig.deepSeekApiKey;
+        break;
       case ModelProvider.GPT:
       default:
         if (serverConfig.isAzure) {

@@ -127,7 +127,7 @@ function getSummarizeModel(currentModel: string) {
   if (currentModel.startsWith("qwen")) {
     return QWEN_SUMMARIZE_MODEL;
   }
-  if (currentModel.startsWith("deepseek")) {
+  if (currentModel.startsWith("deepseek-")) {
     return DEEPSEEK_SUMMARIZE_MODEL;
   }
   if (
@@ -138,7 +138,8 @@ function getSummarizeModel(currentModel: string) {
   ) {
     return SUMMARIZE_MODEL;
   }
-  return currentModel;
+  //return currentModel;
+  return SUMMARIZE_MODEL;
 }
 
 function countMessages(msgs: ChatMessage[]) {
@@ -215,9 +216,17 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
       productName === "Claude"
         ? "" //'\nWhen speaking CJK, make sure you write punctuation symbols in FULLWIDTH forms (for example `，` `。` `！` `？` and `「quote」` instead of `"quote"`).\n'
         : "",
-    ShansingHelperDeepseekR1Tip: modelConfig.model.includes("deepseek-r1")
+    ShansingHelperOpenRouterDeepseekR1Tip: modelConfig.model.includes(
+      "deepseek-r1",
+    )
       ? //ref: https://linux.do/t/topic/408247
         "\nALWAYS think before you answer. Response using the following format:\n<think>\n{reasoning_content}\n</think>\n\n{content}"
+      : "",
+    ShansingHelperDeepseekR1Tip: modelConfig.model.startsWith(
+      "deepseek-reasoner",
+    )
+      ? //ref: https://linux.do/t/topic/408247
+        "\nALWAYS think before you answer."
       : "",
   };
 
@@ -877,6 +886,8 @@ export const useChatStore = createPersistStore(
           return new ClientApi(ModelProvider.Claude);
         } else if (model.startsWith("qwen-")) {
           return new ClientApi(ModelProvider.Alibaba);
+        } else if (model.startsWith("deepseek-")) {
+          return new ClientApi(ModelProvider.DeepSeek);
         } else if (model.includes("/")) {
           return new ClientApi(ModelProvider.OpenRouter);
         } else {

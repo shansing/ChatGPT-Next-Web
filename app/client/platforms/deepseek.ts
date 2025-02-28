@@ -1,6 +1,6 @@
 "use client";
 import {
-  OpenRouterPath,
+  DeepSeekPath,
   REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
@@ -46,15 +46,13 @@ interface RequestPayload {
   frequency_penalty: number;
   top_p: number;
   max_tokens?: number;
-  include_reasoning?: boolean; //openrouter
-  provider?: object; //openrouter
 }
 
-export class OpenRouterApi implements LLMApi {
+export class DeepSeekApi implements LLMApi {
   private disableListModels = true;
 
   path(path: string): string {
-    return "/api/openrouter/" + path;
+    return "/api/deepseek/" + path;
   }
 
   extractMessage(res: any) {
@@ -90,15 +88,53 @@ export class OpenRouterApi implements LLMApi {
         content: content,
       };
     });
-    if (
-      options.config.model.includes("deepseek-r1") &&
-      shouldInjectSystemPrompts
-    ) {
-      messages.push({
-        role: "user",
-        content: "\n<think>\n",
-      });
-    }
+    // if (
+    //   options.config.model.includes("deepseek-reasoner") &&
+    //   shouldInjectSystemPrompts
+    // ) {
+    //   messages.push({
+    //     role: "user",
+    //     content: "\n<think>\n",
+    //   });
+    // }
+    // roles must alternate between "user" and "assistant" in deepseek-r1, so combine two or more user messages
+    messages = messages.reduce(
+      (accumulator: RequestMessage[], current: RequestMessage) => {
+        if (
+          !accumulator.length ||
+          current.role !== accumulator[accumulator.length - 1].role ||
+          current.content == null ||
+          accumulator[accumulator.length - 1].content == null
+        ) {
+          accumulator.push(current);
+        } else {
+          let lastContent = accumulator[accumulator.length - 1].content;
+          if (typeof lastContent === "string") {
+            lastContent = [
+              {
+                text: lastContent,
+                type: "text",
+              },
+            ];
+          }
+          let thisContent = current.content;
+          if (typeof thisContent === "string") {
+            thisContent = [
+              {
+                text: thisContent,
+                type: "text",
+              },
+            ];
+          }
+          accumulator[accumulator.length - 1] = {
+            ...accumulator[accumulator.length - 1],
+            content: [...lastContent, ...thisContent],
+          };
+        }
+        return accumulator;
+      },
+      [],
+    );
 
     const requestPayload: RequestPayload = {
       messages: [...messages],
@@ -109,14 +145,6 @@ export class OpenRouterApi implements LLMApi {
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
       max_tokens: modelConfig.max_tokens,
-      include_reasoning: true,
-      provider: {
-        data_collection: "deny",
-        ...(modelConfig.model.includes("deepseek-r1") && {
-          order: ["Fireworks"],
-          allow_fallbacks: true,
-        }),
-      },
     };
     requestPayload["stream_options"] = options.config.stream
       ? {
@@ -127,14 +155,14 @@ export class OpenRouterApi implements LLMApi {
       requestPayload.top_p = 0.99;
     }
 
-    console.log("[Request] openrouter payload: ", requestPayload);
+    console.log("[Request] deepseek payload: ", requestPayload);
 
     const shouldStream = !!options.config.stream;
     const controller = new AbortController();
     options.onController?.(controller);
 
     try {
-      const chatPath = this.path(OpenRouterPath.ChatPath);
+      const chatPath = this.path(DeepSeekPath.ChatPath);
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
@@ -150,7 +178,7 @@ export class OpenRouterApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        modelConfig.model.includes("deepseek-r1")
+        modelConfig.model.includes("deepseek-reasoner")
           ? REQUEST_LONG_TIMEOUT_MS
           : REQUEST_TIMEOUT_MS,
       );
@@ -186,7 +214,7 @@ export class OpenRouterApi implements LLMApi {
             clearTimeout(requestTimeoutId);
             const contentType = res.headers.get("content-type");
             console.log(
-              "[OpenRouter] request response content type: ",
+              "[DeepSeek] request response content type: ",
               contentType,
             );
 
@@ -238,10 +266,10 @@ export class OpenRouterApi implements LLMApi {
                 return error("No choices: " + text);
               }
               const choices = json.choices as Array<{
-                delta: { content: string; reasoning: string };
+                delta: { content: string; reasoning_content: string };
               }>;
               const content = choices[0]?.delta?.content;
-              const reasonContent = choices[0]?.delta?.reasoning;
+              const reasonContent = choices[0]?.delta?.reasoning_content;
               // console.log("content", content, "reasonContent", reasonContent)
               const delta = content;
               const reasonDelta = reasonContent;
@@ -253,10 +281,10 @@ export class OpenRouterApi implements LLMApi {
                 }
                 if (reasonDelta) {
                   responseReasoning += reasonDelta;
-                  //workaround: 将 `\\n` 替换成 `\n` 并移除首尾多余换行
-                  responseReasoning = responseReasoning
-                    .replace(/\\n/g, "\n")
-                    .replace(/^\n+|\n+$/g, "");
+                  // //workaround: 将 `\\n` 替换成 `\n` 并移除首尾多余换行
+                  // responseReasoning = responseReasoning
+                  //   .replace(/\\n/g, "\n")
+                  //   .replace(/^\n+|\n+$/g, "");
                 }
                 requestAnimationFrame(() =>
                   options.onUpdate?.(responseText, responseReasoning),
