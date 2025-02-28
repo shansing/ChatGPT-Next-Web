@@ -504,10 +504,13 @@ export const useChatStore = createPersistStore(
               session.messages = session.messages.concat();
             });
           },
-          onUpdate(message) {
+          onUpdate(message, reasoning) {
             botMessage.streaming = true;
             if (message) {
               botMessage.content = message;
+            }
+            if (reasoning) {
+              botMessage.reasoningContent = reasoning;
             }
             try {
               get().updateSpecificSession(session, (session) => {
@@ -517,10 +520,15 @@ export const useChatStore = createPersistStore(
               console.error("updateCurrentSession", err);
             }
           },
-          onFinish(message) {
+          onFinish(message, reasoning) {
             botMessage.streaming = false;
-            if (message) {
-              botMessage.content = message;
+            if (message || reasoning) {
+              if (message) {
+                botMessage.content = message;
+              }
+              if (reasoning) {
+                botMessage.reasoningContent = reasoning;
+              }
               get().onNewMessage(session, botMessage);
             }
             ChatControllerPool.remove(session.id, botMessage.id);

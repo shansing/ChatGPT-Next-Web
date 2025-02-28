@@ -1703,10 +1703,18 @@ function _Chat() {
                       </div>
                     )}
                     <Markdown
-                      content={getMessageTextContent(message)}
+                      content={
+                        message.reasoningContent
+                          ? "```thinking\n" +
+                            message.reasoningContent +
+                            "\n```\n" +
+                            getMessageTextContent(message)
+                          : getMessageTextContent(message)
+                      }
                       loading={
                         (message.preview || message.streaming) &&
                         message.content.length === 0 &&
+                        !message.reasoningContent &&
                         !isUser
                       }
                       onContextMenu={(e) => onRightClick(e, message)}
@@ -1726,6 +1734,13 @@ function _Chat() {
                     {!isContext && isError && (
                       <Emoji
                         unified="1f534"
+                        size={12}
+                        getEmojiUrl={getEmojiUrl}
+                      />
+                    )}
+                    {message?.reasoningContent && (
+                      <Emoji
+                        unified="1f914"
                         size={12}
                         getEmojiUrl={getEmojiUrl}
                       />

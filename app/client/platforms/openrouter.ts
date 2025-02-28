@@ -165,6 +165,7 @@ export class OpenRouterApi implements LLMApi {
 
       if (shouldStream) {
         let responseText = "";
+        let responseReasoning = "";
         let finished = false;
 
         const error = (inError: Error | string) => {
@@ -179,7 +180,9 @@ export class OpenRouterApi implements LLMApi {
         const finish = () => {
           if (!finished) {
             finished = true;
-            requestAnimationFrame(() => options.onFinish(responseText));
+            requestAnimationFrame(() =>
+              options.onFinish(responseText, responseReasoning),
+            );
           }
         };
 
@@ -250,30 +253,24 @@ export class OpenRouterApi implements LLMApi {
               const content = choices[0]?.delta?.content;
               const reasonContent = choices[0]?.delta?.reasoning;
               // console.log("content", content, "reasonContent", reasonContent)
-              let delta = "";
-              if (reasonContent) {
-                if (!reasoningStarted && !reasoningEnded) {
-                  reasoningStarted = true;
-                  delta = "```thinking\n" + reasonContent;
-                  // delta = reasonContent;
-                } else {
-                  delta = delta + reasonContent;
-                }
-              }
-              if (content) {
-                if (reasoningStarted && !reasoningEnded) {
-                  reasoningEnded = true;
-                  delta = delta + "\n```\n" + content;
-                  // delta = delta + "\n---\n" + content;
-                } else {
-                  delta = delta + content;
-                }
-              }
+              const delta = content;
+              const reasonDelta = reasonContent;
               const textmoderation = json?.prompt_filter_results;
 
-              if (delta) {
-                responseText += delta;
-                requestAnimationFrame(() => options.onUpdate?.(responseText));
+              if (delta || reasonDelta) {
+                if (delta) {
+                  responseText += delta;
+                }
+                if (reasonDelta) {
+                  responseReasoning += reasonDelta;
+                  //workaround: 将 `\\n` 替换成 `\n` 并移除首尾多余换行
+                  responseReasoning = responseReasoning
+                    .replace(/\\n/g, "\n")
+                    .replace(/^\n+|\n+$/g, "");
+                }
+                requestAnimationFrame(() =>
+                  options.onUpdate?.(responseText, responseReasoning),
+                );
               }
 
               if (
