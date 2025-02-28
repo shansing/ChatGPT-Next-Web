@@ -61,30 +61,6 @@ export class OpenRouterApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
-    const visionModel = isVisionModel(options.config.model);
-    let messages = options.messages.map((v) => {
-      let content = visionModel ? v.content : getMessageTextContent(v);
-      if (options.config.model.includes("deepseek-r1") && v.role === "user") {
-        if (typeof content === "string") {
-          content = content + "\n<think>\n";
-        } else if (typeof content === "object") {
-          const arr: MultimodalContent[] = content;
-          content = arr.map((c) => ({
-            type: c.type,
-            text: c.type === "text" ? c.text + "\n<think>\n" : c.text,
-            image_url: c.image_url,
-          }));
-        }
-      }
-      return {
-        role:
-          options.config.model.startsWith("deepseek") && v.role === "system"
-            ? "user"
-            : v.role,
-        content: content,
-      };
-    });
-
     const modelConfig = {
       ...useAppConfig.getState().modelConfig,
       ...useChatStore.getState().currentSession().mask.modelConfig,
@@ -99,6 +75,29 @@ export class OpenRouterApi implements LLMApi {
       }),
     };
     console.log("max_tokens", modelConfig.max_tokens);
+
+    const visionModel = isVisionModel(options.config.model);
+    const shouldInjectSystemPrompts = modelConfig.enableInjectSystemPrompts;
+    // console.log("shouldInjectSystemPrompts", shouldInjectSystemPrompts);
+    let messages = options.messages.map((v) => {
+      let content = visionModel ? v.content : getMessageTextContent(v);
+      return {
+        role:
+          options.config.model.startsWith("deepseek") && v.role === "system"
+            ? "user"
+            : v.role,
+        content: content,
+      };
+    });
+    if (
+      options.config.model.includes("deepseek-r1") &&
+      shouldInjectSystemPrompts
+    ) {
+      messages.push({
+        role: "user",
+        content: "\n<think>\n",
+      });
+    }
 
     // const deepseekR1Message : RequestMessage = {
     //   role: "assistant",
