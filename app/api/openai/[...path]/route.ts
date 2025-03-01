@@ -97,15 +97,19 @@ async function handle(
     (!requestJson.stream_options ||
       requestJson.stream_options.include_usage !== true)
   ) {
-    return NextResponse.json(
-      {
-        error: true,
-        msg: "Invalid param (stream_options.include_usage should be true)",
-      },
-      {
-        status: 401,
-      },
-    );
+    // return NextResponse.json(
+    //   {
+    //     error: true,
+    //     msg: "Invalid param (stream_options.include_usage should be true)",
+    //   },
+    //   {
+    //     status: 401,
+    //   },
+    // );
+    if (requestJson.stream_options == null) {
+      requestJson.stream_options = {};
+    }
+    requestJson.stream_options.include_usage = true;
   }
 
   const authResult = auth(req, ModelProvider.GPT, username);
