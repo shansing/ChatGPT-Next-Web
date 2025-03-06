@@ -198,6 +198,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "claude-3-5-sonnet-latest": "2024-04",
   "anthropic/claude-3.5-sonnet": "2024-04",
   "anthropic/claude-3.7-sonnet": "2024-10",
+  "anthropic/claude-3.7-sonnet:thinking": "2024-10",
 };
 
 const openaiModels = [
@@ -288,6 +289,7 @@ const alibabaModels = [
 
 const openRouterModels = [
   "anthropic/claude-3.7-sonnet",
+  "anthropic/claude-3.7-sonnet:thinking",
   "anthropic/claude-3.5-sonnet",
   "openai/o3-mini-high",
   "openai/o3-mini",
