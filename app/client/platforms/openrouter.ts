@@ -112,7 +112,8 @@ export class OpenRouterApi implements LLMApi {
       include_reasoning: true,
       provider: {
         data_collection: "deny",
-        ...(modelConfig.model.includes("deepseek-r1") && {
+        ...((modelConfig.model.includes("deepseek-r1") ||
+          modelConfig.model.includes("qwen/qwq-32b")) && {
           order: ["Fireworks"],
           allow_fallbacks: true,
         }),

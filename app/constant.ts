@@ -291,6 +291,7 @@ const openRouterModels = [
   "anthropic/claude-3.7-sonnet",
   "anthropic/claude-3.7-sonnet:thinking",
   "anthropic/claude-3.5-sonnet",
+  "qwen/qwq-32b",
   "openai/o3-mini-high",
   "openai/o3-mini",
   "deepseek/deepseek-chat",
@@ -432,6 +433,7 @@ export const modelThresholdTokenNumbers = [
     prompt: null,
     completion: 8_000,
   },
+  { name: "qwen/qwq-32b", total: 131_000, prompt: null, completion: 131_000 },
   { name: "", total: 4_000, prompt: null, completion: null }, //default
 ] as const;
 
