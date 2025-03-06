@@ -118,6 +118,9 @@ function getSummarizeModel(currentModel: string) {
   //   );
   //   return summarizeModel?.name ?? currentModel;
   // }
+  if (currentModel.includes("/")) {
+    return SUMMARIZE_MODEL;
+  }
   if (currentModel.startsWith("gemini")) {
     return GEMINI_SUMMARIZE_MODEL;
   }
@@ -180,6 +183,11 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     productName = "ChatGPT";
   } else if (modelInfo?.name?.includes("o3")) {
     productName = "ChatGPT";
+  } else if (
+    modelInfo?.name?.includes("qwen") ||
+    modelInfo?.name?.includes("qwq")
+  ) {
+    productName = "Qwen";
   }
 
   const vars = {
