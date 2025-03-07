@@ -279,7 +279,7 @@ export class OpenRouterApi implements LLMApi {
                 json.citations.length > 0
               ) {
                 const citationsMarkdown =
-                  "\n---\n" +
+                  "\n\n---\n" +
                   json.citations
                     .map((citation: any, index: number) => {
                       return `[${index + 1}] ${citation}`;
