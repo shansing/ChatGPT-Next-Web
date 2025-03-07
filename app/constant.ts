@@ -296,6 +296,7 @@ const openRouterModels = [
   "openai/o3-mini",
   "deepseek/deepseek-chat",
   "deepseek/deepseek-r1",
+  "deepseek/deepseek-r1-zero:free",
 ];
 
 const deepSeekModels = ["deepseek-chat", "deepseek-reasoner"];
