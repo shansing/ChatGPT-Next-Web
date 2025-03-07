@@ -11,6 +11,7 @@ import { auth } from "../../auth";
 import {
   getUsernameFromHttpBasicAuth,
   hashUsername,
+  parseUsageArr,
   parseUsageObj,
   pay,
   payFixed,
@@ -133,8 +134,8 @@ async function handle(
       firstCompletionTokenNumber = parseInt(
         response?.headers.get("X-Shansing-First-Completion-Token-Number") ??
           "0",
-      ),
-      searchCount = parseInt(
+      );
+    let searchCount = parseInt(
         response?.headers.get("X-Shansing-Search-Count") ?? "0",
       ),
       newsCount = parseInt(
@@ -148,6 +149,17 @@ async function handle(
       .text()
       .then((responseBody) => {
         //console.log("[responseBody]" + responseBody)
+        const citations = parseUsageArr(responseBody, "citations", false);
+        if (citations && Array.isArray(citations) && citations.length > 0) {
+          //其实应该是搜索产生的，但是 citations 都是具体页面的 url，跟搜索不一一对应，暂且计为爬取公平一些
+          const nativeCrawlerCount = citations.length;
+          console.log(
+            "[OpenRouter Usage]<" + username + "> nativeCrawlerCount",
+            nativeCrawlerCount,
+          );
+          crawlerCount += nativeCrawlerCount;
+        }
+
         const usage = parseUsageObj(responseBody, "usage", false);
         console.log(
           "[OpenRouter Usage]<" + username + ">",

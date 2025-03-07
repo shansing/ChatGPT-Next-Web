@@ -213,19 +213,6 @@ export class AlibabaApi implements LLMApi {
                 responseText += delta;
                 requestAnimationFrame(() => options.onUpdate?.(responseText));
               }
-
-              if (
-                textmoderation &&
-                textmoderation.length > 0 &&
-                ServiceProvider.Azure
-              ) {
-                const contentFilterResults =
-                  textmoderation[0]?.content_filter_results;
-                console.log(
-                  `[${ServiceProvider.Azure}] [Text Moderation] flagged categories result:`,
-                  contentFilterResults,
-                );
-              }
             } catch (e) {
               showToast(Locale.Shansing.messageParseFailure);
               console.error("[Request] parse error", text, msg);

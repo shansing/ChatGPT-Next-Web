@@ -151,7 +151,9 @@ export class OpenRouterApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        modelConfig.model.includes("deepseek-r1")
+        modelConfig.model.includes("deepseek-r1") ||
+          modelConfig.model.includes("QwQ") ||
+          modelConfig.model.includes("perplexity")
           ? REQUEST_LONG_TIMEOUT_MS
           : REQUEST_TIMEOUT_MS,
       );
@@ -181,6 +183,7 @@ export class OpenRouterApi implements LLMApi {
 
         controller.signal.onabort = finish;
 
+        let citationsNum = 0;
         fetchEventSource(chatPath, {
           ...chatPayload,
           async onopen(res) {
@@ -235,11 +238,16 @@ export class OpenRouterApi implements LLMApi {
             const text = msg.data;
             try {
               const json = JSON.parse(text);
+              if (json.citations && json.citations.length > citationsNum) {
+                citationsNum = json.citations.length;
+                options.onFlag?.(true, undefined);
+              }
               if (!json.choices && !json.usage) {
                 return error("No choices: " + text);
               }
               const choices = json.choices as Array<{
                 delta: { content: string; reasoning: string };
+                finish_reason?: string;
               }>;
               const content = choices[0]?.delta?.content;
               const reasonContent = choices[0]?.delta?.reasoning;
@@ -264,16 +272,22 @@ export class OpenRouterApi implements LLMApi {
                 );
               }
 
+              //for perplexity
               if (
-                textmoderation &&
-                textmoderation.length > 0 &&
-                ServiceProvider.Azure
+                choices[0]?.finish_reason === "stop" &&
+                json.citations &&
+                json.citations.length > 0
               ) {
-                const contentFilterResults =
-                  textmoderation[0]?.content_filter_results;
-                console.log(
-                  `[${ServiceProvider.Azure}] [Text Moderation] flagged categories result:`,
-                  contentFilterResults,
+                const citationsMarkdown =
+                  "\n---\n" +
+                  json.citations
+                    .map((citation: any, index: number) => {
+                      return `[${index + 1}] ${citation}`;
+                    })
+                    .join("\n");
+                responseText += citationsMarkdown;
+                requestAnimationFrame(() =>
+                  options.onUpdate?.(responseText, responseReasoning),
                 );
               }
             } catch (e) {
