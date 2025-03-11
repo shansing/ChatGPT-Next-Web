@@ -1,6 +1,7 @@
 "use client";
 import {
   AlibabaPath,
+  REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
 } from "@/app/constant";
@@ -125,11 +126,14 @@ export class AlibabaApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        REQUEST_TIMEOUT_MS,
+        modelConfig.model.includes("QwQ")
+          ? REQUEST_LONG_TIMEOUT_MS
+          : REQUEST_TIMEOUT_MS,
       );
 
       if (shouldStream) {
         let responseText = "";
+        let responseReasoning = "";
         let finished = false;
 
         const error = (inError: Error | string) => {
@@ -144,7 +148,9 @@ export class AlibabaApi implements LLMApi {
         const finish = () => {
           if (!finished) {
             finished = true;
-            requestAnimationFrame(() => options.onFinish(responseText));
+            requestAnimationFrame(() =>
+              options.onFinish(responseText, responseReasoning),
+            );
           }
         };
 
@@ -204,14 +210,28 @@ export class AlibabaApi implements LLMApi {
                 return error("No choices: " + text);
               }
               const choices = json.choices as Array<{
-                delta: { content: string };
+                delta: { content: string; reasoning_content: string };
               }>;
-              const delta = choices[0]?.delta?.content;
-              const textmoderation = json?.prompt_filter_results;
+              const content = choices[0]?.delta?.content;
+              const reasonContent = choices[0]?.delta?.reasoning_content;
+              // console.log("content", content, "reasonContent", reasonContent)
+              const delta = content;
+              const reasonDelta = reasonContent;
 
-              if (delta) {
-                responseText += delta;
-                requestAnimationFrame(() => options.onUpdate?.(responseText));
+              if (delta || reasonDelta) {
+                if (delta) {
+                  responseText += delta;
+                }
+                if (reasonDelta) {
+                  responseReasoning += reasonDelta;
+                  //workaround: 将 `\\n` 替换成 `\n` 并移除首尾多余换行
+                  responseReasoning = responseReasoning
+                    .replace(/\\n/g, "\n")
+                    .replace(/^\n+|\n+$/g, "");
+                }
+                requestAnimationFrame(() =>
+                  options.onUpdate?.(responseText, responseReasoning),
+                );
               }
             } catch (e) {
               showToast(Locale.Shansing.messageParseFailure);

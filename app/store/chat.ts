@@ -127,7 +127,7 @@ function getSummarizeModel(currentModel: string) {
   if (currentModel.startsWith("claude")) {
     return CLAUDE_SUMMARIZE_MODEL;
   }
-  if (currentModel.startsWith("qwen")) {
+  if (currentModel.startsWith("qwen") || currentModel.startsWith("qwq")) {
     return QWEN_SUMMARIZE_MODEL;
   }
   if (currentModel.startsWith("deepseek-")) {
@@ -894,7 +894,7 @@ export const useChatStore = createPersistStore(
           return new ClientApi(ModelProvider.GeminiPro);
         } else if (identifyDefaultClaudeModel(model)) {
           return new ClientApi(ModelProvider.Claude);
-        } else if (model.startsWith("qwen-")) {
+        } else if (model.startsWith("qwen-") || model.startsWith("qwq-")) {
           return new ClientApi(ModelProvider.Alibaba);
         } else if (model.startsWith("deepseek-")) {
           return new ClientApi(ModelProvider.DeepSeek);

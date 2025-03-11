@@ -261,6 +261,9 @@ const anthropicModels = [
 ];
 
 const alibabaModels = [
+  "qwq-plus-latest",
+  "qwq-plus",
+  "qwq-plus-2025-03-05",
   "qwen-max-latest",
   "qwen-max",
   "qwen-max-0428",
@@ -321,15 +324,6 @@ export const DEFAULT_MODELS = [
       providerType: "anthropic",
     },
   })),
-  ...deepSeekModels.map((name) => ({
-    name,
-    available: true,
-    provider: {
-      id: "deepseek",
-      providerName: "DeepSeek",
-      providerType: "deepseek",
-    },
-  })),
   ...googleModels.map((name) => ({
     name,
     available: true,
@@ -339,13 +333,13 @@ export const DEFAULT_MODELS = [
       providerType: "google",
     },
   })),
-  ...openRouterModels.map((name) => ({
+  ...deepSeekModels.map((name) => ({
     name,
     available: true,
     provider: {
-      id: "openrouter",
-      providerName: "OpenRouter",
-      providerType: "openrouter-compatible",
+      id: "deepseek",
+      providerName: "DeepSeek",
+      providerType: "deepseek",
     },
   })),
   ...alibabaModels.map((name) => ({
@@ -355,6 +349,15 @@ export const DEFAULT_MODELS = [
       id: "alibaba",
       providerName: "Alibaba",
       providerType: "alibaba-compatible",
+    },
+  })),
+  ...openRouterModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "openrouter",
+      providerName: "OpenRouter",
+      providerType: "openrouter-compatible",
     },
   })),
 ] as const;
@@ -388,6 +391,7 @@ export const modelThresholdTokenNumbers = [
   { name: "o1-mini", total: 128_000, prompt: null, completion: 65_536 },
   { name: "o1", total: 200_000, prompt: null, completion: 100_000 },
   { name: "o3-mini", total: 200_000, prompt: null, completion: 100_000 },
+  { name: "qwq-plus", total: 131_072, prompt: 98_304, completion: 8_192 },
   { name: "qwen-turbo", total: null, prompt: 6_000, completion: 1500 },
   { name: "qwen-plus", total: null, prompt: 30_000, completion: 2000 },
   {

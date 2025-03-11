@@ -254,7 +254,6 @@ export class OpenRouterApi implements LLMApi {
               // console.log("content", content, "reasonContent", reasonContent)
               const delta = content;
               const reasonDelta = reasonContent;
-              const textmoderation = json?.prompt_filter_results;
 
               if (delta || reasonDelta) {
                 if (delta) {
