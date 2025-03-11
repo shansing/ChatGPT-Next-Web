@@ -261,15 +261,15 @@ const anthropicModels = [
 ];
 
 const alibabaModels = [
-  "qwq-plus-latest",
-  "qwq-plus",
-  "qwq-plus-2025-03-05",
   "qwen-max-latest",
   "qwen-max",
   "qwen-max-0428",
   "qwen-max-0403",
   "qwen-max-0107",
   "qwen-max-longcontext",
+  "qwq-plus-latest",
+  "qwq-plus",
+  "qwq-plus-2025-03-05",
   "qwen-plus",
   "qwen-turbo",
   "qwen-vl-max",
