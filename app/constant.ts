@@ -200,6 +200,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "anthropic/claude-3.5-sonnet": "2024-04",
   "anthropic/claude-3.7-sonnet": "2024-10",
   "anthropic/claude-3.7-sonnet:thinking": "2024-10",
+  "x-ai/grok-3-beta": "2024-11-17",
+  "x-ai/grok-3-mini-beta": "2024-11-17",
 };
 
 const openaiModels = [
@@ -292,6 +294,8 @@ const alibabaModels = [
 ];
 
 const openRouterModels = [
+  "x-ai/grok-3-beta",
+  "x-ai/grok-3-mini-beta",
   "anthropic/claude-3.7-sonnet",
   "anthropic/claude-3.7-sonnet:thinking",
   "anthropic/claude-3.5-sonnet",
@@ -454,6 +458,7 @@ export const modelThresholdTokenNumbers = [
     prompt: null,
     completion: 200_000,
   },
+  { name: "grok-3", total: 131_000, prompt: null, completion: 131_000 },
   { name: "", total: 4_000, prompt: null, completion: null }, //default
 ] as const;
 

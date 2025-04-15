@@ -153,7 +153,9 @@ export class OpenRouterApi implements LLMApi {
         () => controller.abort(),
         modelConfig.model.includes("deepseek-r1") ||
           modelConfig.model.includes("QwQ") ||
-          modelConfig.model.includes("perplexity")
+          modelConfig.model.includes("perplexity") ||
+          modelConfig.model.includes("o1") ||
+          modelConfig.model.includes("o3")
           ? REQUEST_LONG_TIMEOUT_MS
           : REQUEST_TIMEOUT_MS,
       );
