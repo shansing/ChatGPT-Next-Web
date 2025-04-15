@@ -196,6 +196,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
   "gemini-pro-vision": "2023-12",
+  "gemini-2.5-pro-preview-03-25": "2025-01",
+  "gemini-2.5-pro-exp-03-25": "2025-01",
   "gemini-2.0-flash": "2024-08",
   "gemini-2.0-flash-lite-preview-02-05": "2024-08",
   "claude-3-opus-20240229": "2023-08",
@@ -255,6 +257,8 @@ const openaiModels = [
 ];
 
 const googleModels = [
+  "gemini-2.5-pro-preview-03-25",
+  "gemini-2.5-pro-exp-03-25",
   "gemini-2.0-flash-latest",
   "gemini-2.0-flash",
   "gemini-2.0-flash-lite-preview-02-05",
@@ -441,6 +445,7 @@ export const modelThresholdTokenNumbers = [
   { name: "qwen-max-latest", total: null, prompt: 30_720, completion: 8_192 },
   { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
+  { name: "gemini-2.5-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.0-", total: null, prompt: 1_048_576, completion: 8192 },
   { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576;  1.5pro 2,097,152;  but under 128k is cheap
   {
@@ -515,6 +520,7 @@ export const visionKeywords = [
   "gemini-1.5-pro",
   "gemini-1.5-flash",
   "gemini-2.0",
+  "gemini-2.5",
   "gpt-4o",
   "gpt-4.5",
   "gpt-4.1",
@@ -532,12 +538,17 @@ export const onlineSearchKeywords = [
   // "qwen-max",
   // "qwen-long",
   "gemini-2.0-",
+  "gemini-2.5-",
   // "gemini-1.5-",
   // "gemini-1.5-pro",
   // "claude-3-",
 ];
 
-export const codeExecutionKeywords = ["gemini-1.5-", "gemini-2.0-"];
+export const codeExecutionKeywords = [
+  "gemini-1.5-",
+  "gemini-2.0-",
+  "gemini-2.5-",
+];
 
 export const uploadFileModels: {
   name: string;
