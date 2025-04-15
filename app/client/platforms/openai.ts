@@ -53,10 +53,10 @@ interface RequestPayload {
   };
   stream?: boolean;
   model: string;
-  temperature: number;
-  presence_penalty: number;
-  frequency_penalty: number;
-  top_p: number;
+  temperature?: number;
+  presence_penalty?: number;
+  frequency_penalty?: number;
+  top_p?: number;
   max_completion_tokens?: number;
 }
 
@@ -139,10 +139,18 @@ export class ChatGPTApi implements LLMApi {
       messages,
       stream: shouldStream,
       model: modelConfig.model,
-      temperature: modelConfig.temperature,
-      presence_penalty: modelConfig.presence_penalty,
-      frequency_penalty: modelConfig.frequency_penalty,
-      top_p: modelConfig.top_p,
+      temperature: modelConfig.model.includes("-search")
+        ? undefined
+        : modelConfig.temperature,
+      presence_penalty: modelConfig.model.includes("-search")
+        ? undefined
+        : modelConfig.presence_penalty,
+      frequency_penalty: modelConfig.model.includes("-search")
+        ? undefined
+        : modelConfig.frequency_penalty,
+      top_p: modelConfig.model.includes("-search")
+        ? undefined
+        : modelConfig.top_p,
       max_completion_tokens: modelConfig.max_tokens,
     };
     if (shouldStream) {

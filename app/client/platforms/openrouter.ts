@@ -42,9 +42,9 @@ interface RequestPayload {
   stream?: boolean;
   model: string;
   temperature?: number;
-  presence_penalty: number;
-  frequency_penalty: number;
-  top_p: number;
+  presence_penalty?: number;
+  frequency_penalty?: number;
+  top_p?: number;
   max_tokens?: number;
   include_reasoning?: boolean; //openrouter
   provider?: object; //openrouter
@@ -107,7 +107,7 @@ export class OpenRouterApi implements LLMApi {
       temperature: modelConfig.temperature,
       presence_penalty: modelConfig.presence_penalty,
       frequency_penalty: modelConfig.frequency_penalty,
-      top_p: modelConfig.top_p,
+      top_p: modelConfig.model.includes("o1") ? undefined : modelConfig.top_p,
       max_tokens: modelConfig.max_tokens,
       include_reasoning: true,
       provider: {
@@ -117,10 +117,10 @@ export class OpenRouterApi implements LLMApi {
           order: ["Fireworks"],
           allow_fallbacks: true,
         }),
-        ...(modelConfig.model.includes("grok") && {
-          order: ["xAI Fast"],
-          allow_fallbacks: true,
-        }),
+        // ...(modelConfig.model.includes("grok") && {
+        //   order: ["xAI Fast"],
+        //   allow_fallbacks: true,
+        // }),
       },
     };
     requestPayload["stream_options"] = options.config.stream
@@ -128,7 +128,7 @@ export class OpenRouterApi implements LLMApi {
           include_usage: true,
         }
       : undefined;
-    if (requestPayload.top_p >= 1.0) {
+    if (requestPayload.top_p && requestPayload.top_p >= 1.0) {
       requestPayload.top_p = 0.99;
     }
 
