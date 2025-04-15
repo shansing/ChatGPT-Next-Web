@@ -262,7 +262,9 @@ export function isVisionModel(model: string) {
   return (
     (visionKeywords.some((keyword) => model.includes(keyword)) &&
       !model.includes("o1-mini") &&
-      !model.includes("o1-preview")) ||
+      !model.includes("o1-preview") &&
+      !model.includes("gpt-4o-search") &&
+      !model.includes("gpt-4o-mini-search")) ||
     isGpt4Turbo
   );
 }
@@ -272,6 +274,7 @@ export function isOnlineSearchModel(model: string) {
   return (
     onlineSearchKeywords.some((keyword) => model.includes(keyword)) &&
     !model.includes("-lite") &&
+    !model.includes("gpt-4.1-nano") &&
     !model.includes("-search") &&
     !isChatGpt
   );

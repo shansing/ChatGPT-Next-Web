@@ -185,6 +185,8 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
     productName = "ChatGPT";
   } else if (modelInfo?.name?.includes("perplexity")) {
     productName = "Perplexity";
+  } else if (modelInfo?.name?.includes("grok")) {
+    productName = "Grok";
   } else if (
     modelInfo?.name?.includes("qwen") ||
     modelInfo?.name?.includes("qwq")
