@@ -117,6 +117,10 @@ export class OpenRouterApi implements LLMApi {
           order: ["Fireworks"],
           allow_fallbacks: true,
         }),
+        ...(modelConfig.model.includes("grok") && {
+          order: ["xAI Fast"],
+          allow_fallbacks: true,
+        }),
       },
     };
     requestPayload["stream_options"] = options.config.stream

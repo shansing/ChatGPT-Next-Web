@@ -170,6 +170,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4o-2024-05-13": "2023-10",
   "gpt-4o-mini": "2023-10",
   "gpt-4o-mini-2024-07-18": "2023-10",
+  "gpt-4o-search-preview-2025-03-11": "2023-10-01",
+  "gpt-4o-mini-search-preview-2025-03-11": "2023-10-01",
   "gpt-4.5-preview": "2023-10",
   "gpt-4.5-preview-2025-02-27": "2023-10",
   "chatgpt-4o-latest": "2023-10",
@@ -211,6 +213,10 @@ const openaiModels = [
   "gpt-4o-2024-05-13",
   "gpt-4o-mini",
   "gpt-4o-mini-2024-07-18",
+  "gpt-4o-search-preview",
+  "gpt-4o-search-preview-2025-03-11",
+  "gpt-4o-mini-search-preview",
+  "gpt-4o-mini-search-preview-2025-03-11",
   "chatgpt-4o-latest",
   "gpt-4.5-preview",
   "gpt-4.5-preview-2025-02-27",
@@ -369,6 +375,18 @@ export const DEFAULT_MODELS = [
 ] as const;
 
 export const modelThresholdTokenNumbers = [
+  {
+    name: "gpt-4o-search",
+    total: 128_000,
+    prompt: null,
+    completion: 16_384,
+  },
+  {
+    name: "gpt-4o-mini-search",
+    total: 128_000,
+    prompt: null,
+    completion: 16_384,
+  },
   {
     name: "gpt-4o-2024-11-20",
     total: 128_000,
