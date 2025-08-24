@@ -569,6 +569,7 @@ export const visionKeywords = [
   // "deepseek",
   "claude-3.",
   "claude-sonnet-4",
+  "grok-4",
 ];
 
 export const onlineSearchKeywords = [
