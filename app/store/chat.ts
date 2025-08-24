@@ -511,7 +511,7 @@ export const useChatStore = createPersistStore(
           messages: sendMessages,
           config: {
             ...modelConfig,
-            stream: true,
+            stream: decideStream(modelConfig.model),
             checkShansingOnlineSearch: true,
           },
           onFlag(isOnlineSearch, isCodeExecution) {
@@ -829,7 +829,7 @@ export const useChatStore = createPersistStore(
             config: {
               ...modelConfig,
               max_tokens: SUMMARIZE_MAX_TOKENS,
-              stream: true,
+              stream: decideStream(modelConfig.model),
               model: getSummarizeModel(session.mask.modelConfig.model),
               checkShansingOnlineSearch: false,
             },
@@ -991,3 +991,7 @@ export const useChatStore = createPersistStore(
     },
   },
 );
+
+const decideStream = function (model: string) {
+  return !(model.includes("gpt-5") && !model.includes("gpt-5-nano"));
+};
