@@ -568,7 +568,7 @@ export const visionKeywords = [
   "-vl",
   // "deepseek",
   "claude-3.",
-  "claude-4",
+  "claude-sonnet-4",
 ];
 
 export const onlineSearchKeywords = [
