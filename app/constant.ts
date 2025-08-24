@@ -16,7 +16,7 @@ export const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/";
 export const ALIBABA_BASE_URL =
   "https://dashscope.aliyuncs.com/compatible-mode";
 export const OPEN_ROUTER_BASE_URL = "https://openrouter.ai/api";
-export const DEEP_SEEK_BASE_URL = "https://api.deepseek.com/v1"; //v1 is more compatible
+export const DEEP_SEEK_BASE_URL = "https://api.deepseek.com";
 
 export enum Path {
   Home = "/",
@@ -582,7 +582,7 @@ export const onlineSearchKeywords = [
   // "gemini-1.5-",
   // "gemini-1.5-pro",
   // "claude-3-",
-  "deepseek-chat",
+  // "deepseek-chat",
 ];
 
 export const codeExecutionKeywords = [
