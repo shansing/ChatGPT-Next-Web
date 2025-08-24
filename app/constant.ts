@@ -495,15 +495,15 @@ export const modelThresholdTokenNumbers = [
   },
   {
     name: "deepseek-chat",
-    total: 64_000,
+    total: 128_000,
     prompt: null,
     completion: 8_000,
   },
   {
     name: "deepseek-reasoner",
-    total: 64_000,
+    total: 128_000,
     prompt: null,
-    completion: 8_000,
+    completion: 64_000,
   },
   { name: "qwen/qwq-32b", total: 131_000, prompt: null, completion: 131_000 },
   {
@@ -560,6 +560,7 @@ export const onlineSearchKeywords = [
   // "gemini-1.5-",
   // "gemini-1.5-pro",
   // "claude-3-",
+  "deepseek-reasoner",
 ];
 
 export const codeExecutionKeywords = [
