@@ -532,7 +532,7 @@ export const modelThresholdTokenNumbers = [
     prompt: null,
     completion: 200_000,
   },
-  { name: "grok-4", total: 256_000, prompt: null, completion: 256_000 },
+  { name: "grok-4", total: 128_000, prompt: null, completion: 128_000 }, //under 128k is cheap
   { name: "grok-3", total: 131_000, prompt: null, completion: 131_000 },
   { name: "", total: 4_000, prompt: null, completion: null }, //default
 ] as const;
@@ -568,6 +568,7 @@ export const visionKeywords = [
   "-vl",
   // "deepseek",
   "claude-3.",
+  "claude-4",
 ];
 
 export const onlineSearchKeywords = [
@@ -581,7 +582,7 @@ export const onlineSearchKeywords = [
   // "gemini-1.5-",
   // "gemini-1.5-pro",
   // "claude-3-",
-  "deepseek-reasoner",
+  "deepseek-chat",
 ];
 
 export const codeExecutionKeywords = [
