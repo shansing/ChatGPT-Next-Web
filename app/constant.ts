@@ -227,12 +227,6 @@ export const KnowledgeCutOffDate: Record<string, string> = {
 };
 
 const openaiModels = [
-  "gpt-5",
-  "gpt-5-2025-08-07",
-  "gpt-5-mini",
-  "gpt-5-mini-2025-08-07",
-  "gpt-5-nano",
-  "gpt-5-nano-2025-08-07",
   "gpt-4.1",
   "gpt-4.1-2025-04-14",
   "gpt-4.1-mini",
@@ -250,6 +244,12 @@ const openaiModels = [
   "gpt-4o-mini-search-preview",
   "gpt-4o-mini-search-preview-2025-03-11",
   "chatgpt-4o-latest",
+  "gpt-5",
+  "gpt-5-2025-08-07",
+  "gpt-5-mini",
+  "gpt-5-mini-2025-08-07",
+  "gpt-5-nano",
+  "gpt-5-nano-2025-08-07",
   "gpt-4.5-preview",
   "gpt-4.5-preview-2025-02-27",
   "gpt-4",
