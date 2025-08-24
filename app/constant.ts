@@ -202,6 +202,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
   "gemini-pro-vision": "2023-12",
+  "gemini-2.5-pro": "2025-01",
+  "gemini-2.5-flash": "2025-01",
   "gemini-2.5-pro-preview-03-25": "2025-01",
   "gemini-2.5-pro-exp-03-25": "2025-01",
   "gemini-2.0-flash": "2024-08",
@@ -269,6 +271,8 @@ const openaiModels = [
 ];
 
 const googleModels = [
+  "gemini-2.5-pro",
+  "gemini-2.5-flash",
   "gemini-2.5-pro-preview-03-25",
   "gemini-2.5-pro-exp-03-25",
   "gemini-2.0-flash-latest",
