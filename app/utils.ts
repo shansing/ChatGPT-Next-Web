@@ -275,6 +275,7 @@ export function isOnlineSearchModel(model: string) {
     onlineSearchKeywords.some((keyword) => model.includes(keyword)) &&
     !model.includes("-lite") &&
     !model.includes("gpt-4.1-nano") &&
+    !model.includes("gpt-5-nano") &&
     !model.includes("-search") &&
     !isChatGpt
   );
