@@ -198,6 +198,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "openai/o3-mini-high": "2023-10",
   "o3-mini": "2023-10",
   "o3-mini-2025-01-31": "2023-10",
+  "openai/o4-mini": "2024-06-01",
   // After improvements,
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
@@ -219,8 +220,10 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "anthropic/claude-3.5-sonnet": "2024-04",
   "anthropic/claude-3.7-sonnet": "2024-10",
   "anthropic/claude-3.7-sonnet:thinking": "2024-10",
+  "anthropic/claude-sonnet-4": "2024-10",
   "x-ai/grok-3-beta": "2024-11-17",
   "x-ai/grok-3-mini-beta": "2024-11-17",
+  "x-ai/grok-4": "2024-11",
 };
 
 const openaiModels = [
@@ -333,17 +336,21 @@ const alibabaModels = [
 ];
 
 const openRouterModels = [
+  "x-ai/grok-4",
   "x-ai/grok-3-beta",
   "x-ai/grok-3-mini-beta",
+  "anthropic/claude-sonnet-4",
   "anthropic/claude-3.7-sonnet",
   "anthropic/claude-3.7-sonnet:thinking",
   "anthropic/claude-3.5-sonnet",
   "perplexity/sonar-deep-research",
   "qwen/qwq-32b",
   "openai/o1-pro",
+  "openai/o4-mini",
   "openai/o3-mini-high",
   "openai/o3-mini",
   "deepseek/deepseek-chat",
+  "deepseek/deepseek-r1-0528",
   "deepseek/deepseek-r1",
   "deepseek/deepseek-r1-zero:free",
 ];
@@ -450,6 +457,7 @@ export const modelThresholdTokenNumbers = [
   { name: "o1-mini", total: 128_000, prompt: null, completion: 65_536 },
   { name: "o1", total: 200_000, prompt: null, completion: 100_000 },
   { name: "o3-mini", total: 200_000, prompt: null, completion: 100_000 },
+  { name: "o4-mini", total: 200_000, prompt: null, completion: 100_000 },
   { name: "qwq-plus", total: 131_072, prompt: 98_304, completion: 8_192 },
   { name: "qwen-turbo", total: null, prompt: 6_000, completion: 1500 },
   { name: "qwen-plus", total: null, prompt: 30_000, completion: 2000 },
@@ -465,6 +473,12 @@ export const modelThresholdTokenNumbers = [
   { name: "gemini-2.5-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.0-", total: null, prompt: 1_048_576, completion: 8192 },
   { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576;  1.5pro 2,097,152;  but under 128k is cheap
+  {
+    name: "anthropic/claude-sonnet-4",
+    total: 200_000,
+    prompt: null,
+    completion: 64_000,
+  },
   {
     name: "anthropic/claude-3.7",
     total: 200_000,
@@ -486,6 +500,12 @@ export const modelThresholdTokenNumbers = [
     total: 64_000,
     prompt: null,
     completion: 8_000,
+  },
+  {
+    name: "deepseek/deepseek-r1-0528",
+    total: 163_000,
+    prompt: null,
+    completion: 32_000,
   },
   {
     name: "deepseek/deepseek-r1",
@@ -512,6 +532,7 @@ export const modelThresholdTokenNumbers = [
     prompt: null,
     completion: 200_000,
   },
+  { name: "grok-4", total: 256_000, prompt: null, completion: 256_000 },
   { name: "grok-3", total: 131_000, prompt: null, completion: 131_000 },
   { name: "", total: 4_000, prompt: null, completion: null }, //default
 ] as const;
