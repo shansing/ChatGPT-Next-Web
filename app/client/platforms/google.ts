@@ -147,6 +147,7 @@ export class GeminiProApi implements LLMApi {
               //   }
               // },
               googleSearch: {},
+              urlContext: {},
             },
           ]
         : []),
