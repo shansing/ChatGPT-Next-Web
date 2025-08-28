@@ -1,5 +1,5 @@
 import { BuiltinMask } from "./typing";
-import { CLAUDE_SONNET, GPT_5_MODEL } from "@/app/constant";
+import { CLAUDE_SONNET, GPT_MAIN_MODEL } from "@/app/constant";
 
 export const EN_MASKS: BuiltinMask[] = [
   {
@@ -15,7 +15,7 @@ export const EN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_5_MODEL,
+      model: GPT_MAIN_MODEL,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -49,7 +49,7 @@ export const EN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_5_MODEL,
+      model: GPT_MAIN_MODEL,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -83,7 +83,7 @@ export const EN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_5_MODEL,
+      model: GPT_MAIN_MODEL,
       temperature: 1,
       max_tokens: 4000,
       presence_penalty: 0,
@@ -948,7 +948,7 @@ export const EN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_5_MODEL,
+      model: GPT_MAIN_MODEL,
       temperature: 0.5,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -980,7 +980,7 @@ export const EN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_5_MODEL,
+      model: GPT_MAIN_MODEL,
       temperature: 0.5,
       max_tokens: 2000,
       presence_penalty: 0,
@@ -1012,7 +1012,7 @@ export const EN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_5_MODEL,
+      model: GPT_MAIN_MODEL,
       temperature: 0.5,
       max_tokens: 2000,
       presence_penalty: 0,

@@ -139,10 +139,9 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}{{ShansingHelperDeepseekR1Tip}}{{ShansingHelperOpenRouterDeepseekR1Tip}}`;
 
-export const GPT_5_MODEL = "gpt-5-2025-08-07";
-// export const GPT_35_MODEL = "gpt-3.5-turbo-0125";
-export const GPT_5_MINI_MODEL = "gpt-5-mini-2025-08-07";
-export const GPT_5_NANO_MODEL = "gpt-5-nano-2025-08-07";
+export const GPT_MAIN_MODEL = "gpt-4.1-2025-04-14";
+export const GPT_MAIN_MINI_MODEL = "gpt-4.1-mini-2025-04-14";
+// SUMMARIZE_MODEL
 //temporarily disable claude
 export const CLAUDE_SONNET = "anthropic/claude-3.7-sonnet"; //claude-3-5-sonnet-latest
 export const CLAUDE_HAIKU = CLAUDE_SONNET; //claude-3-5-haiku-latest
@@ -150,7 +149,7 @@ export const QWEN_LONG = "qwen-long";
 export const DEEPSEEK_CHAT = "deepseek-chat";
 export const DEEPSEEK_REASONER = "deepseek-reasoner";
 
-export const SUMMARIZE_MODEL = GPT_5_NANO_MODEL;
+export const SUMMARIZE_MODEL = "gpt-4.1-mini-2025-04-14";
 export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash";
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const QWEN_SUMMARIZE_MODEL = QWEN_LONG;
@@ -187,6 +186,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-5-mini-2025-08-07": "2024-05-31",
   "gpt-5-nano": "2024-05-31",
   "gpt-5-nano-2025-08-07": "2024-05-31",
+  "gpt-5-chat-latest": "2024-09-30",
   "chatgpt-4o-latest": "2023-10",
   "o1-preview": "2023-10",
   "o1-preview-2024-09-12": "2023-10",
@@ -227,12 +227,20 @@ export const KnowledgeCutOffDate: Record<string, string> = {
 };
 
 const openaiModels = [
+  "gpt-5-chat-latest",
+  "gpt-5",
+  "gpt-5-2025-08-07",
+  "gpt-5-mini",
+  "gpt-5-mini-2025-08-07",
+  "gpt-5-nano",
+  "gpt-5-nano-2025-08-07",
   "gpt-4.1",
   "gpt-4.1-2025-04-14",
   "gpt-4.1-mini",
   "gpt-4.1-mini-2025-04-14",
   "gpt-4.1-nano",
   "gpt-4.1-nano-2025-04-14",
+  "chatgpt-4o-latest",
   "gpt-4o",
   "gpt-4o-2024-11-20",
   "gpt-4o-2024-08-06",
@@ -243,13 +251,6 @@ const openaiModels = [
   "gpt-4o-search-preview-2025-03-11",
   "gpt-4o-mini-search-preview",
   "gpt-4o-mini-search-preview-2025-03-11",
-  "chatgpt-4o-latest",
-  "gpt-5",
-  "gpt-5-2025-08-07",
-  "gpt-5-mini",
-  "gpt-5-mini-2025-08-07",
-  "gpt-5-nano",
-  "gpt-5-nano-2025-08-07",
   "gpt-4.5-preview",
   "gpt-4.5-preview-2025-02-27",
   "gpt-4",
@@ -415,6 +416,7 @@ export const DEFAULT_MODELS = [
 ] as const;
 
 export const modelThresholdTokenNumbers = [
+  { name: "gpt-5-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5", total: 400_000, prompt: null, completion: 128_000 },
   { name: "gpt-4.1", total: 1_047_576, prompt: null, completion: 32_768 },
   {
