@@ -220,7 +220,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "anthropic/claude-3.5-sonnet": "2024-04",
   "anthropic/claude-3.7-sonnet": "2024-10",
   "anthropic/claude-3.7-sonnet:thinking": "2024-10",
-  "anthropic/claude-sonnet-4": "2024-10",
+  "anthropic/claude-3.5-haiku": "2024-07",
+  "anthropic/claude-sonnet-4": "2025-03",
   "x-ai/grok-3-beta": "2024-11-17",
   "x-ai/grok-3-mini-beta": "2024-11-17",
   "x-ai/grok-4": "2024-11",
@@ -337,13 +338,14 @@ const alibabaModels = [
 ];
 
 const openRouterModels = [
-  "x-ai/grok-4",
-  "x-ai/grok-3-beta",
-  "x-ai/grok-3-mini-beta",
   "anthropic/claude-sonnet-4",
+  "anthropic/claude-3.5-haiku",
   "anthropic/claude-3.7-sonnet",
   "anthropic/claude-3.7-sonnet:thinking",
   "anthropic/claude-3.5-sonnet",
+  "x-ai/grok-4",
+  "x-ai/grok-3-beta",
+  "x-ai/grok-3-mini-beta",
   "perplexity/sonar-deep-research",
   "qwen/qwq-32b",
   "openai/o1-pro",
@@ -475,6 +477,12 @@ export const modelThresholdTokenNumbers = [
   { name: "gemini-2.5-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.0-", total: null, prompt: 1_048_576, completion: 8192 },
   { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576;  1.5pro 2,097,152;  but under 128k is cheap
+  {
+    name: "anthropic/claude-3.5-haiku",
+    total: 200_000,
+    prompt: null,
+    completion: 8200,
+  },
   {
     name: "anthropic/claude-sonnet-4",
     total: 200_000,
