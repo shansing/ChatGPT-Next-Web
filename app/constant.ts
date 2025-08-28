@@ -141,15 +141,15 @@ Latex block: $$e=mc^2$$
 
 export const GPT_MAIN_MODEL = "gpt-4.1-2025-04-14";
 export const GPT_MAIN_MINI_MODEL = "gpt-4.1-mini-2025-04-14";
-// SUMMARIZE_MODEL
+export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
-export const CLAUDE_SONNET = "anthropic/claude-3.7-sonnet"; //claude-3-5-sonnet-latest
-export const CLAUDE_HAIKU = CLAUDE_SONNET; //claude-3-5-haiku-latest
+export const CLAUDE_SONNET = "anthropic/claude-sonnet-4"; //claude-3-5-sonnet-latest
+export const CLAUDE_HAIKU = "anthropic/claude-3.5-haiku"; //claude-3-5-haiku-latest
 export const QWEN_LONG = "qwen-long";
 export const DEEPSEEK_CHAT = "deepseek-chat";
 export const DEEPSEEK_REASONER = "deepseek-reasoner";
 
-export const SUMMARIZE_MODEL = "gpt-4.1-mini-2025-04-14";
+export const SUMMARIZE_MODEL = GPT_MAIN_NANO_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash";
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const QWEN_SUMMARIZE_MODEL = QWEN_LONG;
