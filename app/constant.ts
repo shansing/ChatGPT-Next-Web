@@ -143,7 +143,7 @@ export const GPT_MAIN_MODEL = "gpt-4.1-2025-04-14";
 export const GPT_MAIN_MINI_MODEL = "gpt-4.1-mini-2025-04-14";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
-export const CLAUDE_SONNET = "anthropic/claude-sonnet-4"; //claude-3-5-sonnet-latest
+export const CLAUDE_SONNET = "anthropic/claude-sonnet-4.5"; //claude-3-5-sonnet-latest
 export const CLAUDE_HAIKU = "anthropic/claude-3.5-haiku"; //claude-3-5-haiku-latest
 export const QWEN_LONG = "qwen-long";
 export const DEEPSEEK_CHAT = "deepseek-chat";
@@ -222,6 +222,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "anthropic/claude-3.7-sonnet:thinking": "2024-10",
   "anthropic/claude-3.5-haiku": "2024-07",
   "anthropic/claude-sonnet-4": "2025-03",
+  "anthropic/claude-sonnet-4.5": "2025-07",
   "x-ai/grok-3-beta": "2024-11-17",
   "x-ai/grok-3-mini-beta": "2024-11-17",
   "x-ai/grok-4": "2024-11",
@@ -338,6 +339,7 @@ const alibabaModels = [
 ];
 
 const openRouterModels = [
+  "anthropic/claude-sonnet-4.5",
   "anthropic/claude-sonnet-4",
   "anthropic/claude-3.5-haiku",
   "anthropic/claude-3.7-sonnet",
