@@ -140,7 +140,7 @@ Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}{{ShansingHelperDeepseekR1Tip}}{{ShansingHelperOpenRouterDeepseekR1Tip}}`;
 
 export const GPT_MAIN_MODEL = "gpt-5.1-chat-latest";
-export const GPT_MAIN_MINI_MODEL = "gpt-4.1-mini-2025-04-14";
+export const GPT_MAIN_MINI_MODEL = "gpt-5-mini-2025-08-07";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
 export const CLAUDE_SONNET = "anthropic/claude-sonnet-4.5"; //claude-3-5-sonnet-latest
@@ -598,6 +598,7 @@ export const visionKeywords = [
   // "deepseek",
   "claude-3.",
   "claude-sonnet-4",
+  "claude-haiku-4",
   "grok-4",
 ];
 

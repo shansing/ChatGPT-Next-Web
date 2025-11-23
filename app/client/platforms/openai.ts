@@ -58,6 +58,7 @@ interface RequestPayload {
   frequency_penalty?: number;
   top_p?: number;
   max_completion_tokens?: number;
+  reasoning_effort?: string;
 }
 
 export class ChatGPTApi implements LLMApi {
@@ -152,6 +153,13 @@ export class ChatGPTApi implements LLMApi {
         ? undefined
         : modelConfig.top_p,
       max_completion_tokens: modelConfig.max_tokens,
+      reasoning_effort:
+        modelConfig.model.includes("gpt-5.1") &&
+        !modelConfig.model.includes("-chat")
+          ? "medium"
+          : modelConfig.model.includes("-mini")
+            ? "low"
+            : undefined,
     };
     if (shouldStream) {
       requestPayload["stream_options"] = options.config.stream
