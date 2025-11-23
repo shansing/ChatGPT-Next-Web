@@ -144,7 +144,7 @@ export const GPT_MAIN_MINI_MODEL = "gpt-4.1-mini-2025-04-14";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
 export const CLAUDE_SONNET = "anthropic/claude-sonnet-4.5"; //claude-3-5-sonnet-latest
-export const CLAUDE_HAIKU = "anthropic/claude-3.5-haiku"; //claude-3-5-haiku-latest
+export const CLAUDE_HAIKU = "anthropic/claude-haiku-4.5"; //claude-3-5-haiku-latest
 export const QWEN_LONG = "qwen-long";
 export const DEEPSEEK_CHAT = "deepseek-chat";
 export const DEEPSEEK_REASONER = "deepseek-reasoner";
@@ -220,6 +220,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "anthropic/claude-3.5-sonnet": "2024-04",
   "anthropic/claude-3.7-sonnet": "2024-10",
   "anthropic/claude-3.7-sonnet:thinking": "2024-10",
+  "anthropic/claude-haiku-4.5": "2025-07",
   "anthropic/claude-3.5-haiku": "2024-07",
   "anthropic/claude-sonnet-4": "2025-03",
   "anthropic/claude-sonnet-4.5": "2025-07",
@@ -341,6 +342,7 @@ const alibabaModels = [
 const openRouterModels = [
   "anthropic/claude-sonnet-4.5",
   "anthropic/claude-sonnet-4",
+  "anthropic/claude-haiku-4.5",
   "anthropic/claude-3.5-haiku",
   "anthropic/claude-3.7-sonnet",
   "anthropic/claude-3.7-sonnet:thinking",
@@ -484,6 +486,12 @@ export const modelThresholdTokenNumbers = [
     total: 200_000,
     prompt: null,
     completion: 8200,
+  },
+  {
+    name: "anthropic/claude-haiku-4",
+    total: 200_000,
+    prompt: null,
+    completion: 64_000,
   },
   {
     name: "anthropic/claude-sonnet-4",
