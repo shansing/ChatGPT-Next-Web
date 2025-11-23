@@ -993,9 +993,10 @@ export const useChatStore = createPersistStore(
 );
 
 const decideStream = function (model: string) {
-  return !(
-    model.includes("gpt-5") &&
-    !model.includes("gpt-5-nano") &&
-    !model.includes("gpt-5-chat")
-  );
+  // return !(
+  //   model.includes("gpt-5") &&
+  //   !model.includes("gpt-5-nano") &&
+  //   !model.includes("gpt-5-chat")
+  // );
+  return true;
 };
