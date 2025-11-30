@@ -292,7 +292,7 @@ export function isCodeExecutionModel(model: string) {
   );
 }
 
-export function isReasoningLevelModel(model: string) {
+export function isReasoningModel(model: string) {
   return reasoningLevelModels.some(
     (r) =>
       model === r.name &&

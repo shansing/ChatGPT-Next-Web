@@ -61,7 +61,7 @@ import {
   getMessageTextContent,
   isCodeExecutionModel,
   isOnlineSearchModel,
-  isReasoningLevelModel,
+  isReasoningModel,
   isUploadFileModel,
   isVisionModel,
   selectOrCopy,
@@ -613,7 +613,7 @@ export function ChatActions(props: {
     if (!showCodeExecution && codeExecution) {
       turnCodeExecutionWithoutTip(false);
     }
-    const showReasoningLevel = isReasoningLevelModel(currentModel);
+    const showReasoningLevel = isReasoningModel(currentModel);
     setShowReasoningLevel(showReasoningLevel);
     if (!showReasoningLevel && reasoningLevel != ReasoningLevel.Unspecific) {
       turnReasoningLevelWithoutTip(ReasoningLevel.Unspecific);

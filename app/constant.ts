@@ -654,10 +654,10 @@ export const uploadFileModels: {
 export enum ReasoningLevel {
   Unspecific = "",
   None = "none",
-  // Auto = "auto",
   Low = "low",
   Medium = "medium",
   High = "high",
+  Auto = "auto",
 }
 export const reasoningLevelModels: {
   name: string;
@@ -669,7 +669,7 @@ export const reasoningLevelModels: {
   },
   {
     name: "gemini-2.5-pro",
-    levels: [ReasoningLevel.Medium],
+    levels: [ReasoningLevel.Auto],
   },
   {
     name: "gemini-2.5-flash",
@@ -695,5 +695,21 @@ export const reasoningLevelModels: {
   {
     name: "anthropic/claude-haiku-4.5",
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "deepseek-reasoner",
+    levels: [ReasoningLevel.Auto],
+  },
+  {
+    name: "x-ai/grok-4",
+    levels: [ReasoningLevel.Auto],
+  },
+  {
+    name: "perplexity/sonar-deep-research",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "deepseek/deepseek-r1-0528",
+    levels: [ReasoningLevel.Auto],
   },
 ];

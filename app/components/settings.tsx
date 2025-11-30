@@ -54,7 +54,7 @@ import {
   copyToClipboard,
   isCodeExecutionModel,
   isOnlineSearchModel,
-  isReasoningLevelModel,
+  isReasoningModel,
   isUploadFileModel,
   isVisionModel,
 } from "../utils";
@@ -809,7 +809,7 @@ export function Settings() {
                         {choice.completionTokenPrice1k}
                       </td>
                       <td className="emoji-text">
-                        {isReasoningLevelModel(choice.model) ? (
+                        {isReasoningModel(choice.model) ? (
                           <Emoji
                             unified="1f914"
                             size={14}

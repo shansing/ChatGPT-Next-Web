@@ -521,8 +521,22 @@ const cn = {
     CodeExecution: {
       Title: "代码执行",
     },
-    ReasoningLevel: (level: string) =>
-      level === "none" ? "不深度思考" : "思考：" + level,
+    ReasoningLevel: (level: string) => {
+      switch (level) {
+        case "none":
+          return "关闭思考";
+        case "low":
+          return "思考：浅";
+        case "medium":
+          return "思考：中度";
+        case "high":
+          return "思考：深";
+        case "auto":
+          return "思考：自动";
+        default:
+          return "思考：" + level;
+      }
+    },
     UploadFile: {
       Title: "上传文件",
       UploadedTitle: " 个文件",
