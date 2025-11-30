@@ -531,7 +531,7 @@ const en: LocaleType = {
       Title: "Code Execution",
     },
     ReasoningLevel: (level: string) =>
-      level === "No Think" ? "" : "Think: " + level,
+      level === "none" ? "No Think" : "Think: " + level,
     UploadFile: {
       Title: "Upload File",
       UploadedTitle: " file(s)",

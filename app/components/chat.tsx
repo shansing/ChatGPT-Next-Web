@@ -1,24 +1,24 @@
 import { useDebouncedCallback } from "use-debounce";
 import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
   Fragment,
   RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from "react";
 
 import SendWhiteIcon from "../icons/send-white.svg";
 import BrainIcon from "../icons/brain.svg";
 import RenameIcon from "../icons/rename.svg";
+import EditIcon from "../icons/rename.svg";
 import ExportIcon from "../icons/share.svg";
 import ReturnIcon from "../icons/return.svg";
 import CopyIcon from "../icons/copy.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import LoadingButtonIcon from "../icons/loading.svg";
 import PromptIcon from "../icons/prompt.svg";
-import MaskIcon from "../icons/mask.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
 import ResetIcon from "../icons/reload.svg";
@@ -26,7 +26,6 @@ import BreakIcon from "../icons/break.svg";
 import SettingsIcon from "../icons/chat-settings.svg";
 import DeleteIcon from "../icons/clear.svg";
 import PinIcon from "../icons/pin.svg";
-import EditIcon from "../icons/rename.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 import CancelIcon from "../icons/cancel.svg";
 import ImageIcon from "../icons/image.svg";
@@ -36,9 +35,6 @@ import LaptopOffIcon from "../icons/laptop-off.svg";
 import EarthOffIcon from "../icons/earth-off.svg";
 import ThinkingIcon from "../icons/face-thinking.svg";
 import ThinkingOffIcon from "../icons/face-thinking-off.svg";
-import LightIcon from "../icons/light.svg";
-import DarkIcon from "../icons/dark.svg";
-import AutoIcon from "../icons/auto.svg";
 import FileIcon from "../icons/file-document-outline.svg";
 import FileCheckIcon from "../icons/file-document-check-outline.svg";
 import BottomIcon from "../icons/bottom.svg";
@@ -46,30 +42,30 @@ import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
 
 import {
-  ChatMessage,
-  SubmitKey,
-  useChatStore,
   BOT_HELLO,
+  ChatMessage,
   createMessage,
-  useAccessStore,
-  Theme,
-  useAppConfig,
   DEFAULT_TOPIC,
   ModelType,
+  SubmitKey,
+  Theme,
+  useAccessStore,
+  useAppConfig,
+  useChatStore,
 } from "../store";
 
 import {
-  copyToClipboard,
-  selectOrCopy,
   autoGrowTextArea,
-  useMobileScreen,
-  getMessageTextContent,
+  copyToClipboard,
   getMessageImages,
-  isVisionModel,
-  isOnlineSearchModel,
-  isUploadFileModel,
+  getMessageTextContent,
   isCodeExecutionModel,
+  isOnlineSearchModel,
   isReasoningLevelModel,
+  isUploadFileModel,
+  isVisionModel,
+  selectOrCopy,
+  useMobileScreen,
 } from "../utils";
 
 import { compressImage } from "@/app/utils/chat";
@@ -106,7 +102,7 @@ import {
 import { Avatar, getEmojiUrl } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
 import { useMaskStore } from "../store/mask";
-import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
+import { useCommand } from "../command";
 import { prettyObject } from "../utils/format";
 import { ExportMessageModal } from "./exporter";
 import { getClientConfig } from "../config/client";
@@ -526,16 +522,16 @@ export function ChatActions(props: {
   const reasoningLevel =
     chatStore.currentSession().mask.modelConfig.shansingReasoningLevel;
   function switchReasoningLevel() {
-    const levels = reasoningLevelModels.find(
+    const reasoningLevels = reasoningLevelModels.find(
       (r) => currentModel === r.name,
     )?.levels;
     let newIndex = 0;
-    if (levels != null) {
-      const index = levels?.indexOf(reasoningLevel);
+    if (reasoningLevels != null) {
+      const index = reasoningLevels?.indexOf(reasoningLevel);
       if (index >= 0) {
-        newIndex = (index + 1) % levels.length;
+        newIndex = (index + 1) % reasoningLevels.length;
       }
-      const newLevel = levels[newIndex];
+      const newLevel = reasoningLevels[newIndex];
       chatStore.updateCurrentSessionNow(
         (session) =>
           (session.mask.modelConfig.shansingReasoningLevel = newLevel),
@@ -547,6 +543,18 @@ export function ChatActions(props: {
             ReasoningLevel.Unspecific),
       );
     }
+  }
+  function checkGoodReasoningLevel() {
+    const reasoningLevels = reasoningLevelModels.find(
+      (r) => currentModel === r.name,
+    )?.levels;
+    if (reasoningLevels != null) {
+      const index = reasoningLevels?.indexOf(reasoningLevel);
+      if (index >= 0) {
+        return true;
+      }
+    }
+    return false;
   }
   const turnReasoningLevelWithoutTip = useCallback(
     (newLevel: ReasoningLevel) => {
@@ -607,8 +615,10 @@ export function ChatActions(props: {
     }
     const showReasoningLevel = isReasoningLevelModel(currentModel);
     setShowReasoningLevel(showReasoningLevel);
-    if (!showReasoningLevel) {
+    if (!showReasoningLevel && reasoningLevel != ReasoningLevel.Unspecific) {
       turnReasoningLevelWithoutTip(ReasoningLevel.Unspecific);
+    } else if (showReasoningLevel && !checkGoodReasoningLevel()) {
+      switchReasoningLevel();
     }
     const showUploadFile = isUploadFileModel(currentModel);
     setShowUploadFile(showUploadFile);
