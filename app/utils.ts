@@ -5,6 +5,8 @@ import { RequestMessage } from "./client/api";
 import {
   codeExecutionKeywords,
   onlineSearchKeywords,
+  ReasoningLevel,
+  reasoningLevelModels,
   uploadFileModels,
   visionKeywords,
 } from "@/app/constant";
@@ -287,6 +289,15 @@ export function isCodeExecutionModel(model: string) {
   return (
     codeExecutionKeywords.some((keyword) => model.includes(keyword)) &&
     !model.includes("-lite")
+  );
+}
+
+export function isReasoningLevelModel(model: string) {
+  return reasoningLevelModels.some(
+    (r) =>
+      model === r.name &&
+      r.levels.length > 0 &&
+      !(r.levels.length === 1 && r.levels[0] === ReasoningLevel.None),
   );
 }
 

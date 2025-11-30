@@ -119,6 +119,12 @@ async function handle(
     }
     requestJson.stream_options.include_usage = true;
   }
+  if (!requestJson.reasoning || requestJson.reasoning.exclude) {
+    if (requestJson.reasoning == null) {
+      requestJson.reasoning = {};
+    }
+    requestJson.reasoning.exclude = false;
+  }
 
   try {
     const response = await requestOpenai(

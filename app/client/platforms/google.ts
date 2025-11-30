@@ -1,5 +1,6 @@
 import {
   Google,
+  ReasoningLevel,
   REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
 } from "@/app/constant";
@@ -166,6 +167,20 @@ export class GeminiProApi implements LLMApi {
         maxOutputTokens: modelConfig.max_tokens,
         topP: modelConfig.top_p,
         // "topK": modelConfig.top_k,
+        thinkingConfig: {
+          //includeThoughts: true,
+          ...(modelConfig.shansingReasoningLevel &&
+            modelConfig.model.startsWith("gemini-2.5-") && {
+              thinkingBudget:
+                modelConfig.shansingReasoningLevel == ReasoningLevel.None
+                  ? 0
+                  : -1,
+            }),
+          ...(modelConfig.shansingReasoningLevel &&
+            !modelConfig.model.startsWith("gemini-2.5-") && {
+              thinkingLevel: modelConfig.shansingReasoningLevel,
+            }),
+        },
       },
       safetySettings: [
         {

@@ -1,6 +1,7 @@
 "use client";
 import {
   OpenRouterPath,
+  ReasoningLevel,
   REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
@@ -48,6 +49,7 @@ interface RequestPayload {
   max_tokens?: number;
   include_reasoning?: boolean; //openrouter
   provider?: object; //openrouter
+  reasoning?: object; //openrouter
 }
 
 export class OpenRouterApi implements LLMApi {
@@ -121,6 +123,12 @@ export class OpenRouterApi implements LLMApi {
           sort: "throughput",
           allow_fallbacks: true,
         }),
+      },
+      reasoning: {
+        ...(modelConfig.shansingReasoningLevel && {
+          effort: modelConfig.shansingReasoningLevel,
+        }),
+        exclude: false,
       },
     };
     requestPayload["stream_options"] = options.config.stream

@@ -4,6 +4,7 @@ import {
   DEFAULT_INPUT_TEMPLATE,
   DEFAULT_MODELS,
   DEFAULT_SIDEBAR_WIDTH,
+  ReasoningLevel,
   StoreKey,
 } from "../constant";
 import { createPersistStore } from "../utils/store";
@@ -62,6 +63,7 @@ export const DEFAULT_CONFIG = {
     shansingOnlineSearch: false,
     shansingCodeExecution: false,
     shansingFileIds: [] as string[],
+    shansingReasoningLevel: ReasoningLevel.Unspecific as ReasoningLevel,
   },
 };
 

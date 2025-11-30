@@ -521,6 +521,8 @@ const cn = {
     CodeExecution: {
       Title: "代码执行",
     },
+    ReasoningLevel: (level: string) =>
+      level === "不深度思考" ? "" : "思考：" + level,
     UploadFile: {
       Title: "上传文件",
       UploadedTitle: " 个文件",

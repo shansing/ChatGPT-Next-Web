@@ -34,6 +34,8 @@ import EarthIcon from "../icons/earth.svg";
 import LaptopIcon from "../icons/laptop.svg";
 import LaptopOffIcon from "../icons/laptop-off.svg";
 import EarthOffIcon from "../icons/earth-off.svg";
+import ThinkingIcon from "../icons/face-thinking.svg";
+import ThinkingOffIcon from "../icons/face-thinking-off.svg";
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
 import AutoIcon from "../icons/auto.svg";
@@ -67,6 +69,7 @@ import {
   isOnlineSearchModel,
   isUploadFileModel,
   isCodeExecutionModel,
+  isReasoningLevelModel,
 } from "../utils";
 
 import { compressImage } from "@/app/utils/chat";
@@ -94,6 +97,8 @@ import {
   CHAT_PAGE_SIZE,
   LAST_INPUT_KEY,
   Path,
+  ReasoningLevel,
+  reasoningLevelModels,
   REQUEST_TIMEOUT_MS,
   UNFINISHED_INPUT,
   uploadFileModels,
@@ -518,6 +523,41 @@ export function ChatActions(props: {
     [chatStore],
   );
 
+  const reasoningLevel =
+    chatStore.currentSession().mask.modelConfig.shansingReasoningLevel;
+  function switchReasoningLevel() {
+    const levels = reasoningLevelModels.find(
+      (r) => currentModel === r.name,
+    )?.levels;
+    let newIndex = 0;
+    if (levels != null) {
+      const index = levels?.indexOf(reasoningLevel);
+      if (index >= 0) {
+        newIndex = (index + 1) % levels.length;
+      }
+      const newLevel = levels[newIndex];
+      chatStore.updateCurrentSessionNow(
+        (session) =>
+          (session.mask.modelConfig.shansingReasoningLevel = newLevel),
+      );
+    } else {
+      chatStore.updateCurrentSessionNow(
+        (session) =>
+          (session.mask.modelConfig.shansingReasoningLevel =
+            ReasoningLevel.Unspecific),
+      );
+    }
+  }
+  const turnReasoningLevelWithoutTip = useCallback(
+    (newLevel: ReasoningLevel) => {
+      chatStore.updateCurrentSessionNow(
+        (session) =>
+          (session.mask.modelConfig.shansingReasoningLevel = newLevel),
+      );
+    },
+    [chatStore],
+  );
+
   // stop all responses
   const couldStop = ChatControllerPool.hasPending();
   const stopAll = () => ChatControllerPool.stopAll();
@@ -546,6 +586,7 @@ export function ChatActions(props: {
   const [showUploadFile, setShowUploadFile] = useState(false);
   const [showOnlineSearch, setShowOnlineSearch] = useState(false);
   const [showCodeExecution, setShowCodeExecution] = useState(false);
+  const [showReasoningLevel, setShowReasoningLevel] = useState(false);
 
   useEffect(() => {
     const show = isVisionModel(currentModel);
@@ -563,6 +604,11 @@ export function ChatActions(props: {
     setShowCodeExecution(showCodeExecution);
     if (!showCodeExecution && codeExecution) {
       turnCodeExecutionWithoutTip(false);
+    }
+    const showReasoningLevel = isReasoningLevelModel(currentModel);
+    setShowReasoningLevel(showReasoningLevel);
+    if (!showReasoningLevel) {
+      turnReasoningLevelWithoutTip(ReasoningLevel.Unspecific);
     }
     const showUploadFile = isUploadFileModel(currentModel);
     setShowUploadFile(showUploadFile);
@@ -640,6 +686,22 @@ export function ChatActions(props: {
             });
             showToast(s[0]);
           }}
+        />
+      )}
+
+      {showReasoningLevel && (
+        <ChatAction
+          onClick={switchReasoningLevel}
+          text={Locale.Shansing.ReasoningLevel(reasoningLevel)}
+          icon={
+            reasoningLevel == ReasoningLevel.Unspecific ||
+            reasoningLevel == ReasoningLevel.None ? (
+              <ThinkingOffIcon />
+            ) : (
+              <ThinkingIcon />
+            )
+          }
+          fullWidth={!isMobileScreen}
         />
       )}
 

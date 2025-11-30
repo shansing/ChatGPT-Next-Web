@@ -650,3 +650,49 @@ export const uploadFileModels: {
     split: ",",
   },
 ];
+
+export enum ReasoningLevel {
+  Unspecific = "",
+  None = "none",
+  Low = "low",
+  Medium = "medium",
+  High = "high",
+}
+export const reasoningLevelModels: {
+  name: string;
+  levels: ReasoningLevel[];
+}[] = [
+  {
+    name: "gemini-3-pro-preview",
+    levels: [ReasoningLevel.Low, ReasoningLevel.High],
+  },
+  {
+    name: "gemini-2.5-pro",
+    levels: [ReasoningLevel.Medium],
+  },
+  {
+    name: "gemini-2.5-flash",
+    levels: [ReasoningLevel.None, ReasoningLevel.Medium],
+  },
+  {
+    name: "openai/gpt-5.1",
+    levels: [
+      ReasoningLevel.None,
+      ReasoningLevel.Low,
+      ReasoningLevel.Medium,
+      ReasoningLevel.High,
+    ],
+  },
+  {
+    name: "openai/gpt-5-mini",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "anthropic/claude-sonnet-4.5",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "anthropic/claude-haiku-4.5",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+];
