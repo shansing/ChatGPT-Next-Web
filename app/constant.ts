@@ -673,7 +673,7 @@ export const reasoningLevelModels: {
   },
   {
     name: "gemini-2.5-flash",
-    levels: [ReasoningLevel.None, ReasoningLevel.Medium],
+    levels: [ReasoningLevel.None, ReasoningLevel.Auto],
   },
   {
     name: "openai/gpt-5.1",
