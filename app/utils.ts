@@ -278,6 +278,7 @@ export function isOnlineSearchModel(model: string) {
     !model.includes("gpt-5-nano") &&
     !model.includes("-search") &&
     !(model.includes("-chat") && !model.includes("gpt-5")) &&
+    !model.includes("/") &&
     !isChatGpt
   );
 }

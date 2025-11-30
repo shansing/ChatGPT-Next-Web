@@ -139,8 +139,8 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}{{ShansingHelperDeepseekR1Tip}}{{ShansingHelperOpenRouterDeepseekR1Tip}}`;
 
-export const GPT_MAIN_MODEL = "gpt-5.1-chat-latest";
-export const GPT_MAIN_MINI_MODEL = "gpt-5-mini-2025-08-07";
+export const GPT_MAIN_MODEL = "openai/gpt-5.1";
+export const GPT_MAIN_MINI_MODEL = "openai/gpt-5-mini";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
 export const CLAUDE_SONNET = "anthropic/claude-sonnet-4.5"; //claude-3-5-sonnet-latest
@@ -148,9 +148,11 @@ export const CLAUDE_HAIKU = "anthropic/claude-haiku-4.5"; //claude-3-5-haiku-lat
 export const QWEN_LONG = "qwen-long";
 export const DEEPSEEK_CHAT = "deepseek-chat";
 export const DEEPSEEK_REASONER = "deepseek-reasoner";
+export const GEMINI_PRO = "gemini-3-pro-preview";
+export const GEMINI_FLASH = "gemini-2.5-flash";
 
 export const SUMMARIZE_MODEL = GPT_MAIN_NANO_MODEL;
-export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash";
+export const GEMINI_SUMMARIZE_MODEL = GEMINI_FLASH;
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const QWEN_SUMMARIZE_MODEL = QWEN_LONG;
 export const DEEPSEEK_SUMMARIZE_MODEL = DEEPSEEK_CHAT; //of OpenRouter
@@ -183,11 +185,13 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-5": "2024-09-30",
   "gpt-5-2025-08-07": "2024-09-30",
   "gpt-5-mini": "2024-05-31",
+  "openai/gpt-5-mini": "2024-05-31",
   "gpt-5-mini-2025-08-07": "2024-05-31",
   "gpt-5-nano": "2024-05-31",
   "gpt-5-nano-2025-08-07": "2024-05-31",
   "gpt-5-chat-latest": "2024-09-30",
   "gpt-5.1": "2024-09-30",
+  "openai/gpt-5.1": "2024-09-30",
   "gpt-5.1-2025-11-13": "2024-09-30",
   "gpt-5.1-chat-latest": "2024-09-30",
   "chatgpt-4o-latest": "2023-10",
@@ -346,6 +350,8 @@ const alibabaModels = [
 ];
 
 const openRouterModels = [
+  "openai/gpt-5.1",
+  "openai/gpt-5-mini",
   "anthropic/claude-sonnet-4.5",
   "anthropic/claude-sonnet-4",
   "anthropic/claude-haiku-4.5",
@@ -430,8 +436,10 @@ export const DEFAULT_MODELS = [
 export const modelThresholdTokenNumbers = [
   { name: "gpt-5.1-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5.1", total: 400_000, prompt: null, completion: 128_000 },
+  { name: "openai/gpt-5.1", total: 400_000, prompt: null, completion: 128_000 },
   { name: "gpt-5-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5", total: 400_000, prompt: null, completion: 128_000 },
+  { name: "openai/gpt-5", total: 400_000, prompt: null, completion: 128_000 },
   { name: "gpt-4.1", total: 1_047_576, prompt: null, completion: 32_768 },
   {
     name: "gpt-4o-search",
