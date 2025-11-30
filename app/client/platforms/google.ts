@@ -28,6 +28,7 @@ export class GeminiProApi implements LLMApi {
     // console.log("[Response] gemini-pro response: ", res);
     const result = {
       message: "",
+      thoughtMessage: "",
       isCodeExecution: false,
     };
     const parts = res?.candidates?.at(0)?.content?.parts;
@@ -36,7 +37,11 @@ export class GeminiProApi implements LLMApi {
     }
     for (const part of parts) {
       if (part?.text) {
-        result.message += part.text;
+        if (part?.thought) {
+          result.thoughtMessage += part.text;
+        } else {
+          result.message += part.text;
+        }
       }
       // || res?.error?.message
 
@@ -180,7 +185,7 @@ export class GeminiProApi implements LLMApi {
         topP: modelConfig.top_p,
         // "topK": modelConfig.top_k,
         thinkingConfig: {
-          //includeThoughts: true,
+          includeThoughts: true,
           ...(modelConfig.shansingReasoningLevel &&
             modelConfig.model.startsWith("gemini-2.5-") && {
               thinkingBudget:
@@ -272,6 +277,7 @@ export class GeminiProApi implements LLMApi {
 
       if (shouldStream) {
         let responseText = "";
+        let responseReasoning = "";
         let finished = false;
 
         const error = (inError: Error | string) => {
@@ -286,7 +292,9 @@ export class GeminiProApi implements LLMApi {
         const finish = () => {
           if (!finished) {
             finished = true;
-            requestAnimationFrame(() => options.onFinish(responseText));
+            requestAnimationFrame(() =>
+              options.onFinish(responseText, responseReasoning),
+            );
           }
         };
 
@@ -362,14 +370,25 @@ export class GeminiProApi implements LLMApi {
               options.onFlag?.(isSearch, undefined);
 
               const delta = result.message;
+              const reasonDelta = result.thoughtMessage;
               if (result.isCodeExecution) {
                 options.onFlag?.(undefined, true);
               }
 
-              if (delta) {
-                responseText += delta;
-                // console.log("delta", delta)
-                requestAnimationFrame(() => options.onUpdate?.(responseText));
+              if (delta || reasonDelta) {
+                if (delta) {
+                  responseText += delta;
+                }
+                if (reasonDelta) {
+                  responseReasoning += reasonDelta;
+                  responseReasoning = responseReasoning.replace(
+                    /^\n+|\n+$/g,
+                    "",
+                  );
+                }
+                requestAnimationFrame(() =>
+                  options.onUpdate?.(responseText, responseReasoning),
+                );
               }
 
               // const blockReason = json?.promptFeedback?.blockReason;
