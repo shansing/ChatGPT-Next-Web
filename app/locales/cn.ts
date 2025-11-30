@@ -524,7 +524,7 @@ const cn = {
     ReasoningLevel: (level: string) => {
       switch (level) {
         case "none":
-          return "关闭思考";
+          return "不思考";
         case "low":
           return "思考：浅";
         case "medium":
