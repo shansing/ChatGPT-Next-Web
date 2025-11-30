@@ -1,6 +1,7 @@
 import {
   Google,
   ReasoningLevel,
+  reasoningLevelModels,
   REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
 } from "@/app/constant";
@@ -157,6 +158,17 @@ export class GeminiProApi implements LLMApi {
           ]
         : []),
     ];
+    if (
+      options.config.shansingLessThink &&
+      modelConfig.shansingReasoningLevel
+    ) {
+      const reasoningLevels = reasoningLevelModels.find(
+        (r) => modelConfig.model === r.name,
+      )?.levels;
+      if (reasoningLevels) {
+        modelConfig.shansingReasoningLevel = reasoningLevels[0];
+      }
+    }
     const requestPayload = {
       contents: messages,
       generationConfig: {

@@ -41,6 +41,7 @@ export interface LLMConfig {
   frequency_penalty?: number;
   max_tokens?: number;
   checkShansingOnlineSearch: boolean;
+  shansingLessThink: boolean;
 }
 
 export interface ChatOptions {

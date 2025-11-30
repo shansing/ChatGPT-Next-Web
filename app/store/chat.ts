@@ -514,6 +514,7 @@ export const useChatStore = createPersistStore(
             ...modelConfig,
             stream: decideStream(modelConfig.model),
             checkShansingOnlineSearch: true,
+            shansingLessThink: false,
           },
           onFlag(isOnlineSearch, isCodeExecution) {
             if (isOnlineSearch != null) {
@@ -761,6 +762,7 @@ export const useChatStore = createPersistStore(
               model: getSummarizeModel(session.mask.modelConfig.model),
               stream: false,
               checkShansingOnlineSearch: false,
+              shansingLessThink: true,
             },
             onFinish(message) {
               const topic = message.length > 0 ? trimTopic(message) : "";
@@ -833,6 +835,7 @@ export const useChatStore = createPersistStore(
               stream: decideStream(modelConfig.model),
               model: getSummarizeModel(session.mask.modelConfig.model),
               checkShansingOnlineSearch: false,
+              shansingLessThink: true,
             },
             onUpdate(message) {
               session.memoryPrompt = message;

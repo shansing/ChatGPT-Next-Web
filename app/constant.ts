@@ -654,6 +654,7 @@ export const uploadFileModels: {
 export enum ReasoningLevel {
   Unspecific = "",
   None = "none",
+  // Auto = "auto",
   Low = "low",
   Medium = "medium",
   High = "high",

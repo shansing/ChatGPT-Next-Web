@@ -2,6 +2,7 @@
 import {
   OpenRouterPath,
   ReasoningLevel,
+  reasoningLevelModels,
   REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
@@ -102,6 +103,17 @@ export class OpenRouterApi implements LLMApi {
       });
     }
 
+    if (
+      options.config.shansingLessThink &&
+      modelConfig.shansingReasoningLevel
+    ) {
+      const reasoningLevels = reasoningLevelModels.find(
+        (r) => modelConfig.model === r.name,
+      )?.levels;
+      if (reasoningLevels) {
+        modelConfig.shansingReasoningLevel = reasoningLevels[0];
+      }
+    }
     const requestPayload: RequestPayload = {
       messages: [...messages],
       stream: options.config.stream,
