@@ -2,9 +2,9 @@ import { BuiltinMask } from "./typing";
 import {
   CLAUDE_HAIKU,
   CLAUDE_SONNET,
-  GPT_MAIN_MODEL,
   DEEPSEEK_REASONER,
-  GPT_MAIN_MINI_MODEL,
+  GPT_MAIN_MODEL,
+  ReasoningLevel,
 } from "@/app/constant";
 
 export const CN_MASKS: BuiltinMask[] = [
@@ -23,7 +23,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: GPT_MAIN_MINI_MODEL,
+      model: GPT_MAIN_MODEL,
       temperature: 1,
       max_tokens: 8000,
       presence_penalty: 0,
@@ -31,6 +31,7 @@ export const CN_MASKS: BuiltinMask[] = [
       sendMemory: true,
       historyMessageCount: 4,
       compressMessageLengthThreshold: 2000,
+      shansingReasoningLevel: ReasoningLevel.None,
     },
     lang: "cn",
     builtin: true,
