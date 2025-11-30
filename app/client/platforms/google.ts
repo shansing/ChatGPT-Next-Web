@@ -1,4 +1,8 @@
-import { Google, REQUEST_TIMEOUT_MS } from "@/app/constant";
+import {
+  Google,
+  REQUEST_LONG_TIMEOUT_MS,
+  REQUEST_TIMEOUT_MS,
+} from "@/app/constant";
 import { ChatOptions, getHeaders, LLMApi, LLMModel, LLMUsage } from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
@@ -233,7 +237,10 @@ export class GeminiProApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        REQUEST_TIMEOUT_MS,
+        modelConfig.model.includes("gemini-2.5-") ||
+          modelConfig.model.includes("gemini-3-")
+          ? REQUEST_LONG_TIMEOUT_MS
+          : REQUEST_TIMEOUT_MS,
       );
 
       if (shouldStream) {

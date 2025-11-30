@@ -151,7 +151,7 @@ export const DEEPSEEK_REASONER = "deepseek-reasoner";
 export const GEMINI_PRO = "gemini-3-pro-preview";
 export const GEMINI_FLASH = "gemini-2.5-flash";
 
-export const SUMMARIZE_MODEL = GPT_MAIN_NANO_MODEL;
+export const SUMMARIZE_MODEL = GEMINI_FLASH; //GPT_MAIN_NANO_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = GEMINI_FLASH;
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const QWEN_SUMMARIZE_MODEL = QWEN_LONG;
@@ -210,6 +210,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
   "gemini-pro-vision": "2023-12",
+  "gemini-3-pro-preview": "2025-01",
   "gemini-2.5-pro": "2025-01",
   "gemini-2.5-flash": "2025-01",
   "gemini-2.5-pro-preview-03-25": "2025-01",
@@ -288,6 +289,7 @@ const openaiModels = [
 ];
 
 const googleModels = [
+  "gemini-3-pro-preview",
   "gemini-2.5-pro",
   "gemini-2.5-flash",
   "gemini-2.5-pro-preview-03-25",
@@ -494,6 +496,7 @@ export const modelThresholdTokenNumbers = [
   { name: "qwen-max-latest", total: null, prompt: 30_720, completion: 8_192 },
   { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
+  { name: "gemini-3-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.5-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.0-", total: null, prompt: 1_048_576, completion: 8192 },
   { name: "gemini-", total: null, prompt: 128_000, completion: 8192 }, //1.5flash 1,048,576;  1.5pro 2,097,152;  but under 128k is cheap
@@ -595,6 +598,7 @@ export const visionKeywords = [
   "gemini-1.5-flash",
   "gemini-2.0",
   "gemini-2.5",
+  "gemini-3",
   "gpt-4o",
   "gpt-4.5",
   "gpt-4.1",
@@ -618,6 +622,7 @@ export const onlineSearchKeywords = [
   // "qwen-long",
   "gemini-2.0-",
   "gemini-2.5-",
+  "gemini-3-",
   // "gemini-1.5-",
   // "gemini-1.5-pro",
   // "claude-3-",
@@ -628,6 +633,7 @@ export const codeExecutionKeywords = [
   "gemini-1.5-",
   "gemini-2.0-",
   "gemini-2.5-",
+  "gemini-3-",
 ];
 
 export const uploadFileModels: {
