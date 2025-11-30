@@ -156,6 +156,7 @@ export const GEMINI_SUMMARIZE_MODEL = GEMINI_FLASH;
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;
 export const QWEN_SUMMARIZE_MODEL = QWEN_LONG;
 export const DEEPSEEK_SUMMARIZE_MODEL = DEEPSEEK_CHAT; //of OpenRouter
+export const OPENROUTER_SUMMARIZE_MODEL = GPT_MAIN_MINI_MODEL;
 
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "",

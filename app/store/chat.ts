@@ -24,6 +24,7 @@ import {
   CLAUDE_SUMMARIZE_MODEL,
   ServiceProvider,
   DEEPSEEK_SUMMARIZE_MODEL,
+  OPENROUTER_SUMMARIZE_MODEL,
 } from "../constant";
 import { ClientApi, RequestMessage, MultimodalContent } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
@@ -119,7 +120,7 @@ function getSummarizeModel(currentModel: string) {
   //   return summarizeModel?.name ?? currentModel;
   // }
   if (currentModel.includes("/")) {
-    return SUMMARIZE_MODEL;
+    return OPENROUTER_SUMMARIZE_MODEL;
   }
   if (currentModel.startsWith("gemini")) {
     return GEMINI_SUMMARIZE_MODEL;
