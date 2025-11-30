@@ -371,15 +371,6 @@ const openRouterModels = [
 const deepSeekModels = ["deepseek-chat", "deepseek-reasoner"];
 
 export const DEFAULT_MODELS = [
-  ...openaiModels.map((name) => ({
-    name,
-    available: true,
-    provider: {
-      id: "openai",
-      providerName: "OpenAI",
-      providerType: "openai",
-    },
-  })),
   ...anthropicModels.map((name) => ({
     name,
     available: true,
@@ -414,6 +405,15 @@ export const DEFAULT_MODELS = [
       id: "alibaba",
       providerName: "Alibaba",
       providerType: "alibaba-compatible",
+    },
+  })),
+  ...openaiModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "openai",
+      providerName: "OpenAI",
+      providerType: "openai",
     },
   })),
   ...openRouterModels.map((name) => ({
