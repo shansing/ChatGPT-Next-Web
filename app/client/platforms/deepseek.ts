@@ -159,9 +159,10 @@ export class DeepSeekApi implements LLMApi {
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
       max_tokens: modelConfig.max_tokens,
-      ...(modelConfig.shansingReasoningLevel && {
-        thinking: { type: "enabled" },
-      }),
+      ...(modelConfig.shansingReasoningLevel &&
+        modelConfig.shansingReasoningLevel != ReasoningLevel.None && {
+          thinking: { type: "enabled" },
+        }),
     };
     requestPayload["stream_options"] = options.config.stream
       ? {
