@@ -293,7 +293,10 @@ export class GeminiProApi implements LLMApi {
           if (!finished) {
             finished = true;
             requestAnimationFrame(() =>
-              options.onFinish(responseText, responseReasoning),
+              options.onFinish(
+                responseText,
+                responseReasoning.replace(/^\n+|\n+$/g, ""),
+              ),
             );
           }
         };
@@ -381,13 +384,12 @@ export class GeminiProApi implements LLMApi {
                 }
                 if (reasonDelta) {
                   responseReasoning += reasonDelta;
-                  responseReasoning = responseReasoning.replace(
-                    /^\n+|\n+$/g,
-                    "",
-                  );
                 }
                 requestAnimationFrame(() =>
-                  options.onUpdate?.(responseText, responseReasoning),
+                  options.onUpdate?.(
+                    responseText,
+                    responseReasoning.replace(/^\n+|\n+$/g, ""),
+                  ),
                 );
               }
 

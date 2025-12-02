@@ -204,7 +204,10 @@ export class OpenRouterApi implements LLMApi {
           if (!finished) {
             finished = true;
             requestAnimationFrame(() =>
-              options.onFinish(responseText, responseReasoning),
+              options.onFinish(
+                responseText,
+                responseReasoning.replace(/^\n+|\n+$/g, ""),
+              ),
             );
           }
         };
@@ -290,12 +293,13 @@ export class OpenRouterApi implements LLMApi {
                 if (reasonDelta) {
                   responseReasoning += reasonDelta;
                   //workaround: 将 `\\n` 替换成 `\n` 并移除首尾多余换行
-                  responseReasoning = responseReasoning
-                    .replace(/\\n/g, "\n")
-                    .replace(/^\n+|\n+$/g, "");
+                  responseReasoning = responseReasoning.replace(/\\n/g, "\n");
                 }
                 requestAnimationFrame(() =>
-                  options.onUpdate?.(responseText, responseReasoning),
+                  options.onUpdate?.(
+                    responseText,
+                    responseReasoning.replace(/^\n+|\n+$/g, ""),
+                  ),
                 );
               }
 
@@ -314,7 +318,10 @@ export class OpenRouterApi implements LLMApi {
                     .join("\n");
                 responseText += citationsMarkdown;
                 requestAnimationFrame(() =>
-                  options.onUpdate?.(responseText, responseReasoning),
+                  options.onUpdate?.(
+                    responseText,
+                    responseReasoning.replace(/^\n+|\n+$/g, ""),
+                  ),
                 );
               }
             } catch (e) {
