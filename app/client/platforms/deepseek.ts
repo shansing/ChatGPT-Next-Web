@@ -1,6 +1,8 @@
 "use client";
 import {
   DeepSeekPath,
+  ReasoningLevel,
+  reasoningLevelModels,
   REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
@@ -46,6 +48,7 @@ interface RequestPayload {
   frequency_penalty: number;
   top_p: number;
   max_tokens?: number;
+  extra_body?: object;
 }
 
 export class DeepSeekApi implements LLMApi {
@@ -136,6 +139,17 @@ export class DeepSeekApi implements LLMApi {
       [],
     );
 
+    if (
+      options.config.shansingLessThink &&
+      modelConfig.shansingReasoningLevel
+    ) {
+      const reasoningLevels = reasoningLevelModels.find(
+        (r) => modelConfig.model === r.name,
+      )?.levels;
+      if (reasoningLevels) {
+        modelConfig.shansingReasoningLevel = reasoningLevels[0];
+      }
+    }
     const requestPayload: RequestPayload = {
       messages: [...messages],
       stream: options.config.stream,
@@ -145,6 +159,11 @@ export class DeepSeekApi implements LLMApi {
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
       max_tokens: modelConfig.max_tokens,
+      extra_body: {
+        ...(modelConfig.shansingReasoningLevel && {
+          thinking: { type: "enabled" },
+        }),
+      },
     };
     requestPayload["stream_options"] = options.config.stream
       ? {
@@ -178,7 +197,9 @@ export class DeepSeekApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        modelConfig.model.includes("deepseek-reasoner")
+        modelConfig.model.includes("deepseek-reasoner") ||
+          (modelConfig.shansingReasoningLevel &&
+            modelConfig.shansingReasoningLevel != ReasoningLevel.None)
           ? REQUEST_LONG_TIMEOUT_MS
           : REQUEST_TIMEOUT_MS,
       );

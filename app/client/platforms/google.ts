@@ -269,8 +269,8 @@ export class GeminiProApi implements LLMApi {
       // make a fetch request
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
-        modelConfig.model.includes("gemini-2.5-") ||
-          modelConfig.model.includes("gemini-3-")
+        modelConfig.shansingReasoningLevel &&
+          modelConfig.shansingReasoningLevel != ReasoningLevel.None
           ? REQUEST_LONG_TIMEOUT_MS
           : REQUEST_TIMEOUT_MS,
       );
