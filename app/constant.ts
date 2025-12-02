@@ -233,6 +233,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "anthropic/claude-3.5-haiku": "2024-07",
   "anthropic/claude-sonnet-4": "2025-03",
   "anthropic/claude-sonnet-4.5": "2025-07",
+  "anthropic/claude-opus-4.5": "2025-08",
   "x-ai/grok-3-beta": "2024-11-17",
   "x-ai/grok-3-mini-beta": "2024-11-17",
   "x-ai/grok-4": "2024-11",
@@ -355,6 +356,7 @@ const alibabaModels = [
 const openRouterModels = [
   "openai/gpt-5.1",
   "openai/gpt-5-mini",
+  "anthropic/claude-opus-4.5",
   "anthropic/claude-sonnet-4.5",
   "anthropic/claude-sonnet-4",
   "anthropic/claude-haiku-4.5",
@@ -515,6 +517,12 @@ export const modelThresholdTokenNumbers = [
   },
   {
     name: "anthropic/claude-sonnet-4",
+    total: 200_000,
+    prompt: null,
+    completion: 64_000,
+  },
+  {
+    name: "anthropic/claude-opus-4",
     total: 200_000,
     prompt: null,
     completion: 64_000,
@@ -694,6 +702,10 @@ export const reasoningLevelModels: {
   },
   {
     name: "anthropic/claude-haiku-4.5",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "anthropic/claude-opus-4.5",
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
   },
   {
