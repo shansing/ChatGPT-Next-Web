@@ -712,4 +712,8 @@ export const reasoningLevelModels: {
     name: "deepseek/deepseek-r1-0528",
     levels: [ReasoningLevel.Auto],
   },
+  {
+    name: "deepseek-chat",
+    levels: [ReasoningLevel.None, ReasoningLevel.Auto],
+  },
 ];
