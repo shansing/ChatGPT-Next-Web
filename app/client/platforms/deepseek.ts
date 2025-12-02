@@ -48,7 +48,7 @@ interface RequestPayload {
   frequency_penalty: number;
   top_p: number;
   max_tokens?: number;
-  extra_body?: object;
+  thinking?: object;
 }
 
 export class DeepSeekApi implements LLMApi {
@@ -159,11 +159,9 @@ export class DeepSeekApi implements LLMApi {
       frequency_penalty: modelConfig.frequency_penalty,
       top_p: modelConfig.top_p,
       max_tokens: modelConfig.max_tokens,
-      extra_body: {
-        ...(modelConfig.shansingReasoningLevel && {
-          thinking: { type: "enabled" },
-        }),
-      },
+      ...(modelConfig.shansingReasoningLevel && {
+        thinking: { type: "enabled" },
+      }),
     };
     requestPayload["stream_options"] = options.config.stream
       ? {
