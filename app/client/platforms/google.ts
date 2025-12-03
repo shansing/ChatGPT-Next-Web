@@ -30,6 +30,7 @@ export class GeminiProApi implements LLMApi {
       message: "",
       thoughtMessage: "",
       isCodeExecution: false,
+      thoughtSignature: "",
     };
     const parts = res?.candidates?.at(0)?.content?.parts;
     if (!parts) {
@@ -42,6 +43,9 @@ export class GeminiProApi implements LLMApi {
         } else {
           result.message += part.text;
         }
+      }
+      if (part?.thoughtSignature) {
+        result.thoughtSignature = part.thoughtSignature;
       }
       // || res?.error?.message
 
@@ -370,12 +374,16 @@ export class GeminiProApi implements LLMApi {
                 webSearchQueries &&
                 Array.isArray(webSearchQueries) &&
                 webSearchQueries.length > 0;
-              options.onFlag?.(isSearch, undefined);
+              options.onFlag?.(isSearch, undefined, undefined);
 
               const delta = result.message;
               const reasonDelta = result.thoughtMessage;
               if (result.isCodeExecution) {
-                options.onFlag?.(undefined, true);
+                options.onFlag?.(undefined, true, undefined);
+              }
+
+              if (result.thoughtMessage || result.thoughtSignature) {
+                options.onFlag?.(undefined, undefined, true);
               }
 
               if (delta || reasonDelta) {

@@ -261,6 +261,7 @@ export class ChatGPTApi implements LLMApi {
             options.onFlag?.(
               searchCount > 0 || newsCount > 0 || crawlerCount > 0,
               undefined,
+              undefined,
             );
           },
           onmessage(msg) {

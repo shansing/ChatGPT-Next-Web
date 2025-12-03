@@ -252,6 +252,7 @@ export class OpenRouterApi implements LLMApi {
             options.onFlag?.(
               searchCount > 0 || newsCount > 0 || crawlerCount > 0,
               undefined,
+              undefined,
             );
           },
           onmessage(msg) {
@@ -267,17 +268,28 @@ export class OpenRouterApi implements LLMApi {
               const json = JSON.parse(text);
               if (json.citations && json.citations.length > citationsNum) {
                 citationsNum = json.citations.length;
-                options.onFlag?.(true, undefined);
+                options.onFlag?.(true, undefined, undefined);
               }
               if (!json.choices && !json.usage) {
                 return error("No choices: " + text);
               }
               const choices = json.choices as Array<{
-                delta: { content: string; reasoning: string };
+                delta: {
+                  content: string;
+                  reasoning: string;
+                  reasoning_details: any;
+                };
                 finish_reason?: string;
               }>;
               const content = choices[0]?.delta?.content;
               const reasonContent = choices[0]?.delta?.reasoning;
+              const reasoningDetails = choices[0]?.delta?.reasoning_details;
+              if (
+                reasonContent ||
+                (Array.isArray(reasoningDetails) && reasoningDetails.length > 0)
+              ) {
+                options.onFlag?.(undefined, undefined, true);
+              }
               // console.log("content", content, "reasonContent", reasonContent)
               const delta = content;
               const reasonDelta = reasonContent;

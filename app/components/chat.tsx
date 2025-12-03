@@ -1618,6 +1618,7 @@ function _Chat() {
           const isContext = i < context.length;
           const isOnlineSearch = message.isOnlineSearch;
           const isCodeExecution = message.isCodeExecution;
+          const hasReasoning = message.hasReasoning;
           const isError = message.isError;
           const showActions =
             i > 0 &&
@@ -1810,7 +1811,7 @@ function _Chat() {
                         getEmojiUrl={getEmojiUrl}
                       />
                     )}
-                    {message?.reasoningContent && (
+                    {(hasReasoning || message?.reasoningContent) && (
                       <Emoji
                         unified="1f914"
                         size={12}

@@ -55,6 +55,7 @@ export interface ChatOptions {
   onFlag?: (
     isOnlineSearch: boolean | undefined,
     isCodeExecution: boolean | undefined,
+    hasReasoning: boolean | undefined,
   ) => void;
 }
 

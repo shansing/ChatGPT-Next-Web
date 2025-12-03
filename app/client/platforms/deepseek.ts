@@ -269,6 +269,7 @@ export class DeepSeekApi implements LLMApi {
             options.onFlag?.(
               searchCount > 0 || newsCount > 0 || crawlerCount > 0,
               undefined,
+              undefined,
             );
           },
           onmessage(msg) {
@@ -305,6 +306,7 @@ export class DeepSeekApi implements LLMApi {
                   // responseReasoning = responseReasoning
                   //   .replace(/\\n/g, "\n")
                   //   .replace(/^\n+|\n+$/g, "");
+                  options.onFlag?.(undefined, undefined, true);
                 }
                 requestAnimationFrame(() =>
                   options.onUpdate?.(responseText, responseReasoning),
