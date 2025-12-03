@@ -100,7 +100,7 @@ export class GeminiProApi implements LLMApi {
       if (part?.inlineData) {
         if (part?.thought) {
           console.log("hidden image", part);
-          reasoningContent += "[an omitted image]";
+          reasoningContent += "\n[an omitted image]\n";
         } else {
           contents.push({
             type: "image_url",
