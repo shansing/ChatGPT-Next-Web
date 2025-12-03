@@ -163,8 +163,8 @@ export class GeminiProApi implements LLMApi {
                   data: imageData,
                 },
                 thoughtSignature:
-                  options.config.model === textPart.encryptedReasoningModel
-                    ? textPart.encryptedReasoning
+                  options.config.model === image?.encryptedReasoningModel
+                    ? image?.encryptedReasoning
                     : null,
               };
             }),
@@ -207,6 +207,7 @@ export class GeminiProApi implements LLMApi {
     // if (visionModel && messages.length > 1) {
     //   options.onError?.(new Error("Multiturn chat is not enabled for models/gemini-pro-vision"));
     // }
+
     const modelConfig = {
       ...useAppConfig.getState().modelConfig,
       ...useChatStore.getState().currentSession().mask.modelConfig,
@@ -256,6 +257,9 @@ export class GeminiProApi implements LLMApi {
       if (reasoningLevels) {
         modelConfig.shansingReasoningLevel = reasoningLevels[0];
       }
+    }
+    if (modelConfig.model.includes("-image")) {
+      console.log("messages", messages);
     }
     const requestPayload = {
       contents: messages,
