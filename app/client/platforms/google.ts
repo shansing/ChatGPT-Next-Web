@@ -5,7 +5,14 @@ import {
   REQUEST_LONG_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
 } from "@/app/constant";
-import { ChatOptions, getHeaders, LLMApi, LLMModel, LLMUsage } from "../api";
+import {
+  ChatOptions,
+  getHeaders,
+  LLMApi,
+  LLMModel,
+  LLMUsage,
+  MultimodalContent,
+} from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
 import { DEFAULT_API_HOST } from "@/app/constant";
@@ -17,6 +24,8 @@ import {
   getMessageTextContent,
   getMessageImages,
   isVisionModel,
+  getMessageTextContentFull,
+  getMessageImagesFull,
 } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
 import Locale from "@/app/locales";
@@ -69,24 +78,94 @@ export class GeminiProApi implements LLMApi {
     }
     return result;
   }
+  extractFull(
+    res: any,
+    model: string,
+  ): { content: MultimodalContent[]; reasoningContent?: string } {
+    const parts = res?.candidates?.at(0)?.content?.parts;
+    if (!parts) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: "",
+          },
+        ],
+      };
+    }
+    let reasoningContent = "";
+    const contents: MultimodalContent[] = [];
+    for (const part of parts) {
+      // console.log(part)
+      if (part?.inlineData) {
+        if (part?.thought) {
+          console.log("hidden image", part);
+          reasoningContent += "[an omitted image]";
+        } else {
+          contents.push({
+            type: "image_url",
+            image_url: {
+              url:
+                "data:" +
+                part.inlineData.mimeType +
+                ";base64," +
+                part.inlineData.data,
+            },
+            encryptedReasoning: part.thoughtSignature,
+            encryptedReasoningModel: model,
+          });
+        }
+      } else {
+        if (part?.thought) {
+          reasoningContent += part.text;
+        } else {
+          contents.push({
+            type: "text",
+            text: part.text,
+            encryptedReasoning: part.thoughtSignature,
+            encryptedReasoningModel: model,
+          });
+        }
+      }
+    }
+    return {
+      content: contents,
+      reasoningContent: reasoningContent,
+    };
+  }
   async chat(options: ChatOptions): Promise<void> {
     const apiClient = this;
     // let multimodal = false;
     const messages = options.messages.map((v) => {
-      let parts: any[] = [{ text: getMessageTextContent(v) }];
+      const textPart = getMessageTextContentFull(v);
+      let parts: any[] = [
+        {
+          text: textPart.text,
+          thoughtSignature:
+            options.config.model === textPart.encryptedReasoningModel
+              ? textPart.encryptedReasoning
+              : null,
+        },
+      ];
       if (isVisionModel(options.config.model)) {
-        const images = getMessageImages(v);
+        const images = getMessageImagesFull(v);
         if (images.length > 0) {
           // multimodal = true;
           parts.unshift(
             images.map((image) => {
-              const imageType = image.split(";")[0].split(":")[1];
-              const imageData = image.split(",")[1];
+              const imageType = image?.image_url?.url
+                .split(";")[0]
+                ?.split(":")[1];
+              const imageData = image?.image_url?.url.split(",")[1];
               return {
                 inline_data: {
                   mime_type: imageType,
                   data: imageData,
                 },
+                thoughtSignature:
+                  options.config.model === textPart.encryptedReasoningModel
+                    ? textPart.encryptedReasoning
+                    : null,
               };
             }),
           );
@@ -198,10 +277,19 @@ export class GeminiProApi implements LLMApi {
                   : -1,
             }),
           ...(modelConfig.shansingReasoningLevel &&
-            !modelConfig.model.startsWith("gemini-2.5-") && {
+            !modelConfig.model.startsWith("gemini-2.5-") &&
+            !modelConfig.model.includes("-image") && {
               thinkingLevel: modelConfig.shansingReasoningLevel,
             }),
         },
+        // mediaResolution: "MEDIA_RESOLUTION_HIGH",
+        ...(modelConfig.model.includes("-image") && {
+          imageConfig: {
+            // "aspectRatio": string,
+            imageSize: "2k",
+          },
+          responseModalities: ["TEXT", "IMAGE"],
+        }),
       },
       safetySettings: [
         {
@@ -432,9 +520,17 @@ export class GeminiProApi implements LLMApi {
             ),
           );
         }
-        const result = apiClient.extractMessage(resJson);
-        const message = result.message;
-        options.onFinish(message);
+        if (options.onFinishFull) {
+          const extracted = this.extractFull(resJson, modelConfig.model);
+          if (options.onFlag) {
+            options.onFlag(undefined, undefined, !!extracted.reasoningContent);
+          }
+          options.onFinishFull(extracted.content, extracted.reasoningContent);
+        } else {
+          const result = apiClient.extractMessage(resJson);
+          const message = result.message;
+          options.onFinish(message);
+        }
       }
     } catch (e) {
       console.log("[Request] failed to make a chat request", e);

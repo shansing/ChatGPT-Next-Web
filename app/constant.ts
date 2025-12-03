@@ -65,8 +65,8 @@ export const UNFINISHED_INPUT = (id: string) => "unfinished-input-" + id;
 
 export const STORAGE_KEY = "chatgpt-next-web";
 
-export const REQUEST_TIMEOUT_MS = 60000;
-export const REQUEST_LONG_TIMEOUT_MS = 1200000;
+export const REQUEST_TIMEOUT_MS = 60_000;
+export const REQUEST_LONG_TIMEOUT_MS = 600_000;
 
 export const EXPORT_MESSAGE_CLASS_NAME = "export-markdown";
 
@@ -213,6 +213,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gemini-pro": "2023-12",
   "gemini-pro-vision": "2023-12",
   "gemini-3-pro-preview": "2025-01",
+  "gemini-3-pro-image-preview": "2025-01",
   "gemini-2.5-pro": "2025-01",
   "gemini-2.5-flash": "2025-01",
   "gemini-2.5-pro-preview-03-25": "2025-01",
@@ -308,6 +309,7 @@ const googleModels = [
   "gemini-1.5-flash-8b",
   "gemini-1.0-pro",
   "gemini-pro-vision",
+  "gemini-3-pro-image-preview",
 ];
 
 const anthropicModels = [
@@ -500,6 +502,12 @@ export const modelThresholdTokenNumbers = [
   { name: "qwen-max-latest", total: null, prompt: 30_720, completion: 8_192 },
   { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
+  {
+    name: "gemini-3-pro-image",
+    total: null,
+    prompt: 65_000,
+    completion: 32_000,
+  },
   { name: "gemini-3-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.5-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.0-", total: null, prompt: 1_048_576, completion: 8192 },
@@ -676,6 +684,10 @@ export const reasoningLevelModels: {
   {
     name: "gemini-3-pro-preview",
     levels: [ReasoningLevel.Low, ReasoningLevel.High],
+  },
+  {
+    name: "gemini-3-pro-image-preview",
+    levels: [ReasoningLevel.Auto],
   },
   {
     name: "gemini-2.5-pro",

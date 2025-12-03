@@ -24,6 +24,8 @@ export interface MultimodalContent {
   image_url?: {
     url: string;
   };
+  encryptedReasoning?: string;
+  encryptedReasoningModel?: String;
 }
 
 export interface RequestMessage {
@@ -49,6 +51,7 @@ export interface ChatOptions {
   config: LLMConfig;
 
   onUpdate?: (message: string, reasoning?: string) => void;
+  onFinishFull?: (message: MultimodalContent[], reasoning?: string) => void;
   onFinish: (message: string, reasoning?: string) => void;
   onError?: (err: Error) => void;
   onController?: (controller: AbortController) => void;

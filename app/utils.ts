@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { showToast } from "./components/ui-lib";
 import Locale from "./locales";
-import { RequestMessage } from "./client/api";
+import { MultimodalContent, RequestMessage } from "./client/api";
 import {
   codeExecutionKeywords,
   onlineSearchKeywords,
@@ -241,6 +241,25 @@ export function getMessageTextContent(message: RequestMessage) {
   }
   return "";
 }
+export function getMessageTextContentFull(
+  message: RequestMessage,
+): MultimodalContent {
+  if (typeof message.content === "string") {
+    return {
+      type: "text",
+      text: message.content,
+    };
+  }
+  for (const c of message.content) {
+    if (c.type === "text") {
+      return c;
+    }
+  }
+  return {
+    type: "text",
+    text: "",
+  };
+}
 
 export function getMessageImages(message: RequestMessage): string[] {
   if (typeof message.content === "string") {
@@ -250,6 +269,20 @@ export function getMessageImages(message: RequestMessage): string[] {
   for (const c of message.content) {
     if (c.type === "image_url") {
       urls.push(c.image_url?.url ?? "");
+    }
+  }
+  return urls;
+}
+export function getMessageImagesFull(
+  message: RequestMessage,
+): MultimodalContent[] {
+  if (typeof message.content === "string") {
+    return [];
+  }
+  const urls: MultimodalContent[] = [];
+  for (const c of message.content) {
+    if (c.type === "image_url") {
+      urls.push(c);
     }
   }
   return urls;
@@ -281,6 +314,7 @@ export function isOnlineSearchModel(model: string) {
     !model.includes("-search") &&
     !(model.includes("-chat") && !model.includes("gpt-5")) &&
     !model.includes("/") &&
+    !model.includes("-image") &&
     !isChatGpt
   );
 }
@@ -288,7 +322,8 @@ export function isOnlineSearchModel(model: string) {
 export function isCodeExecutionModel(model: string) {
   return (
     codeExecutionKeywords.some((keyword) => model.includes(keyword)) &&
-    !model.includes("-lite")
+    !model.includes("-lite") &&
+    !model.includes("-image")
   );
 }
 

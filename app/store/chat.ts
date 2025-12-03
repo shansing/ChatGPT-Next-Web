@@ -457,6 +457,8 @@ export const useChatStore = createPersistStore(
         // get recent messages
         const recentMessages = get().getMessagesWithMemory(
           estimateTokenLength(JSON.stringify(userMessage)),
+          //workaround: for image generation, keep all history
+          modelConfig.model.includes("-image"),
         );
         const sendMessages = recentMessages.concat(userMessage);
         const messageIndex = get().currentSession().messages.length + 1;
@@ -547,7 +549,20 @@ export const useChatStore = createPersistStore(
               console.error("updateCurrentSession", err);
             }
           },
-          onFinish(message, reasoning) {
+          onFinish(message: string, reasoning) {
+            botMessage.streaming = false;
+            if (message || reasoning) {
+              if (message) {
+                botMessage.content = message;
+              }
+              if (reasoning) {
+                botMessage.reasoningContent = reasoning;
+              }
+              get().onNewMessage(session, botMessage);
+            }
+            ChatControllerPool.remove(session.id, botMessage.id);
+          },
+          onFinishFull(message: MultimodalContent[], reasoning) {
             botMessage.streaming = false;
             if (message || reasoning) {
               if (message) {
@@ -608,7 +623,7 @@ export const useChatStore = createPersistStore(
         }
       },
 
-      getMessagesWithMemory(userMessageLength: number) {
+      getMessagesWithMemory(userMessageLength: number, reserveAll?: boolean) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
         const clearContextIndex = session.clearContextIndex ?? 0;
@@ -673,14 +688,16 @@ export const useChatStore = createPersistStore(
         const maxPromptTokenThreshold = calculatePromptTokenThreshold(
           modelConfig.model,
           modelConfig.max_tokens,
-          userMessageLength +
-            estimateTokenLength(
-              JSON.stringify({
-                systemPrompts,
-                longTermMemoryPrompts,
-                contextPrompts,
-              }),
-            ),
+          reserveAll
+            ? 0
+            : userMessageLength +
+                estimateTokenLength(
+                  JSON.stringify({
+                    systemPrompts,
+                    longTermMemoryPrompts,
+                    contextPrompts,
+                  }),
+                ),
         );
         console.log("maxPromptTokenThreshold", maxPromptTokenThreshold);
 
@@ -694,7 +711,9 @@ export const useChatStore = createPersistStore(
           const msg = messages[i];
           if (!msg || msg.isError) continue;
           // tokenCount += estimateTokenLength(getMessageTextContent(msg));
-          tokenCount += estimateTokenLength(JSON.stringify(msg));
+          tokenCount += reserveAll
+            ? 0
+            : estimateTokenLength(JSON.stringify(msg));
           reversedRecentMessages.push(msg);
         }
         //let recentMessages start with a user message
@@ -788,6 +807,7 @@ export const useChatStore = createPersistStore(
           .slice(summarizeIndex);
 
         const historyMsgLength = countMessages(toBeSummarizedMsgs);
+        // console.log("historyMsgLength", historyMsgLength)
 
         if (
           historyMsgLength > modelConfig.compressMessageLengthThreshold &&
@@ -1006,5 +1026,5 @@ const decideStream = function (model: string) {
   //   !model.includes("gpt-5-nano") &&
   //   !model.includes("gpt-5-chat")
   // );
-  return true;
+  return !(model.includes("gemini-") && model.includes("-image"));
 };
