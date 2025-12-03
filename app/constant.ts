@@ -151,6 +151,7 @@ export const DEEPSEEK_REASONER = "deepseek-reasoner";
 export const GEMINI_PRO = "gemini-3-pro-preview";
 export const GEMINI_FLASH = "gemini-2.5-flash";
 
+export const DEFAULT_MODEL = GEMINI_PRO;
 export const SUMMARIZE_MODEL = GEMINI_FLASH; //GPT_MAIN_NANO_MODEL;
 export const GEMINI_SUMMARIZE_MODEL = GEMINI_FLASH;
 export const CLAUDE_SUMMARIZE_MODEL = CLAUDE_HAIKU;

@@ -2,6 +2,7 @@ import { LLMModel } from "../client/api";
 import { getClientConfig } from "../config/client";
 import {
   DEFAULT_INPUT_TEMPLATE,
+  DEFAULT_MODEL,
   DEFAULT_MODELS,
   DEFAULT_SIDEBAR_WIDTH,
   ReasoningLevel,
@@ -49,10 +50,10 @@ export const DEFAULT_CONFIG = {
   models: DEFAULT_MODELS as any as LLMModel[],
 
   modelConfig: {
-    model: "GPT-4o" as ModelType,
+    model: DEFAULT_MODEL as ModelType,
     temperature: 1,
     top_p: 1,
-    max_tokens: 4000,
+    max_tokens: 8000,
     presence_penalty: 0,
     frequency_penalty: 0,
     sendMemory: true,

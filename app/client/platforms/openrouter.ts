@@ -184,6 +184,7 @@ export class OpenRouterApi implements LLMApi {
       if (shouldStream) {
         let responseText = "";
         let responseReasoning = "";
+        let citationsMarkdown = "";
         let finished = false;
 
         const error = (inError: Error | string) => {
@@ -200,7 +201,7 @@ export class OpenRouterApi implements LLMApi {
             finished = true;
             requestAnimationFrame(() =>
               options.onFinish(
-                responseText,
+                responseText + citationsMarkdown,
                 responseReasoning.replace(/^\n+|\n+$/g, ""),
               ),
             );
@@ -299,25 +300,14 @@ export class OpenRouterApi implements LLMApi {
               }
 
               //for perplexity
-              if (
-                choices[0]?.finish_reason === "stop" &&
-                json.citations &&
-                json.citations.length > 0
-              ) {
-                const citationsMarkdown =
+              if (json.citations && json.citations.length > 0) {
+                citationsMarkdown =
                   "\n\n---\n" +
                   json.citations
                     .map((citation: any, index: number) => {
                       return `[${index + 1}] ${citation}`;
                     })
                     .join("\n");
-                responseText += citationsMarkdown;
-                requestAnimationFrame(() =>
-                  options.onUpdate?.(
-                    responseText,
-                    responseReasoning.replace(/^\n+|\n+$/g, ""),
-                  ),
-                );
               }
             } catch (e) {
               showToast(Locale.Shansing.messageParseFailure);
