@@ -3,12 +3,14 @@ import en from "./en";
 import { merge } from "../utils/merge";
 
 import type { LocaleType } from "./cn";
+import { safeLocalStorage } from "@/app/utils";
 export type { LocaleType, PartialLocaleType } from "./cn";
 
 const ALL_LANGS = {
   cn,
   en,
 };
+const localStorage = safeLocalStorage();
 
 export type Lang = keyof typeof ALL_LANGS;
 
@@ -31,17 +33,11 @@ merge(fallbackLang, targetLang);
 export default fallbackLang as LocaleType;
 
 function getItem(key: string) {
-  try {
-    return localStorage.getItem(key);
-  } catch {
-    return null;
-  }
+  return localStorage.getItem(key);
 }
 
 function setItem(key: string, value: string) {
-  try {
-    localStorage.setItem(key, value);
-  } catch {}
+  localStorage.setItem(key, value);
 }
 
 function getLanguage() {

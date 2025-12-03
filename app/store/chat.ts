@@ -268,6 +268,8 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
 const DEFAULT_CHAT_STATE = {
   sessions: [createEmptySession()],
   currentSessionIndex: 0,
+
+  lastInput: "",
 };
 
 export const useChatStore = createPersistStore(
@@ -961,6 +963,11 @@ export const useChatStore = createPersistStore(
       clearAllData() {
         localStorage.clear();
         location.reload();
+      },
+      setLastInput(lastInput: string) {
+        set({
+          lastInput,
+        });
       },
     };
 
