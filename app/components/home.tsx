@@ -182,11 +182,11 @@ export function useLoadData() {
     api = new ClientApi(ModelProvider.GPT);
   }
   useEffect(() => {
-    // (async () => {
-    // const models = await api.llm.models();
-    // config.mergeModels(models);
-    config.resetModels();
-    // })();
+    (async () => {
+      // const models = await api.llm.models();
+      // config.mergeModels(models);
+      config.resetModels();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }
