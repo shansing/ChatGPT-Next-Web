@@ -201,9 +201,10 @@ async function handle(
           "usageMetadata",
           false,
         );
-        const textCompletionTokenNumber = usageMetadata?.promptTokensDetails
-          ?.filter((detail: any) => detail?.modality === "TEXT")
-          ?.find((detail: any) => detail?.tokenCount);
+        const textCompletionTokenNumber =
+          usageMetadata?.promptTokensDetails?.find(
+            (detail: any) => detail?.modality === "TEXT",
+          )?.tokenCount;
         console.log(
           "[Google Usage]<" + username + ">",
           JSON.stringify(usageMetadata),
