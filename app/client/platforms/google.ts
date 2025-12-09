@@ -84,7 +84,18 @@ export class GeminiProApi implements LLMApi {
   async extractFull(
     res: any,
     model: string,
-  ): Promise<{ content: MultimodalContent[]; reasoningContent?: string }> {
+  ): Promise<{
+    content: MultimodalContent[];
+    thoughtMessage?: string;
+    isGoogleSearch?: false;
+  }> {
+    const webSearchQueries =
+      res?.candidates?.at(0)?.groundingMetadata?.webSearchQueries;
+    const isSearch =
+      webSearchQueries &&
+      Array.isArray(webSearchQueries) &&
+      webSearchQueries.length > 0;
+
     const parts = res?.candidates?.at(0)?.content?.parts;
     if (!parts) {
       return {
@@ -117,7 +128,7 @@ export class GeminiProApi implements LLMApi {
             encryptedReasoningModel: model,
           });
         }
-      } else {
+      } else if (part?.text || part?.thought) {
         if (part?.thought) {
           reasoningContent += part.text;
         } else {
@@ -128,11 +139,18 @@ export class GeminiProApi implements LLMApi {
             encryptedReasoningModel: model,
           });
         }
+      } else {
+        contents.push({
+          type: "transparent",
+          encryptedReasoningModel: model,
+          transparentObject: part,
+        });
       }
     }
     return {
       content: contents,
-      reasoningContent: reasoningContent,
+      thoughtMessage: reasoningContent,
+      isGoogleSearch: isSearch,
     };
   }
   async chat(options: ChatOptions): Promise<void> {
@@ -153,6 +171,7 @@ export class GeminiProApi implements LLMApi {
       ];
       if (isVisionModel(options.config.model)) {
         const images = await getMessageImagesFull(v);
+        // console.log("images", images)
         if (images.length > 0) {
           // multimodal = true;
           parts.unshift(
@@ -173,6 +192,18 @@ export class GeminiProApi implements LLMApi {
               };
             }),
           );
+        }
+      }
+      if (typeof v.content !== "string") {
+        const otherParts = v.content
+          .filter(
+            (part) => part.type === "transparent" && part.transparentObject,
+          )
+          .filter((part) => modelConfig.model === part.encryptedReasoningModel)
+          .map((part) => part.transparentObject);
+        if (otherParts) {
+          console.log("otherParts", otherParts);
+          parts.concat(otherParts);
         }
       }
       messages.push({
@@ -227,30 +258,6 @@ export class GeminiProApi implements LLMApi {
     };
     console.log("max_tokens", modelConfig.max_tokens);
 
-    const tools = [
-      ...(modelConfig.shansingCodeExecution
-        ? [
-            {
-              codeExecution: {},
-            },
-          ]
-        : []),
-      ...(options.config.checkShansingOnlineSearch &&
-      modelConfig.shansingOnlineSearch
-        ? [
-            {
-              // "googleSearchRetrieval": {
-              //   "dynamicRetrievalConfig": {
-              //     "mode": "MODE_DYNAMIC",
-              //     // "dynamic_threshold": 0.3,
-              //   }
-              // },
-              googleSearch: {},
-              urlContext: {},
-            },
-          ]
-        : []),
-    ];
     if (
       options.config.shansingLessThink &&
       modelConfig.shansingReasoningLevel
@@ -324,7 +331,32 @@ export class GeminiProApi implements LLMApi {
           },
         },
       }),
-      tools: tools,
+      tools: [
+        ...(modelConfig.shansingCodeExecution
+          ? [
+              {
+                codeExecution: {},
+              },
+            ]
+          : []),
+        ...(options.config.checkShansingOnlineSearch &&
+        modelConfig.shansingOnlineSearch
+          ? [
+              {
+                // "googleSearchRetrieval": {
+                //   "dynamicRetrievalConfig": {
+                //     "mode": "MODE_DYNAMIC",
+                //     // "dynamic_threshold": 0.3,
+                //   }
+                // },
+                googleSearch: {},
+                ...(!modelConfig.model.includes("-image") && {
+                  urlContext: {},
+                }),
+              },
+            ]
+          : []),
+      ],
     };
 
     const accessStore = useAccessStore.getState();
@@ -531,9 +563,13 @@ export class GeminiProApi implements LLMApi {
         if (options.onFinishFull) {
           const extracted = await this.extractFull(resJson, modelConfig.model);
           if (options.onFlag) {
-            options.onFlag(undefined, undefined, !!extracted.reasoningContent);
+            options.onFlag(
+              !!extracted.isGoogleSearch,
+              undefined,
+              !!extracted.thoughtMessage,
+            );
           }
-          options.onFinishFull(extracted.content, extracted.reasoningContent);
+          options.onFinishFull(extracted.content, extracted.thoughtMessage);
         } else {
           const result = apiClient.extractMessage(resJson);
           const message = result.message;

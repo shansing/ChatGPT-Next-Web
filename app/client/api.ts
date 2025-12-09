@@ -19,13 +19,14 @@ export const Models = ["gpt-3.5-turbo", "gpt-4"] as const;
 export type ChatModel = ModelType;
 
 export interface MultimodalContent {
-  type: "text" | "image_url";
+  type: "text" | "image_url" | "transparent";
   text?: string;
   image_url?: {
     url: string;
   };
   encryptedReasoning?: string;
   encryptedReasoningModel?: String;
+  transparentObject?: object;
 }
 
 export interface RequestMessage {

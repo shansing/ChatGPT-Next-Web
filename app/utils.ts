@@ -282,10 +282,15 @@ export async function getMessageImagesFull(
     return [];
   }
   const urls: MultimodalContent[] = [];
-  const content = await preProcessImageContent(message.content);
-  for (const c of content) {
-    if (typeof c !== "string" && c.type === "image_url") {
-      urls.push(c);
+  for (const c of message.content) {
+    if (c.type === "image_url") {
+      const processed = await preProcessImageContent([c]);
+      if (typeof processed !== "string") {
+        urls.push({
+          ...c,
+          ...processed[0],
+        });
+      }
     }
   }
   return urls;
@@ -317,7 +322,7 @@ export function isOnlineSearchModel(model: string) {
     !model.includes("-search") &&
     !(model.includes("-chat") && !model.includes("gpt-5")) &&
     !model.includes("/") &&
-    !model.includes("-image") &&
+    // !model.includes("-image") &&
     !isChatGpt
   );
 }
