@@ -201,12 +201,16 @@ async function handle(
           "usageMetadata",
           false,
         );
+        const textCompletionTokenNumber = usageMetadata?.promptTokensDetails
+          ?.filter((detail: any) => detail?.modality === "TEXT")
+          ?.findOne((detail: any) => detail?.tokenCount);
         console.log(
           "[Google Usage]<" + username + ">",
           JSON.stringify(usageMetadata),
           JSON.stringify({
             firstPromptTokenNumber,
             firstCompletionTokenNumber,
+            textCompletionTokenNumber,
             searchCount,
             newsCount,
             crawlerCount,
@@ -220,6 +224,9 @@ async function handle(
           return {
             promptTokenNumber: usageMetadata.promptTokenCount as number,
             completionTokenNumber: usageMetadata.candidatesTokenCount as number,
+            textCompletionTokenNumber: textCompletionTokenNumber
+              ? (textCompletionTokenNumber as number)
+              : undefined,
           };
         }
         console.warn(
@@ -234,8 +241,16 @@ async function handle(
       .then((obj) => {
         if (obj) {
           const prompt = obj.promptTokenNumber + firstPromptTokenNumber;
-          const completion =
+          let completion =
             obj.completionTokenNumber + firstCompletionTokenNumber;
+          if (
+            modelChoice.model.includes("-image") &&
+            obj.textCompletionTokenNumber != null
+          ) {
+            //text price is 1/10 image price
+            completion =
+              completion - Math.floor(obj.textCompletionTokenNumber * 0.9);
+          }
           return pay(
             username,
             modelChoice,
