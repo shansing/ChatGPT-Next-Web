@@ -2,6 +2,8 @@ import * as React from "react";
 
 import styles from "./button.module.scss";
 
+import type { JSX } from "react";
+
 export type ButtonType = "primary" | "danger" | null;
 
 export function IconButton(props: {

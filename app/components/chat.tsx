@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  type JSX,
 } from "react";
 
 import SendWhiteIcon from "../icons/send-white.svg";
@@ -417,7 +418,7 @@ function ChatAction(props: {
 }
 
 function useScrollToBottom(
-  scrollRef: RefObject<HTMLDivElement>,
+  scrollRef: RefObject<HTMLDivElement | null>,
   detach: boolean = false,
 ) {
   // for auto-scroll
@@ -1604,7 +1605,6 @@ function ChatInternal() {
           setShowModal={setShowPromptModal}
         />
       </div>
-
       <div
         className={styles["chat-body"]}
         ref={scrollRef}
@@ -1846,7 +1846,6 @@ function ChatInternal() {
           );
         })}
       </div>
-
       <div className={styles["chat-input-panel"]}>
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
 
@@ -1930,11 +1929,9 @@ function ChatInternal() {
           />
         </label>
       </div>
-
       {showExport && (
         <ExportMessageModal onClose={() => setShowExport(false)} />
       )}
-
       {isEditingMessage && (
         <EditMessageModal
           onClose={() => {

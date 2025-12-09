@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { Path } from "../constant";
 import Locale from "../locales";
 
-import BotIcon from "../icons/bot.svg";
 import { useEffect, useState } from "react";
 import { EmojiAvatar } from "@/app/components/emoji";
 import { showToast } from "@/app/components/ui-lib";
@@ -68,8 +67,8 @@ export function AuthPage() {
   }; // Reset access code to empty string
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowConfirm(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

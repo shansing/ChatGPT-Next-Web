@@ -4,14 +4,10 @@ import styles from "./home.module.scss";
 
 import { IconButton } from "./button";
 import SettingsIcon from "../icons/settings.svg";
-import ReturnIcon from "../icons/return.svg";
-import GithubIcon from "../icons/github.svg";
 import StarOutlineIcon from "../icons/star-outline.svg";
 import AddIcon from "../icons/add.svg";
-import CloseIcon from "../icons/close.svg";
 import DeleteIcon from "../icons/delete.svg";
 import MaskIcon from "../icons/mask.svg";
-import PluginIcon from "../icons/plugin.svg";
 import DragIcon from "../icons/drag.svg";
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
@@ -64,6 +60,7 @@ function useDragSideBar() {
   const config = useAppConfig();
   const startX = useRef(0);
   const startDragWidth = useRef(config.sidebarWidth ?? DEFAULT_SIDEBAR_WIDTH);
+  // eslint-disable-next-line react-hooks/purity
   const lastUpdateTime = useRef(Date.now());
 
   const toggleSideBar = () => {

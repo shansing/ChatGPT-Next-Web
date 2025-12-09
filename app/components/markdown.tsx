@@ -30,7 +30,6 @@ export function Mermaid(props: { code: string }) {
           console.error("[Mermaid] ", e.message);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.code]);
 
   function viewSvgInNewWindow() {
@@ -118,7 +117,7 @@ function escapeDollarNumber(text: string) {
 
 function escapeBrackets(text: string) {
   const pattern =
-    /(```[\s\S]*?```|`.*?`)|\\\[([\s\S]*?[^\\])\\\]|\\\((.*?)\\\)/g;
+    /(```[\s\S]*?```|`.*?`)|\\\[([\s\S]*?[^\\])\\]|\\\((.*?)\\\)/g;
   return text.replace(
     pattern,
     (match, codeBlock, squareBracket, roundBracket) => {
@@ -175,7 +174,7 @@ export function Markdown(
     content: string;
     loading?: boolean;
     fontSize?: number;
-    parentRef?: RefObject<HTMLDivElement>;
+    parentRef?: RefObject<HTMLDivElement | null>;
     defaultShow?: boolean;
   } & React.DOMAttributes<HTMLDivElement>,
 ) {

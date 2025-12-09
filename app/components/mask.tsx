@@ -37,7 +37,7 @@ import Locale, { AllLangs, ALL_LANG_OPTIONS, Lang } from "../locales";
 import { useNavigate } from "react-router-dom";
 
 import chatStyle from "./chat.module.scss";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type JSX } from "react";
 import {
   copyToClipboard,
   downloadAs,

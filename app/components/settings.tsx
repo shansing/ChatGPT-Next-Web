@@ -13,7 +13,6 @@ import EditIcon from "../icons/edit.svg";
 import EyeIcon from "../icons/eye.svg";
 import DownloadIcon from "../icons/download.svg";
 import UploadIcon from "../icons/upload.svg";
-import ConfigIcon from "../icons/config.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 
 import ConnectionIcon from "../icons/connection.svg";
@@ -29,7 +28,6 @@ import {
   Popover,
   Select,
   showConfirm,
-  showToast,
 } from "./ui-lib";
 import { ModelConfigList } from "./model-config";
 
@@ -147,6 +145,7 @@ function UserPromptModal(props: { onClose?: () => void }) {
   useEffect(() => {
     if (searchInput.length > 0) {
       const searchResult = SearchService.search(searchInput);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSearchPrompts(searchResult);
     } else {
       setSearchPrompts([]);
@@ -698,7 +697,6 @@ export function Settings() {
     // checkUpdate();
     getUserAndQuota();
     // showUsage && checkUsage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

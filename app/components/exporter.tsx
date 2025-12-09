@@ -21,7 +21,6 @@ import {
 
 import CopyIcon from "../icons/copy.svg";
 import LoadingIcon from "../icons/three-dots.svg";
-// import ChatGptIcon from "../icons/chatgpt.png";
 import StarOutlineIcon from "../icons/star-outline.png";
 import ShareIcon from "../icons/share.svg";
 import BotIcon from "../icons/bot.png";
@@ -581,9 +580,7 @@ export function ImagePreviewer(props: {
             </div>
             <div className={styles["chat-info-item"]}>
               {Locale.Exporter.Time}:{" "}
-              {new Date(
-                props.messages.at(-1)?.date ?? Date.now(),
-              ).toLocaleString()}
+              {new Date(props.messages.at(-1)?.date ?? 0).toLocaleString()}
             </div>
           </div>
         </div>

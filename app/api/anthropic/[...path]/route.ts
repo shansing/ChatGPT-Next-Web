@@ -22,8 +22,9 @@ const ALLOWD_PATH = new Set([Anthropic.ChatPath]);
 
 async function handle(
   req: NextRequest,
-  { params }: { params: { path: string[] } },
+  context: { params: Promise<{ path: string[] }> },
 ) {
+  const params = await context.params;
   // console.log("[Anthropic Route] params ", params);
 
   if (req.method === "OPTIONS") {

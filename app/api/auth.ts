@@ -3,7 +3,7 @@ import { getServerSideConfig } from "../config/server";
 import { ACCESS_CODE_PREFIX, ModelProvider } from "../constant";
 
 function getIP(req: NextRequest) {
-  let ip = req.ip ?? req.headers.get("x-real-ip");
+  let ip = /*req.ip ??*/ req.headers.get("x-real-ip");
   const forwardedFor = req.headers.get("x-forwarded-for");
 
   if (!ip && forwardedFor) {
