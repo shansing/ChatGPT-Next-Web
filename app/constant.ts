@@ -18,6 +18,9 @@ export const ALIBABA_BASE_URL =
 export const OPEN_ROUTER_BASE_URL = "https://openrouter.ai/api";
 export const DEEP_SEEK_BASE_URL = "https://api.deepseek.com";
 
+export const CACHE_URL_PREFIX = "/api/cache";
+export const UPLOAD_URL = `${CACHE_URL_PREFIX}/upload`;
+
 export enum Path {
   Home = "/",
   Chat = "/chat",

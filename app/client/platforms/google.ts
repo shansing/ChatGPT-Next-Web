@@ -21,16 +21,19 @@ import {
   fetchEventSource,
 } from "@fortaine/fetch-event-source";
 import {
-  getMessageTextContent,
-  getMessageImages,
   isVisionModel,
   getMessageTextContentFull,
   getMessageImagesFull,
+  getMessageTextContent,
 } from "@/app/utils";
+import { fitMaxCompletionToken, trimNewline } from "@/app/client/shansing";
+import {
+  base64Image2Blob,
+  preProcessImageContent,
+  uploadImage as uploadImageRemote,
+} from "@/app/utils/chat";
 import { showToast } from "@/app/components/ui-lib";
 import Locale from "@/app/locales";
-import { prettyObject } from "@/app/utils/format";
-import { fitMaxCompletionToken, trimNewline } from "@/app/client/shansing";
 
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
@@ -78,10 +81,10 @@ export class GeminiProApi implements LLMApi {
     }
     return result;
   }
-  extractFull(
+  async extractFull(
     res: any,
     model: string,
-  ): { content: MultimodalContent[]; reasoningContent?: string } {
+  ): Promise<{ content: MultimodalContent[]; reasoningContent?: string }> {
     const parts = res?.candidates?.at(0)?.content?.parts;
     if (!parts) {
       return {
@@ -102,14 +105,13 @@ export class GeminiProApi implements LLMApi {
           console.log("hidden image", part);
           reasoningContent += "\n[an omitted image]\n";
         } else {
+          const url = await uploadImageRemote(
+            base64Image2Blob(part.inlineData.data, part.inlineData.mimeType),
+          );
           contents.push({
             type: "image_url",
             image_url: {
-              url:
-                "data:" +
-                part.inlineData.mimeType +
-                ";base64," +
-                part.inlineData.data,
+              url: url,
             },
             encryptedReasoning: part.thoughtSignature,
             encryptedReasoningModel: model,
@@ -136,7 +138,9 @@ export class GeminiProApi implements LLMApi {
   async chat(options: ChatOptions): Promise<void> {
     const apiClient = this;
     // let multimodal = false;
-    const messages = options.messages.map((v) => {
+
+    const messages = [];
+    for (const v of options.messages) {
       const textPart = getMessageTextContentFull(v);
       let parts: any[] = [
         {
@@ -148,7 +152,7 @@ export class GeminiProApi implements LLMApi {
         },
       ];
       if (isVisionModel(options.config.model)) {
-        const images = getMessageImagesFull(v);
+        const images = await getMessageImagesFull(v);
         if (images.length > 0) {
           // multimodal = true;
           parts.unshift(
@@ -171,11 +175,11 @@ export class GeminiProApi implements LLMApi {
           );
         }
       }
-      return {
+      messages.push({
         role: v.role.replace("assistant", "model"),
         parts: parts,
-      };
-    });
+      });
+    }
 
     let systemMessage: string | undefined = messages
       .filter((v) => v.role === "system" && v?.parts)
@@ -525,7 +529,7 @@ export class GeminiProApi implements LLMApi {
           );
         }
         if (options.onFinishFull) {
-          const extracted = this.extractFull(resJson, modelConfig.model);
+          const extracted = await this.extractFull(resJson, modelConfig.model);
           if (options.onFlag) {
             options.onFlag(undefined, undefined, !!extracted.reasoningContent);
           }

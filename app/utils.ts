@@ -10,6 +10,7 @@ import {
   uploadFileModels,
   visionKeywords,
 } from "@/app/constant";
+import { preProcessImageContent } from "@/app/utils/chat";
 
 export function trimTopic(topic: string) {
   // Fix an issue where double quotes still show in the Indonesian language
@@ -266,6 +267,7 @@ export function getMessageImages(message: RequestMessage): string[] {
     return [];
   }
   const urls: string[] = [];
+  // const content = await preProcessImageContent(message.content)
   for (const c of message.content) {
     if (c.type === "image_url") {
       urls.push(c.image_url?.url ?? "");
@@ -273,15 +275,16 @@ export function getMessageImages(message: RequestMessage): string[] {
   }
   return urls;
 }
-export function getMessageImagesFull(
+export async function getMessageImagesFull(
   message: RequestMessage,
-): MultimodalContent[] {
+): Promise<MultimodalContent[]> {
   if (typeof message.content === "string") {
     return [];
   }
   const urls: MultimodalContent[] = [];
-  for (const c of message.content) {
-    if (c.type === "image_url") {
+  const content = await preProcessImageContent(message.content);
+  for (const c of content) {
+    if (typeof c !== "string" && c.type === "image_url") {
       urls.push(c);
     }
   }

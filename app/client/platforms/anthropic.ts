@@ -204,6 +204,7 @@ export class ClaudeApi implements LLMApi {
             content: getMessageTextContent(v),
           };
         }
+        // to do preProcessImageContent
         return {
           role: insideRole,
           content: content

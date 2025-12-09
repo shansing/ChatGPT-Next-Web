@@ -23,13 +23,10 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from "@fortaine/fetch-event-source";
-import {
-  getMessageTextContent,
-  getMessageImages,
-  isVisionModel,
-} from "@/app/utils";
+import { getMessageTextContent, isVisionModel } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
 import { fitMaxCompletionToken } from "@/app/client/shansing";
+import { preProcessImageContent } from "@/app/utils/chat";
 
 //ref: openai.ts
 
@@ -83,16 +80,20 @@ export class OpenRouterApi implements LLMApi {
     const visionModel = isVisionModel(options.config.model);
     const shouldInjectSystemPrompts = modelConfig.enableInjectSystemPrompts;
     // console.log("shouldInjectSystemPrompts", shouldInjectSystemPrompts);
-    let messages = options.messages.map((v) => {
-      let content = visionModel ? v.content : getMessageTextContent(v);
-      return {
+
+    const messages: ChatOptions["messages"] = [];
+    for (const v of options.messages) {
+      const content = visionModel
+        ? await preProcessImageContent(v.content)
+        : getMessageTextContent(v);
+      messages.push({
         role:
           options.config.model.startsWith("deepseek") && v.role === "system"
             ? "user"
             : v.role,
         content: content,
-      };
-    });
+      });
+    }
     if (
       options.config.model.includes("deepseek-r1") &&
       shouldInjectSystemPrompts

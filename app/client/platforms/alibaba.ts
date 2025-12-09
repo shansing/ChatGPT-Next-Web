@@ -20,13 +20,10 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from "@fortaine/fetch-event-source";
-import {
-  getMessageTextContent,
-  getMessageImages,
-  isVisionModel,
-} from "@/app/utils";
+import { getMessageTextContent, isVisionModel } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
 import { fitMaxCompletionToken } from "@/app/client/shansing";
+import { preProcessImageContent } from "@/app/utils/chat";
 
 //ref: openai.ts
 
@@ -62,6 +59,7 @@ export class AlibabaApi implements LLMApi {
     const visionModel = isVisionModel(options.config.model);
     const messages = options.messages.map((v) => ({
       role: v.role,
+      // to do preProcessImageContent
       content: visionModel ? v.content : getMessageTextContent(v),
     }));
 

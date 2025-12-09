@@ -42,6 +42,8 @@ import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
 
+import { uploadImage as uploadImageRemote } from "@/app/utils/chat";
+
 import {
   BOT_HELLO,
   ChatMessage,
@@ -1328,7 +1330,6 @@ function ChatInternal() {
 
   const UPLOAD_FILE_MAX_NUMBER = 5;
   const UPLOAD_IMAGE_MAX_NUMBER = 3;
-  const UPLOAD_IMAGE_MAX_SIZE = 256 * 1024;
 
   // remember unfinished input
   useEffect(() => {
@@ -1372,7 +1373,18 @@ function ChatInternal() {
               ...(await new Promise<string[]>((res, rej) => {
                 setUploading(true);
                 const imagesData: string[] = [];
-                compressImage(file, UPLOAD_IMAGE_MAX_SIZE)
+                // compressImage(file, UPLOAD_IMAGE_MAX_SIZE)
+                //   .then((dataUrl) => {
+                //     imagesData.push(dataUrl);
+                //     setUploading(false);
+                //     res(imagesData);
+                //   })
+                //   .catch((e) => {
+                //     setUploading(false);
+                //     showToast(Locale.Shansing.imageSelectorFailure);
+                //     rej(e);
+                //   });
+                uploadImageRemote(file)
                   .then((dataUrl) => {
                     imagesData.push(dataUrl);
                     setUploading(false);
@@ -1398,7 +1410,7 @@ function ChatInternal() {
         }
       }
     },
-    [attachImages, chatStore, UPLOAD_IMAGE_MAX_SIZE],
+    [attachImages, chatStore],
   );
 
   async function uploadImage() {
@@ -1431,7 +1443,23 @@ function ChatInternal() {
           const imagesData: string[] = [];
           for (let i = 0; i < files.length; i++) {
             const file = event.target.files[i];
-            compressImage(file, UPLOAD_IMAGE_MAX_SIZE)
+            // compressImage(file, UPLOAD_IMAGE_MAX_SIZE)
+            //   .then((dataUrl) => {
+            //     imagesData.push(dataUrl);
+            //     if (
+            //       imagesData.length === 3 ||
+            //       imagesData.length === files.length
+            //     ) {
+            //       setUploading(false);
+            //       res(imagesData);
+            //     }
+            //   })
+            //   .catch((e) => {
+            //     setUploading(false);
+            //     showToast(Locale.Shansing.imageSelectorFailure);
+            //     rej(e);
+            //   });
+            uploadImageRemote(file)
               .then((dataUrl) => {
                 imagesData.push(dataUrl);
                 if (

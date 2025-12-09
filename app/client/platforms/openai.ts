@@ -26,11 +26,7 @@ import {
 import { prettyObject } from "@/app/utils/format";
 import { getClientConfig } from "@/app/config/client";
 import { makeAzurePath } from "@/app/azure";
-import {
-  getMessageTextContent,
-  getMessageImages,
-  isVisionModel,
-} from "@/app/utils";
+import { getMessageTextContent, isVisionModel } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
 import { fitMaxCompletionToken } from "@/app/client/shansing";
 
@@ -117,6 +113,7 @@ export class ChatGPTApi implements LLMApi {
         v.role === "system"
           ? "user"
           : v.role,
+      // to do preProcessImageContent
       content: visionModel ? v.content : getMessageTextContent(v),
     }));
 

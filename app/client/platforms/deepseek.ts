@@ -23,11 +23,7 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from "@fortaine/fetch-event-source";
-import {
-  getMessageTextContent,
-  getMessageImages,
-  isVisionModel,
-} from "@/app/utils";
+import { getMessageTextContent, isVisionModel } from "@/app/utils";
 import { showToast } from "@/app/components/ui-lib";
 import { fitMaxCompletionToken } from "@/app/client/shansing";
 
@@ -82,6 +78,7 @@ export class DeepSeekApi implements LLMApi {
     const shouldInjectSystemPrompts = modelConfig.enableInjectSystemPrompts;
     // console.log("shouldInjectSystemPrompts", shouldInjectSystemPrompts);
     let messages = options.messages.map((v) => {
+      // to do preProcessImageContent
       let content = visionModel ? v.content : getMessageTextContent(v);
       return {
         role:
