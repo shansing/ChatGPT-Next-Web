@@ -26,6 +26,7 @@ const nextConfig = {
 
     return config;
   },
+    // turbopack:{},
   output: mode,
   images: {
     unoptimized: mode === "export",
