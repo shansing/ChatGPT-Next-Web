@@ -491,6 +491,7 @@ const cn = {
     userName: "当前用户",
     userPassword: "修改密码",
     imageSelectorFailure: "图片过大或格式暂不支持",
+    imageSavedFailure: "图片保存失败，请尝试强制刷新",
     animationFailure: "打字机动画渲染有误",
     modelPrice: "模型单价",
     modelPriceDescription: "单位：元 / 1000 词元",

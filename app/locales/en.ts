@@ -500,6 +500,7 @@ const en: LocaleType = {
     userPassword: "Change Password",
     userQuotaDescription: "Unit: Yuan",
     imageSelectorFailure: "Image too big or format unsupported",
+    imageSavedFailure: "Failed to save images. Try force-refresh",
     animationFailure: "Animation failed to render",
     modelPrice: "Model & Price",
     modelPriceDescription: "Unit: Yuan / 1000 tokens",

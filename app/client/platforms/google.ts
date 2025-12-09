@@ -118,7 +118,10 @@ export class GeminiProApi implements LLMApi {
         } else {
           const url = await uploadImageRemote(
             base64Image2Blob(part.inlineData.data, part.inlineData.mimeType),
-          );
+          ).catch((e) => {
+            showToast(Locale.Shansing.imageSavedFailure);
+            throw e;
+          });
           contents.push({
             type: "image_url",
             image_url: {
