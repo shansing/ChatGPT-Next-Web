@@ -141,7 +141,7 @@ export function base64Image2Blob(base64Data: string, contentType: string) {
 }
 
 export function uploadImage(file: File | Blob): Promise<string> {
-  if (!window._SW_ENABLED && !("serviceWorker" in navigator)) {
+  if (/*!window._SW_ENABLED && */ !("serviceWorker" in navigator)) {
     // if serviceWorker register error, using compressImage
     console.warn("serviceWorker register error");
     return compressImage(file, UPLOAD_IMAGE_MAX_SIZE);
@@ -161,6 +161,10 @@ export function uploadImage(file: File | Blob): Promise<string> {
         return res?.data;
       }
       throw Error(`upload Error: ${res?.msg}`);
+    })
+    .catch((e) => {
+      console.warn("uploadImage error, falling back to compressImage", e);
+      return compressImage(file, UPLOAD_IMAGE_MAX_SIZE);
     });
 }
 

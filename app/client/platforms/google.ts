@@ -116,12 +116,15 @@ export class GeminiProApi implements LLMApi {
           console.log("hidden image", part);
           reasoningContent += "\n[an omitted image]\n";
         } else {
-          const url = await uploadImageRemote(
-            base64Image2Blob(part.inlineData.data, part.inlineData.mimeType),
-          ).catch((e) => {
+          let url;
+          try {
+            url = await uploadImageRemote(
+              base64Image2Blob(part.inlineData.data, part.inlineData.mimeType),
+            );
+          } catch (e) {
             showToast(Locale.Shansing.imageSavedFailure);
             throw e;
-          });
+          }
           contents.push({
             type: "image_url",
             image_url: {
