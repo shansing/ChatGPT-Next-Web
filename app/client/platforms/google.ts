@@ -356,9 +356,10 @@ export class GeminiProApi implements LLMApi {
                 //   }
                 // },
                 googleSearch: {},
-                ...(!modelConfig.model.includes("-image") && {
-                  urlContext: {},
-                }),
+                ...(!modelConfig.model.includes("-image") &&
+                  !modelConfig.model.includes("gemini-3") && {
+                    urlContext: {},
+                  }),
               },
             ]
           : []),
