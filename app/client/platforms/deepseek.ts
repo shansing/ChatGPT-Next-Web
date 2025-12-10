@@ -280,7 +280,8 @@ export class DeepSeekApi implements LLMApi {
             const text = msg.data;
             try {
               const json = JSON.parse(text);
-              if (!json.choices && !json.usage) {
+              const finishReason = json?.choices?.at(0)?.finish_reason;
+              if (!json.choices && !json.usage && !finishReason) {
                 return error("No choices: " + text);
               }
               const choices = json.choices as Array<{
@@ -321,6 +322,19 @@ export class DeepSeekApi implements LLMApi {
                   `[${ServiceProvider.Azure}] [Text Moderation] flagged categories result:`,
                   contentFilterResults,
                 );
+              }
+
+              if (finishReason) {
+                if (finishReason === "stop") {
+                  return finish();
+                } else if (finishReason === "length") {
+                  return error(
+                    "Reach max_tokens, try raise the value in Settings: " +
+                      text,
+                  );
+                } else {
+                  return error("Abnormal finish: " + text);
+                }
               }
             } catch (e) {
               showToast(Locale.Shansing.messageParseFailure);

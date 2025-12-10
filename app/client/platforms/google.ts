@@ -498,7 +498,8 @@ export class GeminiProApi implements LLMApi {
             const text = msg.data;
             try {
               const json = JSON.parse(text);
-              if (!json?.candidates?.at(0)?.content?.parts) {
+              const finishReason = json?.candidates?.at(0)?.finishReason;
+              if (!json?.candidates?.at(0)?.content?.parts && !finishReason) {
                 return error("No candidate parts: " + text);
               }
               const result = apiClient.extractMessage(json);
@@ -534,6 +535,19 @@ export class GeminiProApi implements LLMApi {
                     responseReasoning.replace(/^\n+|\n+$/g, ""),
                   ),
                 );
+              }
+
+              if (finishReason) {
+                if (finishReason === "STOP") {
+                  return finish();
+                } else if (finishReason === "MAX_TOKENS") {
+                  return error(
+                    "Reach max_tokens, try raise the value in Settings: " +
+                      text,
+                  );
+                } else {
+                  return error("Abnormal finish: " + text);
+                }
               }
 
               // const blockReason = json?.promptFeedback?.blockReason;

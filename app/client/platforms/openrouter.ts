@@ -267,11 +267,12 @@ export class OpenRouterApi implements LLMApi {
             const text = msg.data;
             try {
               const json = JSON.parse(text);
+              const finishReason = json?.choices?.at(0)?.finish_reason;
               if (json.citations && json.citations.length > citationsNum) {
                 citationsNum = json.citations.length;
                 options.onFlag?.(true, undefined, undefined);
               }
-              if (!json.choices && !json.usage) {
+              if (!json.choices && !json.usage && !finishReason) {
                 return error("No choices: " + text);
               }
               const choices = json.choices as Array<{
@@ -321,6 +322,19 @@ export class OpenRouterApi implements LLMApi {
                       return `[${index + 1}] ${citation}`;
                     })
                     .join("\n");
+              }
+
+              if (finishReason) {
+                if (finishReason === "stop") {
+                  return finish();
+                } else if (finishReason === "length") {
+                  return error(
+                    "Reach max_tokens, try raise the value in Settings: " +
+                      text,
+                  );
+                } else {
+                  return error("Abnormal finish: " + text);
+                }
               }
             } catch (e) {
               showToast(Locale.Shansing.messageParseFailure);
