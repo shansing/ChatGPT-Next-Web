@@ -3,18 +3,17 @@ const CHATGPT_NEXT_WEB_FILE_CACHE = "chatgpt-next-web-file";
 let a="useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";let nanoid=(e=21)=>{let t="",r=crypto.getRandomValues(new Uint8Array(e));for(let n=0;n<e;n++)t+=a[63&r[n]];return t};
 
 self.addEventListener("activate", function (event) {
-  console.log("ServiceWorker activated.");
+    console.log("ServiceWorker activated.");
 });
 
 self.addEventListener("install", function (event) {
-  event.waitUntil(
-    caches.open(CHATGPT_NEXT_WEB_CACHE).then(function (cache) {
-      return cache.addAll([]);
-    }),
-  );
+    self.skipWaiting();  // enable new version
+    event.waitUntil(
+        caches.open(CHATGPT_NEXT_WEB_CACHE).then(function (cache) {
+            return cache.addAll([]);
+        }),
+    );
 });
-
-self.addEventListener("fetch", (e) => {});
 
 function jsonify(data) {
     return new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } })

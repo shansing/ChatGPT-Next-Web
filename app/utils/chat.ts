@@ -10,7 +10,7 @@ import { MultimodalContent, RequestMessage } from "@/app/client/api";
 //ref: https://platform.openai.com/docs/guides/vision/managing-images
 //ref: https://docs.anthropic.com/en/docs/vision#image-size
 const MAX_SHORT_SIDE_PIXEL = 768;
-const UPLOAD_IMAGE_MAX_SIZE = 256 * 1024;
+const UPLOAD_IMAGE_MAX_SIZE = 384 * 1024;
 
 export function compressImage(
   file: File | Blob,
@@ -29,10 +29,14 @@ export function compressImage(
         }
         dataURLtoFile(image.src)
           .then((jpgFile) => {
+            let type = EImageType.JPEG;
+            if (jpgFile.type && jpgFile.type.includes("png")) {
+              type = EImageType.PNG;
+            }
             compressAccurately(jpgFile, {
               size: Math.floor(maxSize / 1024),
               accuracy: 0.9,
-              type: EImageType.JPEG,
+              type: type,
               orientation: 1,
               scale: scale,
             })
