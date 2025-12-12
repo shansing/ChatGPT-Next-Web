@@ -143,7 +143,7 @@ Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}{{ShansingHelperDeepseekR1Tip}}{{ShansingHelperOpenRouterDeepseekR1Tip}}`;
 
 export const GPT_MAIN_MODEL = "openai/gpt-5.2";
-export const GPT_MAIN_MINI_MODEL = "openai/gpt-5-mini";
+export const GPT_MAIN_MINI_MODEL = "openai/gpt-4.1-mini";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
 export const CLAUDE_SONNET = "anthropic/claude-sonnet-4.5"; //claude-3-5-sonnet-latest
@@ -185,6 +185,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4.1-2025-04-14": "2024-06-01",
   "gpt-4.1-mini": "2024-06-01",
   "gpt-4.1-mini-2025-04-14": "2024-06-01",
+  "openai/gpt-4.1-mini": "2024-06-01",
   "gpt-4.1-nano": "2024-06-01",
   "gpt-4.1-nano-2025-04-14": "2024-06-01",
   "gpt-5": "2024-09-30",
@@ -364,6 +365,7 @@ const openRouterModels = [
   "openai/gpt-5.2",
   "openai/gpt-5.1",
   "openai/gpt-5-mini",
+  "openai/gpt-4.1-mini",
   "anthropic/claude-opus-4.5",
   "anthropic/claude-sonnet-4.5",
   "anthropic/claude-sonnet-4",
@@ -449,10 +451,17 @@ export const DEFAULT_MODELS = [
 export const modelThresholdTokenNumbers = [
   { name: "gpt-5.1-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5.1", total: 400_000, prompt: null, completion: 128_000 },
+  { name: "openai/gpt-5.", total: 400_000, prompt: null, completion: 128_000 },
   { name: "openai/gpt-5", total: 400_000, prompt: null, completion: 128_000 },
   { name: "gpt-5-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5", total: 400_000, prompt: null, completion: 128_000 },
   { name: "gpt-4.1", total: 1_047_576, prompt: null, completion: 32_768 },
+  {
+    name: "openai/gpt-4.1-mini",
+    total: 1_047_576,
+    prompt: null,
+    completion: 32_768,
+  },
   {
     name: "gpt-4o-search",
     total: 128_000,
