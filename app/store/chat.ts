@@ -32,9 +32,6 @@ import { prettyObject } from "../utils/format";
 import { estimateTokenLength } from "../utils/token";
 import { nanoid } from "nanoid";
 import { createPersistStore } from "../utils/store";
-import { identifyDefaultClaudeModel } from "../utils/checkers";
-import { collectModelsWithDefaultModel } from "../utils/model";
-import { useAccessStore } from "./access";
 import {
   calculatePromptTokenThreshold,
   extractErrorMessage,
@@ -924,7 +921,7 @@ export const useChatStore = createPersistStore(
       getClientApi(model: string) {
         if (model.startsWith("gemini")) {
           return new ClientApi(ModelProvider.GeminiPro);
-        } else if (identifyDefaultClaudeModel(model)) {
+        } else if (model.startsWith("claude")) {
           return new ClientApi(ModelProvider.Claude);
         } else if (model.startsWith("qwen-") || model.startsWith("qwq-")) {
           return new ClientApi(ModelProvider.Alibaba);

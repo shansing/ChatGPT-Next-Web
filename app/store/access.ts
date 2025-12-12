@@ -9,6 +9,7 @@ import { getClientConfig } from "../config/client";
 import { createPersistStore } from "../utils/store";
 import { ensure } from "../utils/clone";
 import { DEFAULT_CONFIG } from "./config";
+import { ShansingModelChoice } from "@/app/api/shansing";
 
 let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 
@@ -49,6 +50,7 @@ const DEFAULT_ACCESS_STATE = {
   disableGPT4: false,
   disableFastLink: false,
   customModels: "",
+  modelChoices: [] as ShansingModelChoice[],
   defaultModel: "",
 };
 
