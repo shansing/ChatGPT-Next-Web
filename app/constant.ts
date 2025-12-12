@@ -142,7 +142,7 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}{{ShansingHelperDeepseekR1Tip}}{{ShansingHelperOpenRouterDeepseekR1Tip}}`;
 
-export const GPT_MAIN_MODEL = "openai/gpt-5.1";
+export const GPT_MAIN_MODEL = "openai/gpt-5.2";
 export const GPT_MAIN_MINI_MODEL = "openai/gpt-5-mini";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
@@ -196,6 +196,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-5-nano-2025-08-07": "2024-05-31",
   "gpt-5-chat-latest": "2024-09-30",
   "gpt-5.1": "2024-09-30",
+  "openai/gpt-5.2": "2025-08-31",
   "openai/gpt-5.1": "2024-09-30",
   "gpt-5.1-2025-11-13": "2024-09-30",
   "gpt-5.1-chat-latest": "2024-09-30",
@@ -360,6 +361,7 @@ const alibabaModels = [
 ];
 
 const openRouterModels = [
+  "openai/gpt-5.2",
   "openai/gpt-5.1",
   "openai/gpt-5-mini",
   "anthropic/claude-opus-4.5",
@@ -447,10 +449,9 @@ export const DEFAULT_MODELS = [
 export const modelThresholdTokenNumbers = [
   { name: "gpt-5.1-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5.1", total: 400_000, prompt: null, completion: 128_000 },
-  { name: "openai/gpt-5.1", total: 400_000, prompt: null, completion: 128_000 },
+  { name: "openai/gpt-5", total: 400_000, prompt: null, completion: 128_000 },
   { name: "gpt-5-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5", total: 400_000, prompt: null, completion: 128_000 },
-  { name: "openai/gpt-5", total: 400_000, prompt: null, completion: 128_000 },
   { name: "gpt-4.1", total: 1_047_576, prompt: null, completion: 32_768 },
   {
     name: "gpt-4o-search",
@@ -702,6 +703,15 @@ export const reasoningLevelModels: {
   },
   {
     name: "openai/gpt-5.1",
+    levels: [
+      ReasoningLevel.None,
+      ReasoningLevel.Low,
+      ReasoningLevel.Medium,
+      ReasoningLevel.High,
+    ],
+  },
+  {
+    name: "openai/gpt-5.2",
     levels: [
       ReasoningLevel.None,
       ReasoningLevel.Low,
