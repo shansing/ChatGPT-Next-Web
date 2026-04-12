@@ -818,7 +818,7 @@ export const reasoningLevelModels: {
   },
   {
     name: "x-ai/grok-4.20",
-    levels: [ReasoningLevel.Auto],
+    levels: [ReasoningLevel.None, ReasoningLevel.Auto],
   },
   {
     name: "perplexity/sonar-deep-research",

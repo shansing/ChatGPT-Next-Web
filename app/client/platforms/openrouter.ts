@@ -139,7 +139,10 @@ export class OpenRouterApi implements LLMApi {
       },
       reasoning: {
         ...(modelConfig.shansingReasoningLevel && {
-          effort: modelConfig.shansingReasoningLevel,
+          effort:
+            modelConfig.shansingReasoningLevel === ReasoningLevel.Auto
+              ? ReasoningLevel.Medium
+              : modelConfig.shansingReasoningLevel,
         }),
         exclude: false,
       },
