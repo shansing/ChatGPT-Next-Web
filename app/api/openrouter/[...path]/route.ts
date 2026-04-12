@@ -200,10 +200,13 @@ async function handle(
       })
       .then((obj) => {
         if (obj) {
+          const promptToken = obj.promptTokenNumber + firstPromptTokenNumber;
           return pay(
             username,
             modelChoice,
-            obj.promptTokenNumber + firstPromptTokenNumber,
+            modelChoice.name === "openai/gpt-5.4" && promptToken > 272_000
+              ? promptToken * 2
+              : promptToken,
             obj.completionTokenNumber + firstCompletionTokenNumber,
             config.shansingOnlineSearchSearchPrice
               .mul(searchCount + newsCount)

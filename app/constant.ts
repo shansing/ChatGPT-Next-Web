@@ -142,8 +142,8 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}{{ShansingHelperDeepseekR1Tip}}{{ShansingHelperOpenRouterDeepseekR1Tip}}`;
 
-export const GPT_MAIN_MODEL = "openai/gpt-5.2";
-export const GPT_MAIN_MINI_MODEL = "openai/gpt-4.1-mini";
+export const GPT_MAIN_MODEL = "openai/gpt-5.4";
+export const GPT_MAIN_MINI_MODEL = "openai/gpt-5.4-mini";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
 export const CLAUDE_SONNET = "anthropic/claude-sonnet-4.5"; //claude-3-5-sonnet-latest
@@ -192,11 +192,13 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-5-2025-08-07": "2024-09-30",
   "gpt-5-mini": "2024-05-31",
   "openai/gpt-5-mini": "2024-05-31",
+  "openai/gpt-5.4-mini": "2025-08-31",
   "gpt-5-mini-2025-08-07": "2024-05-31",
   "gpt-5-nano": "2024-05-31",
   "gpt-5-nano-2025-08-07": "2024-05-31",
   "gpt-5-chat-latest": "2024-09-30",
   "gpt-5.1": "2024-09-30",
+  "openai/gpt-5.4": "2025-08-31",
   "openai/gpt-5.2": "2025-08-31",
   "openai/gpt-5.1": "2024-09-30",
   "gpt-5.1-2025-11-13": "2024-09-30",
@@ -362,8 +364,10 @@ const alibabaModels = [
 ];
 
 const openRouterModels = [
+  "openai/gpt-5.4",
   "openai/gpt-5.2",
   "openai/gpt-5.1",
+  "openai/gpt-5.4-mini",
   "openai/gpt-5-mini",
   "openai/gpt-4.1-mini",
   "anthropic/claude-opus-4.5",
@@ -449,6 +453,7 @@ export const DEFAULT_MODELS = [
 ] as const;
 
 export const modelThresholdTokenNumbers = [
+  { name: "gpt-5.4", total: null, prompt: 272_000, completion: 128_000 },
   { name: "gpt-5.1-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5.1", total: 400_000, prompt: null, completion: 128_000 },
   { name: "openai/gpt-5.", total: 400_000, prompt: null, completion: 128_000 },
@@ -729,8 +734,26 @@ export const reasoningLevelModels: {
     ],
   },
   {
+    name: "openai/gpt-5.4",
+    levels: [
+      ReasoningLevel.None,
+      ReasoningLevel.Low,
+      ReasoningLevel.Medium,
+      ReasoningLevel.High,
+    ],
+  },
+  {
     name: "openai/gpt-5-mini",
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "openai/gpt-5.4-mini",
+    levels: [
+      ReasoningLevel.None,
+      ReasoningLevel.Low,
+      ReasoningLevel.Medium,
+      ReasoningLevel.High,
+    ],
   },
   {
     name: "anthropic/claude-sonnet-4.5",
