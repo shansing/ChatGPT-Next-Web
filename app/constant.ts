@@ -151,8 +151,8 @@ export const CLAUDE_HAIKU = "anthropic/claude-haiku-4.5"; //claude-3-5-haiku-lat
 export const QWEN_LONG = "qwen-long";
 export const DEEPSEEK_CHAT = "deepseek-chat";
 export const DEEPSEEK_REASONER = "deepseek-reasoner";
-export const GEMINI_PRO = "gemini-3-pro-preview";
-export const GEMINI_FLASH = "gemini-2.5-flash";
+export const GEMINI_PRO = "gemini-3.1-pro-preview";
+export const GEMINI_FLASH = "gemini-3-flash-preview";
 
 export const DEFAULT_MODEL = GEMINI_PRO;
 export const SUMMARIZE_MODEL = GEMINI_FLASH; //GPT_MAIN_NANO_MODEL;
@@ -219,8 +219,10 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
   "gemini-pro-vision": "2023-12",
+  "gemini-3.1-pro-preview": "2025-01",
   "gemini-3-pro-preview": "2025-01",
   "gemini-3-pro-image-preview": "2025-01",
+  "gemini-3-flash-preview": "2025-01",
   "gemini-2.5-pro": "2025-01",
   "gemini-2.5-flash": "2025-01",
   "gemini-2.5-pro-preview-03-25": "2025-01",
@@ -300,8 +302,10 @@ const openaiModels = [
 ];
 
 const googleModels = [
+  "gemini-3.1-pro-preview",
   "gemini-3-pro-preview",
   "gemini-2.5-pro",
+  "gemini-3-flash-preview",
   "gemini-2.5-flash",
   "gemini-2.5-pro-preview-03-25",
   "gemini-2.5-pro-exp-03-25",
@@ -526,6 +530,8 @@ export const modelThresholdTokenNumbers = [
     prompt: 65_000,
     completion: 32_000,
   },
+  { name: "gemini-3.1-", total: null, prompt: 200_000, completion: 64_000 }, //prompt under 200k is cheap
+  { name: "gemini-3-flash", total: null, prompt: 200_000, completion: 64_000 }, //prompt under 200k is cheap
   { name: "gemini-3-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.5-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
   { name: "gemini-2.0-", total: null, prompt: 1_048_576, completion: 8192 },
@@ -699,6 +705,14 @@ export const reasoningLevelModels: {
   name: string;
   levels: ReasoningLevel[];
 }[] = [
+  {
+    name: "gemini-3.1-pro-preview",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "gemini-3-flash-preview",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
   {
     name: "gemini-3-pro-preview",
     levels: [ReasoningLevel.Low, ReasoningLevel.High],
