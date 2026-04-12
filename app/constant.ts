@@ -244,7 +244,9 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "anthropic/claude-3.5-haiku": "2024-07",
   "anthropic/claude-sonnet-4": "2025-03",
   "anthropic/claude-sonnet-4.5": "2025-07",
+  "anthropic/claude-sonnet-4.6": "2025-08",
   "anthropic/claude-opus-4.5": "2025-08",
+  "anthropic/claude-opus-4.6": "2025-05",
   "x-ai/grok-3-beta": "2024-11-17",
   "x-ai/grok-3-mini-beta": "2024-11-17",
   "x-ai/grok-4": "2024-11",
@@ -374,7 +376,9 @@ const openRouterModels = [
   "openai/gpt-5.4-mini",
   "openai/gpt-5-mini",
   "openai/gpt-4.1-mini",
+  "anthropic/claude-opus-4.6",
   "anthropic/claude-opus-4.5",
+  "anthropic/claude-sonnet-4.6",
   "anthropic/claude-sonnet-4.5",
   "anthropic/claude-sonnet-4",
   "anthropic/claude-haiku-4.5",
@@ -549,10 +553,22 @@ export const modelThresholdTokenNumbers = [
     completion: 64_000,
   },
   {
+    name: "anthropic/claude-sonnet-4.6",
+    total: 1_000_000,
+    prompt: null,
+    completion: 128_000,
+  },
+  {
     name: "anthropic/claude-sonnet-4",
     total: 200_000,
     prompt: null,
     completion: 64_000,
+  },
+  {
+    name: "anthropic/claude-opus-4.6",
+    total: 1_000_000,
+    prompt: null,
+    completion: 128_000,
   },
   {
     name: "anthropic/claude-opus-4",
@@ -774,11 +790,19 @@ export const reasoningLevelModels: {
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
   },
   {
+    name: "anthropic/claude-sonnet-4.6",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
     name: "anthropic/claude-haiku-4.5",
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
   },
   {
     name: "anthropic/claude-opus-4.5",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "anthropic/claude-opus-4.6",
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
   },
   {
