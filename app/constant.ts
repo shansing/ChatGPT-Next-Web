@@ -627,9 +627,9 @@ export const modelThresholdTokenNumbers = [
   { name: "qwen/qwq-32b", total: 131_000, prompt: null, completion: 131_000 },
   {
     name: "perplexity/sonar-deep-research",
-    total: 200_000,
+    total: 128_000,
     prompt: null,
-    completion: 200_000,
+    completion: 128_000,
   },
   { name: "grok-4.20", total: 2_000_000, prompt: 200_000, completion: 200_000 }, //under 200k is cheap
   { name: "grok-4", total: 128_000, prompt: null, completion: 128_000 }, //under 128k is cheap
