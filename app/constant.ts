@@ -718,6 +718,8 @@ export const visionKeywords = [
   "claude-opus-4",
   "claude-sonnet-4",
   "claude-haiku-4",
+  "claude-opus-5",
+  "claude-sonnet-5",
   "grok-4",
   "kimi-k3",
 ];
