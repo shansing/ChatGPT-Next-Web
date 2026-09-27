@@ -152,7 +152,7 @@ export const QWEN_LONG = "qwen-long";
 export const DEEPSEEK_CHAT = "deepseek-chat";
 export const DEEPSEEK_REASONER = "deepseek-reasoner";
 export const GEMINI_PRO = "gemini-3.1-pro-preview";
-export const GEMINI_FLASH = "gemini-3-flash-preview";
+export const GEMINI_FLASH = "gemini-3.8-flash";
 
 export const DEFAULT_MODEL = GEMINI_PRO;
 export const SUMMARIZE_MODEL = GEMINI_FLASH; //GPT_MAIN_NANO_MODEL;
@@ -227,6 +227,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gemini-pro-vision": "2023-12",
   "gemini-3.1-pro-preview": "2025-01",
   "gemini-3-pro-preview": "2025-01",
+  "gemini-3-pro-image": "2025-11",
   "gemini-3-pro-image-preview": "2025-01",
   "gemini-3-flash-preview": "2025-01",
   "gemini-2.5-pro": "2025-01",
@@ -235,6 +236,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gemini-2.5-pro-exp-03-25": "2025-01",
   "gemini-2.0-flash": "2024-08",
   "gemini-2.0-flash-lite-preview-02-05": "2024-08",
+  "gemini-3.8-flash": "2026-09",
   "claude-3-opus-20240229": "2023-08",
   "claude-3-sonnet-20240229": "2023-08",
   "claude-3-haiku-20240307": "2023-08",
@@ -314,6 +316,7 @@ const googleModels = [
   "gemini-3.1-pro-preview",
   "gemini-3-pro-preview",
   "gemini-2.5-pro",
+  "gemini-3.8-flash",
   "gemini-3-flash-preview",
   "gemini-2.5-flash",
   "gemini-2.5-pro-preview-03-25",
@@ -329,6 +332,7 @@ const googleModels = [
   "gemini-1.5-flash-8b",
   "gemini-1.0-pro",
   "gemini-pro-vision",
+  "gemini-3-pro-image",
   "gemini-3-pro-image-preview",
 ];
 
@@ -541,11 +545,18 @@ export const modelThresholdTokenNumbers = [
   { name: "qwen-max", total: null, prompt: 6_000, completion: 2000 },
   { name: "qwen-long", total: null, prompt: 9_000, completion: 2000 }, // total is not 10_000_000
   {
-    name: "gemini-3-pro-image",
+    name: "gemini-3-pro-image-preview",
     total: null,
     prompt: 65_000,
     completion: 32_000,
   },
+  {
+    name: "gemini-3-pro-image-preview",
+    total: null,
+    prompt: 65_536,
+    completion: 32_768,
+  },
+  { name: "gemini-3.8-", total: null, prompt: 1_048_576, completion: 65_536 },
   { name: "gemini-3.1-", total: null, prompt: 200_000, completion: 64_000 }, //prompt under 200k is cheap
   { name: "gemini-3-flash", total: null, prompt: 200_000, completion: 64_000 }, //prompt under 200k is cheap
   { name: "gemini-3-", total: null, prompt: 200_000, completion: 65_536 }, //prompt under 200k is cheap
@@ -670,6 +681,7 @@ export const visionKeywords = [
   "gemini-2.0",
   "gemini-2.5",
   "gemini-3",
+  "gemini-3.",
   "gpt-4o",
   "gpt-4.5",
   "gpt-4.1",
@@ -696,6 +708,7 @@ export const onlineSearchKeywords = [
   "gemini-2.0-",
   "gemini-2.5-",
   "gemini-3-",
+  "gemini-3.",
   // "gemini-1.5-",
   // "gemini-1.5-pro",
   // "claude-3-",
@@ -707,6 +720,7 @@ export const codeExecutionKeywords = [
   "gemini-2.0-",
   "gemini-2.5-",
   "gemini-3-",
+  "gemini-3.",
 ];
 
 export const uploadFileModels: {
@@ -740,6 +754,10 @@ export const reasoningLevelModels: {
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
   },
   {
+    name: "gemini-3.8-flash",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
     name: "gemini-3-flash-preview",
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
   },
@@ -749,6 +767,10 @@ export const reasoningLevelModels: {
   },
   {
     name: "gemini-3-pro-image-preview",
+    levels: [ReasoningLevel.Auto],
+  },
+  {
+    name: "gemini-3-pro-image",
     levels: [ReasoningLevel.Auto],
   },
   {
