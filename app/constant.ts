@@ -146,7 +146,7 @@ export const GPT_MAIN_MODEL = "openai/gpt-6-astra";
 export const GPT_MAIN_MINI_MODEL = "openai/gpt-6-luna";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
-export const CLAUDE_SONNET = "anthropic/claude-sonnet-4.5"; //claude-3-5-sonnet-latest
+export const CLAUDE_SONNET = "anthropic/claude-sonnet-5"; //claude-3-5-sonnet-latest
 export const CLAUDE_HAIKU = "anthropic/claude-haiku-4.5"; //claude-3-5-haiku-latest
 export const QWEN_LONG = "qwen-long";
 export const DEEPSEEK_CHAT = "deepseek-chat";
@@ -253,8 +253,10 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "anthropic/claude-sonnet-4": "2025-03",
   "anthropic/claude-sonnet-4.5": "2025-07",
   "anthropic/claude-sonnet-4.6": "2025-08",
+  "anthropic/claude-sonnet-5": "2026-01",
   "anthropic/claude-opus-4.5": "2025-08",
   "anthropic/claude-opus-4.6": "2025-05",
+  "anthropic/claude-opus-5.5": "2026-06",
   "x-ai/grok-3-beta": "2024-11-17",
   "x-ai/grok-3-mini-beta": "2024-11-17",
   "x-ai/grok-4": "2024-11",
@@ -390,8 +392,10 @@ const openRouterModels = [
   "openai/gpt-5.4-mini",
   "openai/gpt-5-mini",
   "openai/gpt-4.1-mini",
+  "anthropic/claude-opus-5.5",
   "anthropic/claude-opus-4.6",
   "anthropic/claude-opus-4.5",
+  "anthropic/claude-sonnet-5",
   "anthropic/claude-sonnet-4.6",
   "anthropic/claude-sonnet-4.5",
   "anthropic/claude-sonnet-4",
@@ -576,6 +580,12 @@ export const modelThresholdTokenNumbers = [
     completion: 64_000,
   },
   {
+    name: "anthropic/claude-sonnet-5",
+    total: 1_000_000,
+    prompt: null,
+    completion: 128_000,
+  },
+  {
     name: "anthropic/claude-sonnet-4.6",
     total: 1_000_000,
     prompt: null,
@@ -586,6 +596,12 @@ export const modelThresholdTokenNumbers = [
     total: 200_000,
     prompt: null,
     completion: 64_000,
+  },
+  {
+    name: "anthropic/claude-opus-5.5",
+    total: 1_000_000,
+    prompt: null,
+    completion: 128_000,
   },
   {
     name: "anthropic/claude-opus-4.6",
@@ -844,6 +860,10 @@ export const reasoningLevelModels: {
     ],
   },
   {
+    name: "anthropic/claude-sonnet-5",
+    levels: [ReasoningLevel.None, ReasoningLevel.Auto],
+  },
+  {
     name: "anthropic/claude-sonnet-4.5",
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
   },
@@ -854,6 +874,10 @@ export const reasoningLevelModels: {
   {
     name: "anthropic/claude-haiku-4.5",
     levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "anthropic/claude-opus-5.5",
+    levels: [ReasoningLevel.Auto],
   },
   {
     name: "anthropic/claude-opus-4.5",
