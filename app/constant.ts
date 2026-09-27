@@ -261,6 +261,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "x-ai/grok-3-mini-beta": "2024-11-17",
   "x-ai/grok-4": "2024-11",
   "x-ai/grok-4.20": "2024-11",
+  "x-ai/grok-4.7": "2026-05",
 };
 
 const openaiModels = [
@@ -404,6 +405,7 @@ const openRouterModels = [
   "anthropic/claude-3.7-sonnet",
   "anthropic/claude-3.7-sonnet:thinking",
   "anthropic/claude-3.5-sonnet",
+  "x-ai/grok-4.7",
   "x-ai/grok-4.20",
   "x-ai/grok-4",
   "x-ai/grok-3-beta",
@@ -669,6 +671,7 @@ export const modelThresholdTokenNumbers = [
     completion: 128_000,
   },
   { name: "grok-4.20", total: 2_000_000, prompt: 200_000, completion: 200_000 }, //under 200k is cheap
+  { name: "grok-4.7", total: 500_000, prompt: null, completion: null },
   { name: "grok-4", total: 128_000, prompt: null, completion: 128_000 }, //under 128k is cheap
   { name: "grok-3", total: 131_000, prompt: null, completion: 131_000 },
   { name: "", total: 4_000, prompt: null, completion: null }, //default
@@ -894,6 +897,10 @@ export const reasoningLevelModels: {
   {
     name: "x-ai/grok-4",
     levels: [ReasoningLevel.Auto],
+  },
+  {
+    name: "x-ai/grok-4.7",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
   },
   {
     name: "x-ai/grok-4.20",
