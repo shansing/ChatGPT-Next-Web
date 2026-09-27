@@ -533,6 +533,7 @@ export function ChatActions(props: {
     )?.levels;
     let newIndex = 0;
     if (reasoningLevels != null) {
+      //TODO seems auto low
       const index = reasoningLevels?.indexOf(reasoningLevel);
       if (index >= 0) {
         newIndex = (index + 1) % reasoningLevels.length;

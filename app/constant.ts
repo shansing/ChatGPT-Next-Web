@@ -142,8 +142,8 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 {{ShansingHelperVisionFlag}}{{ShansingHelperCodeExecutionFlag}}{{ShansingHelperOnlineSearchFlag}}{{ShansingHelperClaudeTip}}{{ShansingHelperDeepseekR1Tip}}{{ShansingHelperOpenRouterDeepseekR1Tip}}`;
 
-export const GPT_MAIN_MODEL = "openai/gpt-5.4";
-export const GPT_MAIN_MINI_MODEL = "openai/gpt-5.4-mini";
+export const GPT_MAIN_MODEL = "openai/gpt-6-astra";
+export const GPT_MAIN_MINI_MODEL = "openai/gpt-6-luna";
 export const GPT_MAIN_NANO_MODEL = GPT_MAIN_MINI_MODEL; //gpt-5-nano is bad
 //temporarily disable claude
 export const CLAUDE_SONNET = "anthropic/claude-sonnet-4.5"; //claude-3-5-sonnet-latest
@@ -203,6 +203,12 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "openai/gpt-5.1": "2024-09-30",
   "gpt-5.1-2025-11-13": "2024-09-30",
   "gpt-5.1-chat-latest": "2024-09-30",
+  "gpt-6-astra": "2026-04-30",
+  "openai/gpt-6-astra": "2026-04-30",
+  "gpt-6-sol": "2026-04-20",
+  "openai/gpt-6-sol": "2026-04-20",
+  "gpt-6-luna": "2026-05-18",
+  "openai/gpt-6-luna": "2026-05-18",
   "chatgpt-4o-latest": "2023-10",
   "o1-preview": "2023-10",
   "o1-preview-2024-09-12": "2023-10",
@@ -371,6 +377,9 @@ const alibabaModels = [
 ];
 
 const openRouterModels = [
+  "openai/gpt-6-astra",
+  "openai/gpt-6-sol",
+  "openai/gpt-6-luna",
   "openai/gpt-5.4",
   "openai/gpt-5.2",
   "openai/gpt-5.1",
@@ -463,6 +472,7 @@ export const DEFAULT_MODELS = [
 ] as const;
 
 export const modelThresholdTokenNumbers = [
+  { name: "gpt-6", total: 1050_000, prompt: null, completion: 128_000 },
   { name: "gpt-5.4", total: null, prompt: 272_000, completion: 128_000 },
   { name: "gpt-5.1-chat", total: 128_000, prompt: null, completion: 16_384 },
   { name: "gpt-5.1", total: 400_000, prompt: null, completion: 128_000 },
@@ -665,6 +675,7 @@ export const visionKeywords = [
   "gpt-4.1",
   "gpt-5",
   "gpt-5.1",
+  "gpt-6",
   "o1",
   // "o3",
   "-vl",
@@ -781,6 +792,28 @@ export const reasoningLevelModels: {
   },
   {
     name: "openai/gpt-5.4-mini",
+    levels: [
+      ReasoningLevel.None,
+      ReasoningLevel.Low,
+      ReasoningLevel.Medium,
+      ReasoningLevel.High,
+    ],
+  },
+  {
+    name: "openai/gpt-6-astra",
+    levels: [ReasoningLevel.Low, ReasoningLevel.Medium, ReasoningLevel.High],
+  },
+  {
+    name: "openai/gpt-6-sol",
+    levels: [
+      ReasoningLevel.None,
+      ReasoningLevel.Low,
+      ReasoningLevel.Medium,
+      ReasoningLevel.High,
+    ],
+  },
+  {
+    name: "openai/gpt-6-luna",
     levels: [
       ReasoningLevel.None,
       ReasoningLevel.Low,
