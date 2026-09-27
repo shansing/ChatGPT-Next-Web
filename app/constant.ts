@@ -262,6 +262,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "x-ai/grok-4": "2024-11",
   "x-ai/grok-4.20": "2024-11",
   "x-ai/grok-4.7": "2026-05",
+  // "moonshotai/kimi-k3": "",
 };
 
 const openaiModels = [
@@ -420,6 +421,7 @@ const openRouterModels = [
   "deepseek/deepseek-r1-0528",
   "deepseek/deepseek-r1",
   "deepseek/deepseek-r1-zero:free",
+  "moonshotai/kimi-k3",
 ];
 
 const deepSeekModels = ["deepseek-chat", "deepseek-reasoner"];
@@ -674,6 +676,7 @@ export const modelThresholdTokenNumbers = [
   { name: "grok-4.7", total: 500_000, prompt: null, completion: null },
   { name: "grok-4", total: 128_000, prompt: null, completion: 128_000 }, //under 128k is cheap
   { name: "grok-3", total: 131_000, prompt: null, completion: 131_000 },
+  { name: "kimi-k3", total: 1048576, prompt: null, completion: 1048576 },
   { name: "", total: 4_000, prompt: null, completion: null }, //default
 ] as const;
 
@@ -716,6 +719,7 @@ export const visionKeywords = [
   "claude-sonnet-4",
   "claude-haiku-4",
   "grok-4",
+  "kimi-k3",
 ];
 
 export const onlineSearchKeywords = [
@@ -917,5 +921,9 @@ export const reasoningLevelModels: {
   {
     name: "deepseek-chat",
     levels: [ReasoningLevel.None, ReasoningLevel.Auto],
+  },
+  {
+    name: "moonshotai/kimi-k3",
+    levels: [ReasoningLevel.Low, ReasoningLevel.High],
   },
 ];
